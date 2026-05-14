@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="~/RepresentWeb.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
+    @* <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">RepresentWeb</a>
@@ -25,22 +25,200 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                          <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="About" asp-action="About">About</a>
+                        </li>
                     </ul>
                 </div>
             </div>
         </nav>
-    </header>
+    </header> *@
+    <header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-black border-bottom border-secondary py-3">
+        <div class="container-fluid px-4">
+
+            <!-- Mobile Toggle -->
+            <button class="navbar-toggler border-0 shadow-none"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#mainNavbar"
+                    aria-controls="mainNavbar"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Center Logo -->
+            <a class="navbar-brand position-absolute start-50 translate-middle-x fw-semibold text-white m-0"
+               asp-area=""
+               asp-controller="Home"
+               asp-action="Index"
+               style="letter-spacing: 0.35em; font-size: 1.2rem;">
+                REPRESENT
+            </a>
+
+            <!-- Navbar Links -->
+            <div class="collapse navbar-collapse" id="mainNavbar">
+
+                <ul class="navbar-nav mx-auto gap-lg-4 text-center">
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white text-uppercase small"
+                           asp-area=""
+                           asp-controller="Home"
+                           asp-action="Index">
+                            Home
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white text-uppercase small"
+                           asp-area=""
+                           asp-controller="Home"
+                           asp-action="Privacy">
+                            Privacy
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white text-uppercase small"
+                           asp-area=""
+                           asp-controller="About"
+                           asp-action="About">
+                            About
+                        </a>
+                    </li>
+
+                </ul>
+
+                <!-- Right Icons -->
+                <div class="d-none d-lg-flex align-items-center gap-4">
+                    <a href="#" class="text-white">
+                        <i class="bi bi-search fs-5"></i>
+                    </a>
+
+                    <a href="#" class="text-white">
+                        <i class="bi bi-person fs-5"></i>
+                    </a>
+
+                    <a href="#" class="text-white position-relative">
+                        <i class="bi bi-bag fs-5"></i>
+
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-light text-dark"
+                              style="font-size: 0.55rem;">
+                            0
+                        </span>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </nav>
+</header>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    @* <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2026 - RepresentWeb - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
-    </footer>
+    </footer> *@
+
+    <footer class="bg-black text-white border-top border-secondary">
+  <div class="container py-5">
+    <div class="row g-5">
+      
+      <!-- Logo + Newsletter -->
+      <div class="col-lg-5">
+        <h2 class="fw-semibold mb-4" style="letter-spacing: 0.3em;">
+          REPRESENT
+        </h2>
+
+        <p
+          class="text-secondary small mb-4"
+          style="max-width: 400px; line-height: 1.8;"
+        >
+          Sign up to receive exclusive access to new drops, restocks and
+          members-only releases.
+        </p>
+
+        <form class="d-flex flex-column flex-sm-row gap-3">
+          <input
+            type="email"
+            placeholder="Your email"
+            class="form-control bg-dark text-white border-secondary rounded-0"
+          />
+
+          <button class="btn btn-light rounded-0 px-4">
+            Subscribe
+          </button>
+        </form>
+      </div>
+
+      <!-- Help -->
+      <div class="col-6 col-md-3 col-lg-2">
+        <h6 class="text-uppercase fw-bold mb-4">Help</h6>
+
+        <ul class="list-unstyled d-flex flex-row gap-3 ">
+          <li>
+            <a href="#" class="text-secondary text-decoration-none">
+              Contact
+            </a>
+          </li>
+
+          <li>
+            <a href="#" class="text-secondary text-decoration-none">
+              Shipping
+            </a>
+          </li>
+
+          <li>
+            <a href="#" class="text-secondary text-decoration-none">
+              Returns
+            </a>
+          </li>
+
+          <li>
+            <a href="#" class="text-secondary text-decoration-none">
+              FAQs
+            </a>
+          </li>
+
+          <li>
+            <a href="#" class="text-secondary text-decoration-none">
+              Privacy Policy
+            </a>
+          </li>
+        </ul>
+      </div>
+
+    <!-- Bottom -->
+    <div
+      class="border-top border-secondary mt-5 pt-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3"
+    >
+      <p class="text-secondary small mb-0">
+        © 2026 REPRESENT. All rights reserved.
+      </p>
+
+      <div class="d-flex gap-4">
+        <a href="#" class="text-secondary text-decoration-none small">
+          Terms
+        </a>
+
+        <a href="#" class="text-secondary text-decoration-none small">
+          Privacy
+        </a>
+
+        <a href="#" class="text-secondary text-decoration-none small">
+          Cookies
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

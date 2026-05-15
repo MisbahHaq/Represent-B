@@ -32,3 +32,37 @@ C:\Users\Misbah\Desktop\Represent B\representweb\obj\Debug\net8.0\refint\Represe
 C:\Users\Misbah\Desktop\Represent B\representweb\obj\Debug\net8.0\RepresentWeb.pdb
 C:\Users\Misbah\Desktop\Represent B\representweb\obj\Debug\net8.0\RepresentWeb.genruntimeconfig.cache
 C:\Users\Misbah\Desktop\Represent B\representweb\obj\Debug\net8.0\ref\RepresentWeb.dll
+C:\Users\Misbah\Desktop\Represent-B\representweb\bin\Debug\net8.0\appsettings.Development.json
+C:\Users\Misbah\Desktop\Represent-B\representweb\bin\Debug\net8.0\appsettings.json
+C:\Users\Misbah\Desktop\Represent-B\representweb\bin\Debug\net8.0\RepresentWeb.staticwebassets.runtime.json
+C:\Users\Misbah\Desktop\Represent-B\representweb\bin\Debug\net8.0\RepresentWeb.staticwebassets.endpoints.json
+C:\Users\Misbah\Desktop\Represent-B\representweb\bin\Debug\net8.0\RepresentWeb.exe
+C:\Users\Misbah\Desktop\Represent-B\representweb\bin\Debug\net8.0\RepresentWeb.deps.json
+C:\Users\Misbah\Desktop\Represent-B\representweb\bin\Debug\net8.0\RepresentWeb.runtimeconfig.json
+C:\Users\Misbah\Desktop\Represent-B\representweb\bin\Debug\net8.0\RepresentWeb.dll
+C:\Users\Misbah\Desktop\Represent-B\representweb\bin\Debug\net8.0\RepresentWeb.pdb
+C:\Users\Misbah\Desktop\Represent-B\representweb\obj\Debug\net8.0\rpswa.dswa.cache.json
+C:\Users\Misbah\Desktop\Represent-B\representweb\obj\Debug\net8.0\RepresentWeb.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Misbah\Desktop\Represent-B\representweb\obj\Debug\net8.0\RepresentWeb.AssemblyInfoInputs.cache
+C:\Users\Misbah\Desktop\Represent-B\representweb\obj\Debug\net8.0\RepresentWeb.AssemblyInfo.cs
+C:\Users\Misbah\Desktop\Represent-B\representweb\obj\Debug\net8.0\RepresentWeb.csproj.CoreCompileInputs.cache
+C:\Users\Misbah\Desktop\Represent-B\representweb\obj\Debug\net8.0\RepresentWeb.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Misbah\Desktop\Represent-B\representweb\obj\Debug\net8.0\RepresentWeb.RazorAssemblyInfo.cache
+C:\Users\Misbah\Desktop\Represent-B\representweb\obj\Debug\net8.0\RepresentWeb.RazorAssemblyInfo.cs
+C:\Users\Misbah\Desktop\Represent-B\representweb\obj\Debug\net8.0\RepresentWeb.sourcelink.json
+C:\Users\Misbah\Desktop\Represent-B\representweb\obj\Debug\net8.0\rjimswa.dswa.cache.json
+C:\Users\Misbah\Desktop\Represent-B\representweb\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
+C:\Users\Misbah\Desktop\Represent-B\representweb\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
+C:\Users\Misbah\Desktop\Represent-B\representweb\obj\Debug\net8.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
+C:\Users\Misbah\Desktop\Represent-B\representweb\obj\Debug\net8.0\scopedcss\bundle\RepresentWeb.styles.css
+C:\Users\Misbah\Desktop\Represent-B\representweb\obj\Debug\net8.0\scopedcss\projectbundle\RepresentWeb.bundle.scp.css
+C:\Users\Misbah\Desktop\Represent-B\representweb\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\Misbah\Desktop\Represent-B\representweb\obj\Debug\net8.0\staticwebassets.build.json.cache
+C:\Users\Misbah\Desktop\Represent-B\representweb\obj\Debug\net8.0\staticwebassets.development.json
+C:\Users\Misbah\Desktop\Represent-B\representweb\obj\Debug\net8.0\staticwebassets.build.endpoints.json
+C:\Users\Misbah\Desktop\Represent-B\representweb\obj\Debug\net8.0\swae.build.ex.cache
+C:\Users\Misbah\Desktop\Represent-B\representweb\obj\Debug\net8.0\RepresentWeb.dll
+C:\Users\Misbah\Desktop\Represent-B\representweb\obj\Debug\net8.0\refint\RepresentWeb.dll
+C:\Users\Misbah\Desktop\Represent-B\representweb\obj\Debug\net8.0\RepresentWeb.pdb
+C:\Users\Misbah\Desktop\Represent-B\representweb\obj\Debug\net8.0\RepresentWeb.genruntimeconfig.cache
+C:\Users\Misbah\Desktop\Represent-B\representweb\obj\Debug\net8.0\ref\RepresentWeb.dll

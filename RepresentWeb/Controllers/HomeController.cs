@@ -28,16 +28,26 @@ public class HomeController : Controller
         return View();
     }
 
-    
     public IActionResult C247()
     {
         return View();
     }
 
-public IActionResult Retail()
+    public IActionResult Retail()
     {
         return View();
     }
+
+    public IActionResult Vault()
+    {
+        return View();
+    }
+
+    public IActionResult Prestige()
+    {
+        return View();
+    }
+
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

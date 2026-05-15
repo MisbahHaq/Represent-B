@@ -23,6 +23,22 @@ public class HomeController : Controller
         return View();
     }
 
+    public IActionResult Women()
+    {
+        return View();
+    }
+
+    
+    public IActionResult C247()
+    {
+        return View();
+    }
+
+public IActionResult Retail()
+    {
+        return View();
+    }
+
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

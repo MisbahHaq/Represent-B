@@ -1,0 +1,19 @@
+﻿@model representweb.Models.Product
+
+@{
+    ViewData["Title"] = "Product Details";
+}
+
+<h1>Product Details</h1>
+
+<div>
+    <h4>@Model.Name</h4>
+    <p>Description: @Model.Description</p>
+    <p>Price: @Model.Price</p>
+    <p>Stock: @Model.Stock</p>
+</div>
+
+<p>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary">Back</a>
+</p>

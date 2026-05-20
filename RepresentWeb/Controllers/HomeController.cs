@@ -17,12 +17,7 @@ public class HomeController : Controller
     {
         return View();
     }
-
-    public IActionResult Men()
-    {
-        return View();
-    }
-
+    
     public IActionResult Women()
     {
         return View();

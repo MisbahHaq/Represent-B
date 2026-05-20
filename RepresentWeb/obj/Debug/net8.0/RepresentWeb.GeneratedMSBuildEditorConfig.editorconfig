@@ -30,10 +30,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Misbah/Desktop/Represent-B/representweb/Views/Home/Men.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxNZW4uY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/Misbah/Desktop/Represent-B/representweb/Views/Home/Prestige.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcmVzdGlnZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -48,6 +44,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/Misbah/Desktop/Represent-B/representweb/Views/Home/Women.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxXb21lbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Misbah/Desktop/Represent-B/representweb/Views/Men/Men.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVuXE1lbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Misbah/Desktop/Represent-B/representweb/Views/Products/Create.cshtml]

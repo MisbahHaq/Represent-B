@@ -7,6 +7,7 @@
   <title>@ViewData["Title"] - RepresentWeb</title>
   <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
   <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+  <link rel="stylesheet" href="~/css/output.css" asp-append-version="true" />
   <link rel="stylesheet" href="~/RepresentWeb.styles.css" asp-append-version="true" />
 </head>
 
@@ -27,11 +28,11 @@
         <!-- LEFT -->
         <div class="d-flex align-items-center gap-4">
 
-          <a class="nav-link text-white text-uppercase p-0 nav-small" asp-controller="Home" asp-action="Men">
+          <a class="nav-link text-white text-uppercase p-0 nav-small" asp-controller="Men" asp-action="Index">
             Men
           </a>
 
-          <a class="nav-link text-white text-uppercase p-0 nav-small" asp-action="Women" asp-controller="Home">
+          <a class="nav-link text-white text-uppercase p-0 nav-small" asp-controller="Women" asp-action="Index">
             Woman
           </a>
 
@@ -54,7 +55,7 @@
             Retail
           </a>
 
-          <a class="nav-link text-white text-uppercase p-0 nav-small" asp-action="Vault" asp-asp-controller="Home">
+          <a class="nav-link text-white text-uppercase p-0 nav-small" asp-action="Vault" asp-controller="Home">
             The Vault
           </a>
 
@@ -93,7 +94,7 @@
   <footer class="bg-black text-white border-top border-secondary">
     <div class="container py-5">
       <div class="row g-5">
-      
+
         <!-- Logo + Newsletter -->
         <div class="col-lg-5">
           <h2 class="fw-semibold mb-4" style="letter-spacing: 0.3em;">

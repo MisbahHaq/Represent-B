@@ -1,22 +1,26 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using representweb.Data;
 using RepresentWeb.Models;
 
 namespace RepresentWeb.Controllers;
 
-public class MenController : Controller {
+public class MenController : Controller
+{
+    private readonly ApplicationDbContext _context;
+    private readonly ILogger<MenController> _logger;
 
-private readonly ILogger<MenController> _logger;
-
-    public MenController(ILogger<MenController> logger)
+    public MenController(ApplicationDbContext context, ILogger<MenController> logger)
     {
+        _context = context;
         _logger = logger;
     }
 
     [HttpGet("Men")]
-     public IActionResult Men()
+    public async Task<IActionResult> Men()
     {
-        return View();
-    }
+        var products = await _context.Products.ToListAsync();
 
+        return View(products);
+    }
 }

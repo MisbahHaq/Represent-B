@@ -1,19 +1,167 @@
 ﻿@model representweb.Models.Product
 
 @{
-    ViewData["Title"] = "Product Details";
+    ViewData["Title"] = Model.Name;
 }
 
-<h1>Product Details</h1>
+<div class="container-fluid px-md-5 py-4 bg-white" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; letter-spacing: 0.3px;">
+    <div class="row g-5">
+        
+        <div class="col-12 col-md-7">
+            <div class="position-relative d-flex align-items-center justify-content-center p-5 mb-4 rounded-1" style="background-color: #f6f6f6; min-height: 550px;">
+                @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                {
+                    <img src="@Model.ImageUrl" alt="@Model.Name" class="img-fluid" style="max-height: 480px; object-fit: contain;" />
+                }
+                else
+                {
+                    <span class="text-muted">No Image Available</span>
+                }
+                
+                <button class="btn btn-light rounded-circle position-absolute start-0 ms-3 shadow-sm border d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">&larr;</button>
+                <button class="btn btn-light rounded-circle position-absolute end-0 me-3 shadow-sm border d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">&rarr;</button>
+            </div>
 
-<div>
-    <h4>@Model.Name</h4>
-    <p>Description: @Model.Description</p>
-    <p>Price: @Model.Price</p>
-    <p>Stock: @Model.Stock</p>
+            <div class="row g-2 d-none d-md-flex mt-2">
+                <div class="col-4">
+                    <div style="background-color: #f6f6f6; height: 220px;" class="w-100 d-flex align-items-center justify-content-center text-muted small">Fit Angle</div>
+                </div>
+                <div class="col-4">
+                    <div style="background-color: #f6f6f6; height: 220px;" class="w-100 d-flex align-items-center justify-content-center text-muted small">Collar Texture</div>
+                </div>
+                <div class="col-4">
+                    <div style="background-color: #f6f6f6; height: 220px;" class="w-100 d-flex align-items-center justify-content-center text-muted small">Fabric Close-up</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-5 ps-md-5">
+            <div class="d-flex justify-content-between align-items-start mb-1">
+                <h1 class="fw-normal text-dark m-0" style="font-size: 1.65rem; font-weight: 500; letter-spacing: 0.5px;">@Model.Name</h1>
+                
+                <button class="btn p-0 border-0 bg-transparent text-muted mt-1 shadow-none" id="bookmarkBtn" onclick="this.classList.toggle('text-dark')" style="cursor: pointer;" title="Save Item">
+                    <svg width="16" height="20" viewBox="0 0 16 20" fill="none" stroke="currentColor" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1H15V19L8 14L1 19V1Z" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="h4 fw-bold mb-4 text-dark" style="font-size: 1.3rem;">
+                Rs @Model.Price.ToString("N2")
+            </div>
+
+            <p class="text-muted mb-3" style="font-size: 0.8rem;">
+                Model is 184.5cm and 72kg wearing size M <a href="#" class="text-dark text-decoration-underline ms-1">Size & Fit Guide</a>
+            </p>
+
+            <div class="row gx-2 mb-3" id="sizeSelectorGroup">
+                <div class="col-3">
+                    <button type="button" class="btn btn-outline-dark w-100 py-2 rounded-0 text-uppercase fw-semibold size-btn" data-size="S" style="font-size: 0.85rem;">S</button>
+                </div>
+                <div class="col-3">
+                    <button type="button" class="btn btn-outline-dark w-100 py-2 rounded-0 text-uppercase fw-semibold size-btn" data-size="M" style="font-size: 0.85rem;">M</button>
+                </div>
+                <div class="col-3">
+                    <button type="button" class="btn btn-outline-dark w-100 py-2 rounded-0 text-uppercase fw-semibold size-btn" data-size="L" style="font-size: 0.85rem;">L</button>
+                </div>
+                <div class="col-3">
+                    <button type="button" class="btn btn-outline-dark w-100 py-2 rounded-0 text-uppercase fw-semibold size-btn" data-size="XL" style="font-size: 0.85rem;">XL</button>
+                </div>
+            </div>
+
+            <button id="addToBagCta" class="btn w-100 py-3 rounded-0 fw-bold border-0 text-uppercase mb-4 shadow-none" style="background-color: #111827; color: white; letter-spacing: 1px; font-size: 0.85rem;">
+                Select A Size
+            </button>
+
+            <ul class="list-unstyled mb-4 pb-2 border-bottom" style="font-size: 0.8rem; line-height: 1.8;">
+                <li class="text-muted"><span class="me-2">&#9679;</span> EARN 240 PRESTIGE POINTS</li>
+                <li class="text-success"><span class="me-2">&#9679;</span> FREE SHIPPING OVER $300</li>
+                <li class="text-success"><span class="me-2">&#9679;</span> IN STOCK (Current Available: @Model.Stock units)</li>
+            </ul>
+
+            <div class="accordion accordion-flush border-bottom" id="productMetaAccordion">
+                
+                <div class="accordion-item border-0">
+                    <h2 class="accordion-header" id="headingDetails">
+                        <button class="accordion-button collapsed px-0 py-3 fw-bold text-dark bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDetails" aria-expanded="false" aria-controls="collapseDetails" style="font-size: 0.85rem;">
+                            Product Details
+                        </button>
+                    </h2>
+                    <div id="collapseDetails" class="accordion-collapse collapse" aria-labelledby="headingDetails" data-bs-parent="#productMetaAccordion">
+                        <div class="accordion-body px-0 pt-1 pb-3 text-muted" style="font-size: 0.85rem; line-height: 1.6; text-align: justify;">
+                            @if(!string.IsNullOrEmpty(Model.Description)) {
+                                @Model.Description
+                            } else {
+                                <text>Introducing the All Over Print Towel Shirt in Aged White, crafted from heavyweight 300GSM reverse towelling cotton. Designed with a standard fit and revere collar, this shirt delivers relaxed vacation energy with a textured twist. The standout feature is its tonal all-over towelling logo pattern, offering depth and subtle visual contrast. Finished with side splits at the hem for ease of wear.</text>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item border-0">
+                    <h2 class="accordion-header" id="headingShipping">
+                        <button class="accordion-button collapsed px-0 py-3 fw-bold text-dark bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseShipping" aria-expanded="false" aria-controls="collapseShipping" style="font-size: 0.85rem;">
+                            Shipping & Returns
+                        </button>
+                    </h2>
+                    <div id="collapseShipping" class="accordion-collapse collapse" aria-labelledby="headingShipping" data-bs-parent="#productMetaAccordion">
+                        <div class="accordion-body px-0 pt-1 pb-3 text-muted" style="font-size: 0.85rem; line-height: 1.6;">
+                            Free shipping on orders over $300. Standard delivery takes 3-5 business days. Express delivery available. Free returns within 30 days.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5 pt-5 text-center border-top">
+        <h4 class="fw-bold text-uppercase mb-1" style="font-size: 1rem; letter-spacing: 1.5px;">You Might Also Like</h4>
+        <p class="text-muted small mb-4">Discover more products from our collection</p>
+        
+        <div class="row g-3 justify-content-center">
+            <div class="col-6 col-md-2">
+                <div class="p-3 mb-2" style="background-color: #f6f6f6; min-height: 160px;"></div>
+                <div class="small fw-bold text-uppercase" style="font-size: 0.7rem;">247 Bucket Hat</div>
+            </div>
+            <div class="col-6 col-md-2">
+                <div class="p-3 mb-2" style="background-color: #f6f6f6; min-height: 160px;"></div>
+                <div class="small fw-bold text-uppercase" style="font-size: 0.7rem;">Legacy Hoodie</div>
+            </div>
+            <div class="col-6 col-md-2">
+                <div class="p-3 mb-2" style="background-color: #f6f6f6; min-height: 160px;"></div>
+                <div class="small fw-bold text-uppercase" style="font-size: 0.7rem;">Utility Shoulder Bag</div>
+            </div>
+            <div class="col-6 col-md-2">
+                <div class="p-3 mb-2" style="background-color: #f6f6f6; min-height: 160px;"></div>
+                <div class="small fw-bold text-uppercase" style="font-size: 0.7rem;">Overdrive Leather Jacket</div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<p>
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
-    <a asp-action="Index" class="btn btn-secondary">Back</a>
-</p>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const sizeButtons = document.querySelectorAll(".size-btn");
+        const ctaButton = document.getElementById("addToBagCta");
+
+        sizeButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                // Remove dynamic visual status flags from alternative row choices
+                sizeButtons.forEach(btn => {
+                    btn.style.backgroundColor = "transparent";
+                    btn.style.color = "#212529";
+                });
+
+                // Style the clicked target button natively black
+                this.style.backgroundColor = "#111827";
+                this.style.color = "#ffffff";
+
+                // Alter text inside primary layout call-to-action button
+                const selectedSize = this.getAttribute("data-size");
+                ctaButton.innerText = "ADD TO BAG - SIZE " + selectedSize;
+                ctaButton.style.backgroundColor = "#111827";
+            });
+        });
+    });
+</script>

@@ -15,10 +15,16 @@ namespace representweb.Controllers
         }
 
         // GET: Products
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string gender)
         {
-            var products = await _context.Products.ToListAsync();
-            return View(products);
+            var products = _context.Products.AsQueryable();
+
+            if (!string.IsNullOrEmpty(gender))
+            {
+                products = products.Where(p => p.Gender == gender);
+            }
+
+            return View(await products.ToListAsync());
         }
 
         // GET: Products/Details/5
@@ -104,6 +110,7 @@ namespace representweb.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var product = await _context.Products.FindAsync(id);
+            if (product == null) return NotFound();
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

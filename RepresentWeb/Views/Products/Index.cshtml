@@ -17,6 +17,7 @@
             <th>Description</th>
             <th>Price</th>
             <th>Stock</th>
+            <th>Gender</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -28,6 +29,7 @@
                 <td>@item.Description</td>
                 <td>@item.Price</td>
                 <td>@item.Stock</td>
+                <td>@item.Gender</td>
                 <td>
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

@@ -2,44 +2,66 @@
 
 @{
     ViewData["Title"] = Model.Name;
+    var images = Model.GetImages() ?? new List<string> { "" };
 }
 
 <div class="container-fluid px-md-5 py-4 bg-white" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; letter-spacing: 0.3px;">
-    <div class="row g-5">
+    <div class="row g-0 g-md-5">
         
-        <div class="col-12 col-md-7">
-            <div class="position-relative d-flex align-items-center justify-content-center p-5 mb-4 rounded-1" style="background-color: #f6f6f6; min-height: 550px;">
-                @if (!string.IsNullOrEmpty(Model.ImageUrl))
+        <div class="col-12 col-md-6">
+            <div class="position-relative d-flex align-items-center justify-content-center mb-4 bg-light" style="height: 600px; overflow: hidden;">
+                @if (!string.IsNullOrEmpty(images.FirstOrDefault()))
                 {
-                    <img src="@Model.ImageUrl" alt="@Model.Name" class="img-fluid" style="max-height: 480px; object-fit: contain;" />
+                    <div id="productCarousel" class="carousel slide w-100 h-100" data-bs-ride="false">
+                        <div class="carousel-inner h-100">
+                            @for (int i = 0; i < images.Count; i++)
+                            {
+                                <div class="carousel-item h-100 @(i == 0 ? "active" : "")">
+                                    <img src="@images[i]" alt="@Model.Name" class="d-block w-100 h-100 object-fit-cover" />
+                                </div>
+                            }
+                        </div>
+                        @if (images.Count > 1)
+                        {
+                            <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            </button>
+                        }
+                    </div>
                 }
                 else
                 {
                     <span class="text-muted">No Image Available</span>
                 }
-                
-                <button class="btn btn-light rounded-circle position-absolute start-0 ms-3 shadow-sm border d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">&larr;</button>
-                <button class="btn btn-light rounded-circle position-absolute end-0 me-3 shadow-sm border d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">&rarr;</button>
             </div>
 
             <div class="row g-2 d-none d-md-flex mt-2">
-                <div class="col-4">
-                    <div style="background-color: #f6f6f6; height: 220px;" class="w-100 d-flex align-items-center justify-content-center text-muted small">Fit Angle</div>
-                </div>
-                <div class="col-4">
-                    <div style="background-color: #f6f6f6; height: 220px;" class="w-100 d-flex align-items-center justify-content-center text-muted small">Collar Texture</div>
-                </div>
-                <div class="col-4">
-                    <div style="background-color: #f6f6f6; height: 220px;" class="w-100 d-flex align-items-center justify-content-center text-muted small">Fabric Close-up</div>
-                </div>
+                @for (int i = 0; i < Math.Min(3, images.Count); i++)
+                {
+                    <div class="col-4">
+                        <div class="w-100 d-flex align-items-center justify-content-center bg-light thumbnail-selector" data-slide-to="@i" style="height: 180px; overflow: hidden; cursor: pointer; border: 1px solid transparent; transition: border-color 0.2s;">
+                            @if (!string.IsNullOrEmpty(images[i]))
+                            {
+                                <img src="@images[i]" alt="@Model.Name" class="w-100 h-100 object-fit-cover" />
+                            }
+                            else
+                            {
+                                <span class="text-muted small">Image @(i + 1)</span>
+                            }
+                        </div>
+                    </div>
+                }
             </div>
         </div>
 
-        <div class="col-12 col-md-5 ps-md-5">
+        <div class="col-12 col-md-6 ps-md-4">
             <div class="d-flex justify-content-between align-items-start mb-1">
                 <h1 class="fw-normal text-dark m-0" style="font-size: 1.65rem; font-weight: 500; letter-spacing: 0.5px;">@Model.Name</h1>
                 
-                <button class="btn p-0 border-0 bg-transparent text-muted mt-1 shadow-none" id="bookmarkBtn" onclick="this.classList.toggle('text-dark')" style="cursor: pointer;" title="Save Item">
+                <button class="btn p-0 border-0 bg-transparent text-muted mt-1 bookmark-btn" onclick="toggleBookmark(event, @Model.Id)" style="cursor: pointer;" title="Save Item">
                     <svg width="16" height="20" viewBox="0 0 16 20" fill="none" stroke="currentColor" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg">
                         <path d="M1 1H15V19L8 14L1 19V1Z" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
@@ -69,11 +91,11 @@
                 </div>
             </div>
 
-            <button id="addToBagCta" class="btn w-100 py-3 rounded-0 fw-bold border-0 text-uppercase mb-4 shadow-none" style="background-color: #111827; color: white; letter-spacing: 1px; font-size: 0.85rem;">
+            <button id="addToBagCta" class="btn w-100 py-3 rounded-0 fw-bold border-0 text-uppercase mb-4" style="background-color: #111827; color: white; letter-spacing: 1px; font-size: 0.85rem;">
                 Select A Size
             </button>
 
-            <ul class="list-unstyled mb-4 pb-2 border-bottom" style="font-size: 0.8rem; line-height: 1.8;">
+            <ul class="list-unstyled mb-4 pb-2 border-bottom text-start" style="font-size: 0.8rem; line-height: 1.8;">
                 <li class="text-muted"><span class="me-2">&#9679;</span> EARN 240 PRESTIGE POINTS</li>
                 <li class="text-success"><span class="me-2">&#9679;</span> FREE SHIPPING OVER $300</li>
                 <li class="text-success"><span class="me-2">&#9679;</span> IN STOCK (Current Available: @Model.Stock units)</li>
@@ -83,12 +105,12 @@
                 
                 <div class="accordion-item border-0">
                     <h2 class="accordion-header" id="headingDetails">
-                        <button class="accordion-button collapsed px-0 py-3 fw-bold text-dark bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDetails" aria-expanded="false" aria-controls="collapseDetails" style="font-size: 0.85rem;">
+                        <button class="accordion-button collapsed px-0 py-3 fw-bold text-dark bg-white text-start" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDetails" aria-expanded="false" aria-controls="collapseDetails" style="font-size: 0.85rem;">
                             Product Details
                         </button>
                     </h2>
                     <div id="collapseDetails" class="accordion-collapse collapse" aria-labelledby="headingDetails" data-bs-parent="#productMetaAccordion">
-                        <div class="accordion-body px-0 pt-1 pb-3 text-muted" style="font-size: 0.85rem; line-height: 1.6; text-align: justify;">
+                        <div class="accordion-body px-0 pt-1 pb-3 text-muted text-start" style="font-size: 0.85rem; line-height: 1.6;">
                             @if(!string.IsNullOrEmpty(Model.Description)) {
                                 @Model.Description
                             } else {
@@ -100,12 +122,12 @@
 
                 <div class="accordion-item border-0">
                     <h2 class="accordion-header" id="headingShipping">
-                        <button class="accordion-button collapsed px-0 py-3 fw-bold text-dark bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseShipping" aria-expanded="false" aria-controls="collapseShipping" style="font-size: 0.85rem;">
+                        <button class="accordion-button collapsed px-0 py-3 fw-bold text-dark bg-white text-start" type="button" data-bs-toggle="collapse" data-bs-target="#collapseShipping" aria-expanded="false" aria-controls="collapseShipping" style="font-size: 0.85rem;">
                             Shipping & Returns
                         </button>
                     </h2>
                     <div id="collapseShipping" class="accordion-collapse collapse" aria-labelledby="headingShipping" data-bs-parent="#productMetaAccordion">
-                        <div class="accordion-body px-0 pt-1 pb-3 text-muted" style="font-size: 0.85rem; line-height: 1.6;">
+                        <div class="accordion-body px-0 pt-1 pb-3 text-muted text-start" style="font-size: 0.85rem; line-height: 1.6;">
                             Free shipping on orders over $300. Standard delivery takes 3-5 business days. Express delivery available. Free returns within 30 days.
                         </div>
                     </div>
@@ -141,27 +163,80 @@
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const sizeButtons = document.querySelectorAll(".size-btn");
-        const ctaButton = document.getElementById("addToBagCta");
+    function toggleBookmark(event, productId) {
+        const btn = event.currentTarget;
+        btn.classList.toggle('text-dark');
+        
+        const saved = localStorage.getItem('bookmarkedProducts') || '[]';
+        let bookmarks = JSON.parse(saved);
+        
+        if (btn.classList.contains('text-dark')) {
+            if (!bookmarks.includes(productId)) bookmarks.push(productId);
+        } else {
+            const index = bookmarks.indexOf(productId);
+            if (index > -1) bookmarks.splice(index, 1);
+        }
+        localStorage.setItem('bookmarkedProducts', JSON.stringify(bookmarks));
+    }
 
-        sizeButtons.forEach(button => {
-            button.addEventListener("click", function () {
-                // Remove dynamic visual status flags from alternative row choices
-                sizeButtons.forEach(btn => {
-                    btn.style.backgroundColor = "transparent";
-                    btn.style.color = "#212529";
-                });
+    document.addEventListener('DOMContentLoaded', function () {
+        const sizeButtons = document.querySelectorAll('.size-btn');
+        const ctaButton = document.getElementById('addToBagCta');
+        const bookmarkBtn = document.querySelector('.bookmark-btn');
+        const thumbnails = document.querySelectorAll('.thumbnail-selector');
+        
+        const carouselEl = document.getElementById('productCarousel');
+        let productCarousel = null;
+        if(carouselEl && typeof bootstrap !== 'undefined') {
+            productCarousel = new bootstrap.Carousel(carouselEl);
+        }
 
-                // Style the clicked target button natively black
-                this.style.backgroundColor = "#111827";
-                this.style.color = "#ffffff";
+        if(thumbnails.length > 0) {
+            thumbnails[0].style.borderColor = '#111827';
+        }
 
-                // Alter text inside primary layout call-to-action button
-                const selectedSize = this.getAttribute("data-size");
-                ctaButton.innerText = "ADD TO BAG - SIZE " + selectedSize;
-                ctaButton.style.backgroundColor = "#111827";
+        thumbnails.forEach(thumb => {
+            thumb.addEventListener('click', function() {
+                const targetSlideIndex = parseInt(this.getAttribute('data-slide-to'));
+                
+                if(productCarousel) {
+                    productCarousel.to(targetSlideIndex);
+                }
+                
+                thumbnails.forEach(t => t.style.borderColor = 'transparent');
+                this.style.borderColor = '#111827';
             });
         });
+
+        if (carouselEl) {
+            carouselEl.addEventListener('slide.bs.carousel', function (event) {
+                thumbnails.forEach(t => t.style.borderColor = 'transparent');
+                if(thumbnails[event.to]) {
+                    thumbnails[event.to].style.borderColor = '#111827';
+                }
+            });
+        }
+
+        sizeButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                sizeButtons.forEach(btn => {
+                    btn.style.backgroundColor = 'transparent';
+                    btn.style.color = '#212529';
+                });
+
+                this.style.backgroundColor = '#111827';
+                this.style.color = '#ffffff';
+
+                const selectedSize = this.getAttribute('data-size');
+                ctaButton.innerText = 'ADD TO BAG - SIZE ' + selectedSize;
+                ctaButton.style.backgroundColor = '#111827';
+            });
+        });
+
+        const saved = localStorage.getItem('bookmarkedProducts') || '[]';
+        const bookmarks = JSON.parse(saved);
+        if (bookmarks.includes(@Model.Id)) {
+            bookmarkBtn?.classList.add('text-dark');
+        }
     });
 </script>

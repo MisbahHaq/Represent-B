@@ -35,8 +35,16 @@
         <span asp-validation-for="Gender" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="ImageUrl"></label>
-        <input asp-for="ImageUrl" class="form-control" />
+        <label asp-for="ImageUrl">Main Image URL</label>
+        <input asp-for="ImageUrl" class="form-control" placeholder="https://example.com/image.jpg" />
+    </div>
+    <div class="form-group">
+        <label asp-for="ImageUrls">Additional Image URLs (comma-separated)</label>
+        <textarea asp-for="ImageUrls" class="form-control" rows="3" placeholder="https://example.com/image2.jpg, https://example.com/image3.jpg"></textarea>
+    </div>
+    <div class="form-group">
+        <label asp-for="Tags">Tags (comma-separated, e.g., T-Shirt, Full-Neck, Summer)</label>
+        <input asp-for="Tags" class="form-control" placeholder="T-Shirt, Full-Neck, Cotton" />
     </div>
     <button type="submit" class="btn btn-primary">Save</button>
     <a asp-action="Index" class="btn btn-secondary">Back</a>

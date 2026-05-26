@@ -20,3 +20,25 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.object-fit-cover {
+  object-fit: cover;
+}
+
+.object-fit-contain {
+  object-fit: contain;
+}
+
+.btn-outline-dark:hover {
+  background-color: #111827 !important;
+  color: white !important;
+}
+
+.carousel-control-prev, .carousel-control-next {
+  width: 10%;
+  opacity: 0.7;
+}
+
+.carousel-control-prev:hover, .carousel-control-next:hover {
+  opacity: 1;
+}

@@ -5,32 +5,32 @@
     var images = Model.GetImages() ?? new List<string> { "" };
 }
 
-<div class="container-fluid px-md-5 py-4 bg-white" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; letter-spacing: 0.3px;">
+<div class="container-fluid pt-0 pb-4 bg-white" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; letter-spacing: 0.3px;">
     <div class="row g-0 g-md-5">
         
-        <div class="col-12 col-md-6">
-            <div class="position-relative d-flex align-items-center justify-content-center mb-4 bg-light" style="height: 600px; overflow: hidden;">
+        <div class="col-12 col-md-6 px-0">
+            <div class="position-relative d-flex align-items-start justify-content-start mb-4 bg-light" style="max-height: 600px; overflow: hidden;">
                 @if (!string.IsNullOrEmpty(images.FirstOrDefault()))
                 {
-                    <div id="productCarousel" class="carousel slide w-100 h-100" data-bs-ride="false">
-                        <div class="carousel-inner h-100">
-                            @for (int i = 0; i < images.Count; i++)
-                            {
-                                <div class="carousel-item h-100 @(i == 0 ? "active" : "")">
-                                    <img src="@images[i]" alt="@Model.Name" class="d-block w-100 h-100 object-fit-cover" />
-                                </div>
-                            }
-                        </div>
-                        @if (images.Count > 1)
-                        {
-                            <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            </button>
-                        }
-                    </div>
+<div id="productCarousel" class="carousel slide w-100" data-bs-ride="false">
+    <div class="carousel-inner">
+        @for (int i = 0; i < images.Count; i++)
+        {
+            <div class="carousel-item @(i == 0 ? "active" : "")">
+                <img src="@images[i]" alt="@Model.Name" class="d-block w-100" style="max-height: 600px; object-fit: contain;" />
+            </div>
+        }
+    </div>
+    @if (images.Count > 1)
+    {
+        <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        </button>
+    }
+</div>
                 }
                 else
                 {
@@ -109,8 +109,8 @@
                             Product Details
                         </button>
                     </h2>
-                    <div id="collapseDetails" class="accordion-collapse collapse" aria-labelledby="headingDetails" data-bs-parent="#productMetaAccordion">
-                        <div class="accordion-body px-0 pt-1 pb-3 text-muted text-start" style="font-size: 0.85rem; line-height: 1.6;">
+<div id="collapseDetails" class="accordion-collapse collapse" aria-labelledby="headingDetails" data-bs-parent="#productMetaAccordion">
+    <div class="accordion-body px-0 pt-1 pb-3 text-muted text-start" style="font-size: 0.85rem; line-height: 1.6; display: block;">
                             @if(!string.IsNullOrEmpty(Model.Description)) {
                                 @Model.Description
                             } else {
@@ -126,8 +126,8 @@
                             Shipping & Returns
                         </button>
                     </h2>
-                    <div id="collapseShipping" class="accordion-collapse collapse" aria-labelledby="headingShipping" data-bs-parent="#productMetaAccordion">
-                        <div class="accordion-body px-0 pt-1 pb-3 text-muted text-start" style="font-size: 0.85rem; line-height: 1.6;">
+<div id="collapseShipping" class="accordion-collapse collapse" aria-labelledby="headingShipping" data-bs-parent="#productMetaAccordion">
+    <div class="accordion-body px-0 pt-1 pb-3 text-muted text-start" style="font-size: 0.85rem; line-height: 1.6; display: block;">
                             Free shipping on orders over $300. Standard delivery takes 3-5 business days. Express delivery available. Free returns within 30 days.
                         </div>
                     </div>

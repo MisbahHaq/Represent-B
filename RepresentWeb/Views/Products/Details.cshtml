@@ -61,7 +61,7 @@
             <div class="d-flex justify-content-between align-items-start mb-1">
                 <h1 class="fw-normal text-dark m-0" style="font-size: 1.65rem; font-weight: 500; letter-spacing: 0.5px;">@Model.Name</h1>
                 
-                <button class="btn p-0 border-0 bg-transparent text-muted mt-1 bookmark-btn" onclick="toggleBookmark(event, @Model.Id)" style="cursor: pointer;" title="Save Item">
+                <button type="button" class="btn p-0 border-0 bg-transparent text-muted mt-1 bookmark-btn" onclick="toggleBookmark(event, @Model.Id)" style="cursor: pointer;" title="Save Item">
                     <svg width="16" height="20" viewBox="0 0 16 20" fill="none" stroke="currentColor" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg">
                         <path d="M1 1H15V19L8 14L1 19V1Z" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
@@ -209,7 +209,13 @@ function showLoginPrompt() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        btn.classList.toggle('text-dark');
+                        if (isBookmarked) {
+                            btn.classList.remove('text-dark');
+                            btn.classList.add('text-muted');
+                        } else {
+                            btn.classList.remove('text-muted');
+                            btn.classList.add('text-dark');
+                        }
                         updateBookmarkCount();
                         const saved = localStorage.getItem('bookmarkedProducts') || '[]';
                         let bookmarks = JSON.parse(saved);

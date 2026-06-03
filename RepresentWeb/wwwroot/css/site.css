@@ -50,3 +50,7 @@ body {
 .collapse.show {
   display: block !important;
 }
+
+.bookmark-btn.text-dark svg {
+  fill: currentColor;
+}

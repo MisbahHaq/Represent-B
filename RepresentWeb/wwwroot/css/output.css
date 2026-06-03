@@ -274,15 +274,11 @@
 }
 
 @layer utilities {
-    .collapse {
-        visibility: collapse;
-    }
+.invisible {
+         visibility: hidden;
+     }
 
-    .invisible {
-        visibility: hidden;
-    }
-
-    .visible {
+     .visible {
         visibility: visible;
     }
 

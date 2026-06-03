@@ -42,3 +42,11 @@ body {
 .carousel-control-prev:hover, .carousel-control-next:hover {
   opacity: 1;
 }
+
+.collapse:not(.show) {
+  display: none !important;
+}
+
+.collapse.show {
+  display: block !important;
+}

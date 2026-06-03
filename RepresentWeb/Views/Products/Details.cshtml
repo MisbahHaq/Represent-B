@@ -163,7 +163,27 @@
 </div>
 
 <script>
+    function isUserLoggedIn() {
+        // Check if user is logged in by looking for token or user info in localStorage
+        // In a real app, this would check for a valid JWT token or session
+        const token = localStorage.getItem('authToken');
+        return token !== null && token !== '';
+    }
+
+    function showLoginPrompt() {
+        // Show a login prompt - in a real app, this would redirect to login page or show modal
+        alert('Please log in to use the bookmark feature.');
+        // Optionally redirect to login page:
+        // window.location.href = '/Account/Login';
+    }
+
     function toggleBookmark(event, productId) {
+        // Check if user is logged in before allowing bookmark action
+        if (!isUserLoggedIn()) {
+            showLoginPrompt();
+            return;
+        }
+        
         const btn = event.currentTarget;
         btn.classList.toggle('text-dark');
         
@@ -190,11 +210,11 @@
         if(carouselEl && typeof bootstrap !== 'undefined') {
             productCarousel = new bootstrap.Carousel(carouselEl);
         }
-
+ 
         if(thumbnails.length > 0) {
             thumbnails[0].style.borderColor = '#111827';
         }
-
+ 
         thumbnails.forEach(thumb => {
             thumb.addEventListener('click', function() {
                 const targetSlideIndex = parseInt(this.getAttribute('data-slide-to'));
@@ -207,7 +227,7 @@
                 this.style.borderColor = '#111827';
             });
         });
-
+ 
         if (carouselEl) {
             carouselEl.addEventListener('slide.bs.carousel', function (event) {
                 thumbnails.forEach(t => t.style.borderColor = 'transparent');
@@ -216,23 +236,23 @@
                 }
             });
         }
-
+ 
         sizeButtons.forEach(button => {
             button.addEventListener('click', function () {
                 sizeButtons.forEach(btn => {
                     btn.style.backgroundColor = 'transparent';
                     btn.style.color = '#212529';
                 });
-
+ 
                 this.style.backgroundColor = '#111827';
                 this.style.color = '#ffffff';
-
+ 
                 const selectedSize = this.getAttribute('data-size');
                 ctaButton.innerText = 'ADD TO BAG - SIZE ' + selectedSize;
                 ctaButton.style.backgroundColor = '#111827';
             });
         });
-
+ 
         const saved = localStorage.getItem('bookmarkedProducts') || '[]';
         const bookmarks = JSON.parse(saved);
         if (bookmarks.includes(@Model.Id)) {

@@ -67,7 +67,7 @@
             <i class="bi bi-search"></i>
           </a>
 
-          <a href="#" class="text-white">
+          <a href="#" class="text-white" id="userLoginLink">
             <i class="bi bi-person"></i>
           </a>
 
@@ -181,6 +181,65 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    
+    <script>
+        function isUserLoggedIn() {
+            const token = localStorage.getItem('authToken');
+            return token !== null && token !== '';
+        }
+
+        function updateUserLoginLink() {
+            const loginLink = document.getElementById('userLoginLink');
+            if (isUserLoggedIn()) {
+                // Show account/logout option
+                loginLink.innerHTML = '<i class="bi bi-person-circle"></i> Account';
+                loginLink.title = 'Account';
+                loginLink.href = '/Account/Login'; // In a real app, this might be a profile page
+                loginLink.onclick = function(e) {
+                    // For now, just go to login page which can show user info
+                    // In a real app, you might show a dropdown or go to profile
+                };
+            } else {
+                // Show login option
+                loginLink.innerHTML = '<i class="bi bi-person"></i>';
+                loginLink.title = 'Login';
+                loginLink.href = '/Account/Login';
+                loginLink.onclick = null; // Remove any custom click handler
+            }
+        }
+
+        function showLoginPrompt() {
+            alert('Please log in to use the bookmark feature.\n\nFor testing purposes, you can click "OK" then press Ctrl+Shift+L to simulate logging in.');
+        }
+
+        function showUserMenu() {
+            // In a real app, this would show a dropdown with profile options
+            alert('User Menu\\n\\nFor testing:\\nPress Ctrl+Shift+L to logout');
+        }
+
+        // Handle keyboard shortcuts for testing
+        document.addEventListener('keydown', function(e) {
+            // Ctrl+Shift+L to toggle login state for testing
+            if (e.ctrlKey && e.shiftKey && e.key === 'L') {
+                e.preventDefault();
+                if (isUserLoggedIn()) {
+                    // Logout
+                    localStorage.removeItem('authToken');
+                    alert('Logged out successfully.');
+                } else {
+                    // Login
+                    localStorage.setItem('authToken', 'fake-jwt-token-for-testing');
+                    alert('Logged in successfully.');
+                }
+                updateUserLoginLink();
+            }
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateUserLoginLink();
+        });
+    </script>
 
   </body>
 

@@ -1,0 +1,50 @@
+@model representweb.Controllers.LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Login to Your Account</h3>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Login" method="post">
+                        <div asp-validation-summary="All" class="text-danger"></div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">Email address</label>
+                            <input asp-for="Email" class="form-control" placeholder="Enter email">
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label">Password</label>
+                            <input asp-for="Password" class="form-control" type="password" placeholder="Enter password">
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            <input asp-for="RememberMe" class="form-check-input" type="checkbox">
+                            <label asp-for="RememberMe" class="form-check-label">Remember me</label>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                    </form>
+                    
+                    <div class="text-center mt-3">
+                        <p>Don't have an account? <a asp-action="SignUp">Sign up here</a></p>
+                        <p><a asp-action="ForgotPassword" class="link-secondary">Forgot password?</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

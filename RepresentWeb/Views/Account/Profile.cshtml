@@ -1,22 +1,271 @@
+@model representweb.Models.ProfileViewModel
+
 @{
     ViewData["Title"] = "My Account";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="text-center">My Account</h3>
+    <div class="row">
+        <div class="col-md-9">
+            <div class="account-wrapper">
+                <div class="account-heading">
+                    <h2>My Account</h2>
                 </div>
-                <div class="card-body">
-                    <p class="text-center mb-4">You are logged in.</p>
-                    <div class="text-center">
-                        <a asp-action="Logout" asp-controller="Account" class="btn btn-outline-dark">Logout</a>
+                <div class="tab-content">
+                    <!-- Orders Section -->
+                    <div class="tab-pane fade show active" id="orders" role="tabpanel">
+                        <h3 class="mb-4">My Orders</h3>
+                        
+                        <!-- To Ship -->
+                        <div class="order-section mb-4">
+                            <h4>To Ship</h4>
+                            @if (Model.Orders.Any(o => o.Status == "ToShip"))
+                            {
+                                foreach (var order in Model.Orders.Where(o => o.Status == "ToShip"))
+                                {
+                                    <div class="order-card border rounded p-3 mb-3">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h5>Order #@order.Id</h5>
+                                                <p class="text-muted">Placed on @order.OrderDate.ToString("MMM dd, yyyy")</p>
+                                            </div>
+                                            <div class="text-end">
+                                                <span class="badge bg-warning text-dark">To Ship</span>
+                                            </div>
+                                        </div>
+                                        <div class="order-items mt-3">
+                                            @foreach (var item in order.Items)
+                                            {
+                                                <div class="d-flex align-items-center mb-2">
+                                                    <img src="@item.ImageUrl" alt="@item.ProductName" class="me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                                    <div>
+                                                        <h6>@item.ProductName</h6>
+                                                        <p class="mb-0">@item.Quantity x @item.Price.ToString("C")</p>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div class="mt-3">
+                                            <p class="fw-bold mb-1">Total: @order.TotalAmount.ToString("C")</p>
+                                            <a href="#" class="btn btn-sm btn-outline-primary">Track Order</a>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <p class="text-muted">No orders to ship.</p>
+                            }
+                        </div>
+
+                        <!-- To Review -->
+                        <div class="order-section mb-4">
+                            <h4>To Review</h4>
+                            @if (Model.Orders.Any(o => o.Status == "ToReview"))
+                            {
+                                foreach (var order in Model.Orders.Where(o => o.Status == "ToReview"))
+                                {
+                                    <div class="order-card border rounded p-3 mb-3">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h5>Order #@order.Id</h5>
+                                                <p class="text-muted">Placed on @order.OrderDate.ToString("MMM dd, yyyy")</p>
+                                            </div>
+                                            <div class="text-end">
+                                                <span class="badge bg-info text-dark">To Review</span>
+                                            </div>
+                                        </div>
+                                        <div class="order-items mt-3">
+                                            @foreach (var item in order.Items)
+                                            {
+                                                <div class="d-flex align-items-center mb-2">
+                                                    <img src="@item.ImageUrl" alt="@item.ProductName" class="me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                                    <div>
+                                                        <h6>@item.ProductName</h6>
+                                                        <p class="mb-0">@item.Quantity x @item.Price.ToString("C")</p>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div class="mt-3">
+                                            <p class="fw-bold mb-1">Total: @order.TotalAmount.ToString("C")</p>
+                                            <a href="#" class="btn btn-sm btn-outline-primary">Add Review</a>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <p class="text-muted">No orders to review.</p>
+                            }
+                        </div>
+
+                        <!-- Returned -->
+                        <div class="order-section mb-4">
+                            <h4>Returned</h4>
+                            @if (Model.Orders.Any(o => o.Status == "Returned"))
+                            {
+                                foreach (var order in Model.Orders.Where(o => o.Status == "Returned"))
+                                {
+                                    <div class="order-card border rounded p-3 mb-3">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h5>Order #@order.Id</h5>
+                                                <p class="text-muted">Placed on @order.OrderDate.ToString("MMM dd, yyyy")</p>
+                                            </div>
+                                            <div class="text-end">
+                                                <span class="badge bg-secondary">Returned</span>
+                                            </div>
+                                        </div>
+                                        <div class="order-items mt-3">
+                                            @foreach (var item in order.Items)
+                                            {
+                                                <div class="d-flex align-items-center mb-2">
+                                                    <img src="@item.ImageUrl" alt="@item.ProductName" class="me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                                    <div>
+                                                        <h6>@item.ProductName</h6>
+                                                        <p class="mb-0">@item.Quantity x @item.Price.ToString("C")</p>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div class="mt-3">
+                                            <p class="fw-bold mb-1">Total: @order.TotalAmount.ToString("C")</p>
+                                            <a href="#" class="btn btn-sm btn-outline-primary">Return Details</a>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <p class="text-muted">No returned orders.</p>
+                            }
+                        </div>
+
+                        <!-- Cancelled -->
+                        <div class="order-section mb-4">
+                            <h4>Cancelled</h4>
+                            @if (Model.Orders.Any(o => o.Status == "Cancelled"))
+                            {
+                                foreach (var order in Model.Orders.Where(o => o.Status == "Cancelled"))
+                                {
+                                    <div class="order-card border rounded p-3 mb-3">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h5>Order #@order.Id</h5>
+                                                <p class="text-muted">Placed on @order.OrderDate.ToString("MMM dd, yyyy")</p>
+                                            </div>
+                                            <div class="text-end">
+                                                <span class="badge bg-danger">Cancelled</span>
+                                            </div>
+                                        </div>
+                                        <div class="order-items mt-3">
+                                            @foreach (var item in order.Items)
+                                            {
+                                                <div class="d-flex align-items-center mb-2">
+                                                    <img src="@item.ImageUrl" alt="@item.ProductName" class="me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                                    <div>
+                                                        <h6>@item.ProductName</h6>
+                                                        <p class="mb-0">@item.Quantity x @item.Price.ToString("C")</p>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div class="mt-3">
+                                            <p class="fw-bold mb-1">Total: @order.TotalAmount.ToString("C")</p>
+                                            <a href="#" class="btn btn-sm btn-outline-primary">Cancel Details</a>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <p class="text-muted">No cancelled orders.</p>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Recently Viewed Products Section -->
+                    <div class="tab-pane fade" id="recently-viewed" role="tabpanel" aria-labelledby="recently-viewed-tab">
+                        <h3 class="mb-4">Recently Viewed Products</h3>
+                        @if (Model.RecentlyViewed.Any())
+                        {
+                            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+                                @foreach (var product in Model.RecentlyViewed)
+                                {
+                                    <div class="col">
+                                        <div class="product-card h-100 border rounded p-3">
+                                            <img src="@product.ImageUrl" alt="@product.Name" class="product-img img-fluid mb-3" style="height: 150px; object-fit: cover;">
+                                            <h5 class="product-name">@product.Name</h5>
+                                            <p class="product-price text-muted">@product.Price.ToString("C")</p>
+                                            <a asp-action="Details" asp-controller="Products" asp-route-id="@product.Id" class="btn btn-sm btn-outline-primary w-100">View Details</a>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="text-muted">No recently viewed products.</p>
+                        }
                     </div>
                 </div>
             </div>
         </div>
+        <div class="col-md-3">
+            <div class="account-sidebar">
+                <div class="profile-info mb-4">
+                    <img src="https://via.placeholder.com/100" alt="Profile" class="rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover;">
+                    <h5 class="mb-1">@Model.UserEmail</h5>
+                    <p class="text-muted mb-0">Registered User</p>
+                </div>
+                <nav class="nav flex-column">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#orders" role="tab" aria-selected="true">My Orders</a>
+                    <a class="nav-link" data-bs-toggle="tab" href="#recently-viewed" role="tab" aria-selected="false">Recently Viewed</a>
+                    <a asp-action="Logout" asp-controller="Account" class="nav-link mt-3">Logout</a>
+                </nav>
+            </div>
+        </div>
     </div>
 </div>
+
+<style>
+    .account-wrapper {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        padding: 20px;
+    }
+    .account-heading {
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+    .order-card {
+        background-color: #f8f9fa;
+    }
+    .order-items img {
+        border-radius: 4px;
+    }
+    .account-sidebar {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        height: fit-content;
+    }
+    .profile-info img {
+        border: 2px solid #ddd;
+    }
+    .product-card {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    .product-card h5 {
+        flex-grow: 1;
+    }
+    .product-card .btn {
+        margin-top: auto;
+    }
+</style>

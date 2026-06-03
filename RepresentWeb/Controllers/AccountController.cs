@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using System.Linq;
 using representweb.Models;
 using representweb.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace representweb.Controllers
 {
@@ -35,6 +36,10 @@ namespace representweb.Controllers
                 // Set session or cookie to indicate logged in state
                 HttpContext.Session.SetString("UserEmail", model.Email);
                 HttpContext.Session.SetString("AuthToken", "fake-jwt-token");
+                // Set default username (email without domain) and empty address
+                var username = model.Email.Split('@')[0];
+                HttpContext.Session.SetString("UserName", username);
+                HttpContext.Session.SetString("UserAddress", string.Empty);
                 
                 if (model.RememberMe)
                 {
@@ -118,6 +123,18 @@ namespace representweb.Controllers
             return Json(new { success = true });
         }
 
+        // GET: Account/CheckAuth
+        [HttpGet]
+        public IActionResult CheckAuth()
+        {
+            var userEmail = HttpContext.Session.GetString("UserEmail");
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                return Json(new { authenticated = false });
+            }
+            return Json(new { authenticated = true, userEmail = userEmail });
+        }
+
         // GET: Account/Profile
         public IActionResult Profile()
         {
@@ -131,78 +148,86 @@ namespace representweb.Controllers
             var model = new ProfileViewModel
             {
                 UserEmail = userEmail,
-                Orders = GetMockOrders(userEmail),
+                UserName = HttpContext.Session.GetString("UserName"),
+                UserAddress = HttpContext.Session.GetString("UserAddress"),
+                Orders = GetUserOrders(userEmail),
                 RecentlyViewed = GetMockRecentlyViewedProducts()
             };
 
             return View(model);
         }
 
-        // GET: Account/CheckAuth
+        // GET: Account/UpdateUsername
         [HttpGet]
-        public IActionResult CheckAuth()
+        public IActionResult UpdateUsername()
         {
-            var isAuthenticated = !string.IsNullOrEmpty(HttpContext.Session.GetString("AuthToken"));
-            return Json(new { authenticated = isAuthenticated, userEmail = HttpContext.Session.GetString("UserEmail") });
+            var userEmail = HttpContext.Session.GetString("UserEmail");
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                return RedirectToAction("Login");
+            }
+            var username = HttpContext.Session.GetString("UserName");
+            var model = new UpdateUsernameViewModel { Username = username };
+            return View(model);
         }
 
-        private List<Order> GetMockOrders(string userEmail)
+        // POST: Account/UpdateUsername
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult UpdateUsername(UpdateUsernameViewModel model)
         {
-            // Create some mock orders with different statuses
-            var orders = new List<Order>
+            var userEmail = HttpContext.Session.GetString("UserEmail");
+            if (string.IsNullOrEmpty(userEmail))
             {
-                new Order
-                {
-                    Id = 1,
-                    UserEmail = userEmail,
-                    OrderDate = DateTime.Now.AddDays(-10),
-                    Status = "ToShip",
-                    TotalAmount = 89.99m,
-                    Items = new List<OrderItem>
-                    {
-                        new OrderItem { Id = 1, OrderId = 1, ProductId = 1, ProductName = "Represent T-Shirt", Quantity = 2, Price = 29.99m, ImageUrl = "/images/tshirt1.jpg" },
-                        new OrderItem { Id = 2, OrderId = 1, ProductId = 2, ProductName = "Represent Hoodie", Quantity = 1, Price = 39.99m, ImageUrl = "/images/hoodie1.jpg" }
-                    }
-                },
-                new Order
-                {
-                    Id = 2,
-                    UserEmail = userEmail,
-                    OrderDate = DateTime.Now.AddDays(-5),
-                    Status = "ToReview",
-                    TotalAmount = 49.99m,
-                    Items = new List<OrderItem>
-                    {
-                        new OrderItem { Id = 3, OrderId = 2, ProductId = 3, ProductName = "Represent Cap", Quantity = 1, Price = 49.99m, ImageUrl = "/images/cap1.jpg" }
-                    }
-                },
-                new Order
-                {
-                    Id = 3,
-                    UserEmail = userEmail,
-                    OrderDate = DateTime.Now.AddDays(-2),
-                    Status = "Returned",
-                    TotalAmount = 0m,
-                    Items = new List<OrderItem>
-                    {
-                        new OrderItem { Id = 4, OrderId = 3, ProductId = 4, ProductName = "Represent Jeans", Quantity = 1, Price = 79.99m, ImageUrl = "/images/jeans1.jpg" }
-                    }
-                },
-                new Order
-                {
-                    Id = 4,
-                    UserEmail = userEmail,
-                    OrderDate = DateTime.Now.AddDays(-1),
-                    Status = "Cancelled",
-                    TotalAmount = 0m,
-                    Items = new List<OrderItem>
-                    {
-                        new OrderItem { Id = 5, OrderId = 4, ProductId = 5, ProductName = "Represent Sneakers", Quantity = 1, Price = 89.99m, ImageUrl = "/images/sneakers1.jpg" }
-                    }
-                }
-            };
+                return RedirectToAction("Login");
+            }
+            if (ModelState.IsValid)
+            {
+                HttpContext.Session.SetString("UserName", model.Username);
+                return RedirectToAction("Profile");
+            }
+            return View(model);
+        }
 
-            return orders;
+        // GET: Account/UpdateAddress
+        [HttpGet]
+        public IActionResult UpdateAddress()
+        {
+            var userEmail = HttpContext.Session.GetString("UserEmail");
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                return RedirectToAction("Login");
+            }
+            var address = HttpContext.Session.GetString("UserAddress");
+            var model = new UpdateAddressViewModel { Address = address };
+            return View(model);
+        }
+
+        // POST: Account/UpdateAddress
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult UpdateAddress(UpdateAddressViewModel model)
+        {
+            var userEmail = HttpContext.Session.GetString("UserEmail");
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                return RedirectToAction("Login");
+            }
+            if (ModelState.IsValid)
+            {
+                HttpContext.Session.SetString("UserAddress", model.Address);
+                return RedirectToAction("Profile");
+            }
+            return View(model);
+        }
+
+        private List<Order> GetUserOrders(string userEmail)
+        {
+            return _context.Orders
+                .Include(o => o.Items)
+                .Where(o => o.UserEmail == userEmail)
+                .OrderByDescending(o => o.OrderDate)
+                .ToList();
         }
 
         private List<Product> GetMockRecentlyViewedProducts()
@@ -254,5 +279,19 @@ namespace representweb.Controllers
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+    }
+
+    public class UpdateUsernameViewModel
+    {
+        [Required]
+        [Display(Name = "Username")]
+        public string Username { get; set; }
+    }
+
+    public class UpdateAddressViewModel
+    {
+        [Required]
+        [Display(Name = "Address")]
+        public string Address { get; set; }
     }
 }

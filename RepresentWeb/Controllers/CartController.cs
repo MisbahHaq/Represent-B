@@ -3,6 +3,7 @@ using representweb.Data;
 using representweb.Models;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace representweb.Controllers
 {
@@ -131,6 +132,114 @@ namespace representweb.Controllers
             var cart = GetCart();
             var count = cart.Sum(item => item.Quantity);
             return Json(new { count = count });
+        }
+
+        // GET: Cart/Checkout
+        [HttpGet]
+        public IActionResult Checkout()
+        {
+            var userEmail = HttpContext.Session.GetString("UserEmail");
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var address = HttpContext.Session.GetString("UserAddress");
+            if (string.IsNullOrEmpty(address))
+            {
+                // Redirect to update address
+                return RedirectToAction("UpdateAddress", "Account");
+            }
+
+            var cartItems = GetCartItems();
+            if (!cartItems.Any())
+            {
+                return RedirectToAction("Index");
+            }
+
+            var viewModel = new CartViewModel
+            {
+                Items = cartItems,
+                TotalAmount = cartItems.Sum(item => item.Product.Price * item.Quantity)
+            };
+
+            return View(viewModel);
+        }
+
+        // POST: Cart/Checkout
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Checkout(CartViewModel model)
+        {
+            var userEmail = HttpContext.Session.GetString("UserEmail");
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var address = HttpContext.Session.GetString("UserAddress");
+            if (string.IsNullOrEmpty(address))
+            {
+                return RedirectToAction("UpdateAddress", "Account");
+            }
+
+            var cartItems = GetCartItems();
+            if (!cartItems.Any())
+            {
+                return RedirectToAction("Index");
+            }
+
+            // Create order
+            var order = new Order
+            {
+                UserEmail = userEmail,
+                OrderDate = DateTime.Now,
+                Status = "ToShip",
+                TotalAmount = cartItems.Sum(item => item.Product.Price * item.Quantity),
+                Items = new List<OrderItem>()
+            };
+
+            foreach (var cartItem in cartItems)
+            {
+                order.Items.Add(new OrderItem
+                {
+                    ProductId = cartItem.Product.Id,
+                    ProductName = cartItem.Product.Name,
+                    Quantity = cartItem.Quantity,
+                    Price = cartItem.Product.Price,
+                    ImageUrl = cartItem.Product.ImageUrl
+                });
+            }
+
+            _context.Orders.Add(order);
+            _context.SaveChanges();
+
+            // Clear cart
+            var cart = GetCart();
+            cart.Clear();
+            SaveCart(cart);
+
+            return RedirectToAction("OrderConfirmation", new { id = order.Id });
+        }
+
+        // GET: Cart/OrderConfirmation/5
+        [HttpGet]
+        public IActionResult OrderConfirmation(int id)
+        {
+            var order = _context.Orders.Include(o => o.Items).FirstOrDefault(o => o.Id == id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure the order belongs to the current user (optional)
+            var userEmail = HttpContext.Session.GetString("UserEmail");
+            if (order.UserEmail != userEmail)
+            {
+                return Unauthorized();
+            }
+
+            return View(order);
         }
 
         private List<CartItem> GetCart()

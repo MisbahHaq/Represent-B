@@ -217,8 +217,11 @@
             <div class="account-sidebar">
                 <div class="profile-info mb-4">
                     <img src="https://via.placeholder.com/100" alt="Profile" class="rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover;">
-                    <h5 class="mb-1">@Model.UserEmail</h5>
-                    <p class="text-muted mb-0">Registered User</p>
+                    <h5 class="mb-1">@Model.UserName</h5>
+                    <p class="text-muted mb-0">@Model.UserEmail</p>
+                    <p class="small mb-2">@Model.UserAddress</p>
+                    <a asp-action="UpdateUsername" asp-controller="Account" class="btn btn-sm btn-outline-primary w-100 mb-2">Change Username</a>
+                    <a asp-action="UpdateAddress" asp-controller="Account" class="btn btn-sm btn-outline-primary w-100 mb-2">Change Address</a>
                 </div>
                 <nav class="nav flex-column">
                     <a class="nav-link active" data-bs-toggle="tab" href="#orders" role="tab" aria-selected="true">My Orders</a>

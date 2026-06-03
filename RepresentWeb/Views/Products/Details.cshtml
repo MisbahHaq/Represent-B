@@ -95,6 +95,12 @@
                 Select A Size
             </button>
 
+            <div class="d-grid gap-2 mt-3">
+                <button id="addToCartBtn" class="btn btn-outline-dark w-100" style="font-size: 0.85rem;">
+                    <i class="bi bi-bag-plus me-2"></i> Add to Cart
+                </button>
+            </div>
+
             <ul class="list-unstyled mb-4 pb-2 border-bottom text-start" style="font-size: 0.8rem; line-height: 1.8;">
                 <li class="text-muted"><span class="me-2">&#9679;</span> EARN 240 PRESTIGE POINTS</li>
                 <li class="text-success"><span class="me-2">&#9679;</span> FREE SHIPPING OVER $300</li>
@@ -162,101 +168,172 @@
     </div>
 </div>
 
-<script>
-    function isUserLoggedIn() {
-        // Check if user is logged in by looking for token or user info in localStorage
-        // In a real app, this would check for a valid JWT token or session
-        const token = localStorage.getItem('authToken');
-        return token !== null && token !== '';
-    }
+    <script>
+        function isUserLoggedIn() {
+            // Check if user is logged in by looking for token or user info in localStorage
+            // In a real app, this would check for a valid JWT token or session
+            const token = localStorage.getItem('authToken');
+            return token !== null && token !== '';
+        }
 
-    function showLoginPrompt() {
-        // Show a login prompt - in a real app, this would redirect to login page or show modal
-        alert('Please log in to use the bookmark feature.');
-        // Optionally redirect to login page:
-        // window.location.href = '/Account/Login';
-    }
+        function showLoginPrompt() {
+            // Show a login prompt - in a real app, this would redirect to login page or show modal
+            alert('Please log in to use the bookmark feature.');
+            // Optionally redirect to login page:
+            // window.location.href = '/Account/Login';
+        }
 
-    function toggleBookmark(event, productId) {
-        // Check if user is logged in before allowing bookmark action
-        if (!isUserLoggedIn()) {
-            showLoginPrompt();
-            return;
+        function toggleBookmark(event, productId) {
+            // Check if user is logged in before allowing bookmark action
+            if (!isUserLoggedIn()) {
+                showLoginPrompt();
+                return;
+            }
+            
+            const btn = event.currentTarget;
+            btn.classList.toggle('text-dark');
+            
+            const saved = localStorage.getItem('bookmarkedProducts') || '[]';
+            let bookmarks = JSON.parse(saved);
+            
+            if (btn.classList.contains('text-dark')) {
+                if (!bookmarks.includes(productId)) bookmarks.push(productId);
+            } else {
+                const index = bookmarks.indexOf(productId);
+                if (index > -1) bookmarks.splice(index, 1);
+            }
+            localStorage.setItem('bookmarkedProducts', JSON.stringify(bookmarks));
         }
-        
-        const btn = event.currentTarget;
-        btn.classList.toggle('text-dark');
-        
-        const saved = localStorage.getItem('bookmarkedProducts') || '[]';
-        let bookmarks = JSON.parse(saved);
-        
-        if (btn.classList.contains('text-dark')) {
-            if (!bookmarks.includes(productId)) bookmarks.push(productId);
-        } else {
-            const index = bookmarks.indexOf(productId);
-            if (index > -1) bookmarks.splice(index, 1);
-        }
-        localStorage.setItem('bookmarkedProducts', JSON.stringify(bookmarks));
-    }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const sizeButtons = document.querySelectorAll('.size-btn');
-        const ctaButton = document.getElementById('addToBagCta');
-        const bookmarkBtn = document.querySelector('.bookmark-btn');
-        const thumbnails = document.querySelectorAll('.thumbnail-selector');
-        
-        const carouselEl = document.getElementById('productCarousel');
-        let productCarousel = null;
-        if(carouselEl && typeof bootstrap !== 'undefined') {
-            productCarousel = new bootstrap.Carousel(carouselEl);
+        // Helper functions for cart
+        function getAntiForgeryToken() {
+            const tokenElement = document.querySelector('[name=__RequestVerificationToken]');
+            return tokenElement ? tokenElement.value : '';
         }
- 
-        if(thumbnails.length > 0) {
-            thumbnails[0].style.borderColor = '#111827';
-        }
- 
-        thumbnails.forEach(thumb => {
-            thumb.addEventListener('click', function() {
-                const targetSlideIndex = parseInt(this.getAttribute('data-slide-to'));
-                
-                if(productCarousel) {
-                    productCarousel.to(targetSlideIndex);
-                }
-                
-                thumbnails.forEach(t => t.style.borderColor = 'transparent');
-                this.style.borderColor = '#111827';
-            });
-        });
- 
-        if (carouselEl) {
-            carouselEl.addEventListener('slide.bs.carousel', function (event) {
-                thumbnails.forEach(t => t.style.borderColor = 'transparent');
-                if(thumbnails[event.to]) {
-                    thumbnails[event.to].style.borderColor = '#111827';
-                }
-            });
-        }
- 
-        sizeButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                sizeButtons.forEach(btn => {
-                    btn.style.backgroundColor = 'transparent';
-                    btn.style.color = '#212529';
+
+        function updateCartCount() {
+            fetch('/Cart/GetCount')
+                .then(response => response.json())
+                .then(data => {
+                    // Update cart count in header if exists
+                    const cartBadge = document.querySelector('.badge');
+                    if (cartBadge) {
+                        cartBadge.textContent = data.count;
+                    }
                 });
- 
-                this.style.backgroundColor = '#111827';
-                this.style.color = '#ffffff';
- 
-                const selectedSize = this.getAttribute('data-size');
-                ctaButton.innerText = 'ADD TO BAG - SIZE ' + selectedSize;
-                ctaButton.style.backgroundColor = '#111827';
-            });
-        });
- 
-        const saved = localStorage.getItem('bookmarkedProducts') || '[]';
-        const bookmarks = JSON.parse(saved);
-        if (bookmarks.includes(@Model.Id)) {
-            bookmarkBtn?.classList.add('text-dark');
         }
-    });
-</script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const sizeButtons = document.querySelectorAll('.size-btn');
+            const ctaButton = document.getElementById('addToBagCta');
+            const bookmarkBtn = document.querySelector('.bookmark-btn');
+            const thumbnails = document.querySelectorAll('.thumbnail-selector');
+            
+            const carouselEl = document.getElementById('productCarousel');
+            let productCarousel = null;
+            if(carouselEl && typeof bootstrap !== 'undefined') {
+                productCarousel = new bootstrap.Carousel(carouselEl);
+            }
+ 
+            if(thumbnails.length > 0) {
+                thumbnails[0].style.borderColor = '#111827';
+            }
+ 
+            thumbnails.forEach(thumb => {
+                thumb.addEventListener('click', function() {
+                    const targetSlideIndex = parseInt(this.getAttribute('data-slide-to'));
+                    
+                    if(productCarousel) {
+                        productCarousel.to(targetSlideIndex);
+                    }
+                    
+                    thumbnails.forEach(t => t.style.borderColor = 'transparent');
+                    this.style.borderColor = '#111827';
+                });
+            });
+ 
+            if (carouselEl) {
+                carouselEl.addEventListener('slide.bs.carousel', function (event) {
+                    thumbnails.forEach(t => t.style.borderColor = 'transparent');
+                    if(thumbnails[event.to]) {
+                        thumbnails[event.to].style.borderColor = '#111827';
+                    }
+                });
+            }
+ 
+            sizeButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    sizeButtons.forEach(btn => {
+                        btn.style.backgroundColor = 'transparent';
+                        btn.style.color = '#212529';
+                    });
+ 
+                    this.style.backgroundColor = '#111827';
+                    this.style.color = '#ffffff';
+ 
+                    const selectedSize = this.getAttribute('data-size');
+                    ctaButton.innerText = 'ADD TO BAG - SIZE ' + selectedSize;
+                    ctaButton.style.backgroundColor = '#111827';
+                });
+            });
+
+            // Add to cart functionality
+            const addToCartBtn = document.getElementById('addToCartBtn');
+            if (addToCartBtn) {
+                addToCartBtn.addEventListener('click', function() {
+                    const selectedSize = document.querySelector('.size-btn.active')?.getAttribute('data-size') || 'M';
+                    const quantity = 1; // Default quantity
+                    
+                    // Show loading state
+                    const originalText = this.innerHTML;
+                    this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Adding...';
+                    this.disabled = true;
+                    
+                    fetch('/Cart/Add/' + @Model.Id, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'RequestVerificationToken': getAntiForgeryToken()
+                        },
+                        body: 'id=' + @Model.Id + '&quantity=' + quantity
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Show success feedback
+                            this.innerHTML = '<i class="bi bi-check-circle me-2"></i> Added!';
+                            this.classList.remove('btn-outline-dark');
+                            this.classList.add('btn-success');
+                            
+                            // Update cart count in header
+                            updateCartCount();
+                            
+                            // Reset button after 2 seconds
+                            setTimeout(() => {
+                                this.innerHTML = originalText;
+                                this.classList.remove('btn-success');
+                                this.classList.add('btn-outline-dark');
+                                this.disabled = false;
+                            }, 2000);
+                        } else {
+                            alert('Failed to add item to cart');
+                            this.innerHTML = originalText;
+                            this.disabled = false;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Network error');
+                        this.innerHTML = originalText;
+                        this.disabled = false;
+                    });
+                });
+            }
+
+            const saved = localStorage.getItem('bookmarkedProducts') || '[]';
+            const bookmarks = JSON.parse(saved);
+            if (bookmarks.includes(@Model.Id)) {
+                bookmarkBtn?.classList.add('text-dark');
+            }
+        });
+    </script>

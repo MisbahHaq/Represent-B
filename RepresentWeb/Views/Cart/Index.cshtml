@@ -1,0 +1,215 @@
+@model representweb.Controllers.CartViewModel
+@{
+    ViewData["Title"] = "Shopping Cart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <h2>Shopping Cart</h2>
+            
+            @if (Model.Items.Count == 0)
+            {
+                <div class="alert alert-info">
+                    Your cart is empty. <a asp-controller="Products" asp-action="Index">Continue shopping</a>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Items)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            @if (!string.IsNullOrEmpty(item.Product.ImageUrl))
+                                            {
+                                                <img src="@item.Product.ImageUrl" alt="@item.Product.Name" 
+                                                     class="img-thumbnail me-3" style="width: 60px; height: 60px; object-fit: contain;">
+                                            }
+                                            <div>
+                                                <h6 class="mb-0">@item.Product.Name</h6>
+                                                <small class="text-muted">@item.Product.Description?.Substring(0, Math.Min(50, item.Product.Description?.Length ?? 0))...</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>Rs @item.Product.Price.ToString("N2")</td>
+                                    <td>
+                                        <input type="number" class="form-control form-control-sm quantity-input" 
+                                               data-product-id="@item.Product.Id" 
+                                               value="@item.Quantity" min="1">
+                                    </td>
+                                    <td>Rs @item.Subtotal.ToString("N2")</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-danger remove-item" 
+                                                data-product-id="@item.Product.Id">
+                                            <i class="bi bi-trash"></i> Remove
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="d-flex justify-content-between mt-4">
+                    <a asp-controller="Products" asp-action="Index" class="btn btn-outline-secondary">
+                        Continue Shopping
+                    </a>
+                    <div>
+                        <h4>Total: Rs @Model.TotalAmount.ToString("N2")</h4>
+                        <a asp-controller="Cart" asp-action="Index" class="btn btn-primary ms-3">
+                            Proceed to Checkout
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Cart Summary</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.Items.Count > 0)
+                    {
+                        <div>
+                            <h6>Items in cart: @Model.Items.Sum(i => i.Quantity)</h6>
+                            <hr>
+                            <p>Subtotal: Rs @Model.TotalAmount.ToString("N2")</p>
+                            <p>Shipping: Free</p>
+                            <hr>
+                            <p><strong>Total: Rs @Model.TotalAmount.ToString("N2")</strong></p>
+                        </div>
+                        <a asp-controller="Cart" asp-action="Index" class="btn btn-primary w-100 mb-3">
+                            View Cart
+                        </a>
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-success w-100">
+                            Continue Shopping
+                        </a>
+                    }
+                    else
+                    {
+                        <p class="text-center text-muted">
+                            Your cart is empty<br>
+                            <a asp-controller="Products" asp-action="Index" class="btn btn-sm btn-outline-primary mt-2">
+                                Start Shopping
+                            </a>
+                        </p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Handle quantity changes
+            document.querySelectorAll('.quantity-input').forEach(input => {
+                input.addEventListener('change', function () {
+                    const productId = parseInt(this.getAttribute('data-product-id'));
+                    const quantity = parseInt(this.value);
+                    
+                    if (quantity < 1) {
+                        this.value = 1;
+                        return;
+                    }
+                    
+                    // Update cart via AJAX
+                    fetch('/Cart/Update/' + productId, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'RequestVerificationToken': getAntiForgeryToken()
+                        },
+                        body: 'id=' + productId + '&quantity=' + quantity
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Update cart count in UI
+                            updateCartCount();
+                        } else {
+                            alert('Failed to update cart');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Network error');
+                    });
+                });
+            });
+            
+            // Handle remove item
+            document.querySelectorAll('.remove-item').forEach(button => {
+                button.addEventListener('click', function () {
+                    if (!confirm('Are you sure you want to remove this item from your cart?')) {
+                        return;
+                    }
+                    
+                    const productId = parseInt(this.getAttribute('data-product-id'));
+                    
+                    fetch('/Cart/Remove/' + productId, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'RequestVerificationToken': getAntiForgeryToken()
+                        },
+                        body: 'id=' + productId
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Remove row from table and update cart count
+                            this.closest('tr').remove();
+                            updateCartCount();
+                            
+                            // Check if cart is now empty
+                            if (document.querySelectorAll('tbody tr').length === 0) {
+                                location.reload(); // Reload to show empty cart message
+                            }
+                        } else {
+                            alert('Failed to remove item');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Network error');
+                    });
+                });
+            });
+            
+            function updateCartCount() {
+                fetch('/Cart/GetCount')
+                    .then(response => response.json())
+                    .then(data => {
+                        // Update cart count in header if exists
+                        const cartBadge = document.querySelector('.badge');
+                        if (cartBadge) {
+                            cartBadge.textContent = data.count;
+                        }
+                    });
+            }
+            
+            function getAntiForgeryToken() {
+                const tokenElement = document.querySelector('[name=__RequestVerificationToken]');
+                return tokenElement ? tokenElement.value : '';
+            }
+        });
+    </script>
+}

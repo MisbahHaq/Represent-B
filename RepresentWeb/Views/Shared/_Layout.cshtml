@@ -177,13 +177,10 @@
       </div>
     </footer>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
-    
     <script>
         function isUserLoggedIn() {
+            // Check session via AJAX
+            // For simplicity in this demo, we'll also check localStorage as fallback
             const token = localStorage.getItem('authToken');
             return token !== null && token !== '';
         }
@@ -194,27 +191,115 @@
                 // Show account/logout option
                 loginLink.innerHTML = '<i class="bi bi-person-circle"></i> Account';
                 loginLink.title = 'Account';
-                loginLink.href = '/Account/Login'; // In a real app, this might be a profile page
+                loginLink.href = '/Account/Login'; // Link to login page which can show user info
                 loginLink.onclick = function(e) {
-                    // For now, just go to login page which can show user info
-                    // In a real app, you might show a dropdown or go to profile
+                    e.preventDefault();
+                    // In a real app, you might show a dropdown here
+                    // For now, just go to login page
+                    window.location.href = '/Account/Login';
                 };
             } else {
                 // Show login option
                 loginLink.innerHTML = '<i class="bi bi-person"></i>';
                 loginLink.title = 'Login';
                 loginLink.href = '/Account/Login';
-                loginLink.onclick = null; // Remove any custom click handler
+                loginLink.onclick = null; // Use default link behavior
             }
         }
 
-        function showLoginPrompt() {
-            alert('Please log in to use the bookmark feature.\n\nFor testing purposes, you can click "OK" then press Ctrl+Shift+L to simulate logging in.');
+        function updateCartCount() {
+            fetch('/Cart/GetCount')
+                .then(response => response.json())
+                .then(data => {
+                    // Update cart count in header
+                    const cartBadge = document.querySelector('.badge');
+                    if (cartBadge) {
+                        cartBadge.textContent = data.count;
+                    }
+                });
         }
 
-        function showUserMenu() {
-            // In a real app, this would show a dropdown with profile options
-            alert('User Menu\\n\\nFor testing:\\nPress Ctrl+Shift+L to logout');
+        function showLoginForm() {
+            // Show login modal or redirect to login page
+            window.location.href = '/Account/Login';
+        }
+
+        function showSignUpForm() {
+            // Show sign up modal or redirect to sign up page
+            window.location.href = '/Account/SignUp';
+        }
+
+        function loginUser(email, password, rememberMe) {
+            return fetch('/Account/LoginAjax', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': getAntiForgeryToken()
+                },
+                body: JSON.stringify({ email: email, password: password, rememberMe: rememberMe })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    localStorage.setItem('authToken', 'fake-jwt-token');
+                    localStorage.setItem('userEmail', email);
+                    updateUserLoginLink();
+                    updateCartCount(); // Update cart count after login
+                    return true;
+                } else {
+                    showError('Login failed: ' + (data.errors ? data.errors.join('. ') : 'Invalid credentials'));
+                    return false;
+                }
+            })
+            .catch(error => {
+                showError('Network error: ' + error.message);
+                return false;
+            });
+        }
+
+        function logoutUser() {
+            return fetch('/Account/LogoutAjax', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': getAntiForgeryToken()
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('userEmail');
+                    updateUserLoginLink();
+                    updateCartCount(); // Update cart count after logout
+                    return true;
+                } else {
+                    showError('Logout failed');
+                    return false;
+                }
+            })
+            .catch(error => {
+                showError('Network error: ' + error.message);
+                return false;
+            });
+        }
+
+        function getAntiForgeryToken() {
+            const tokenElement = document.querySelector('[name=__RequestVerificationToken]');
+            return tokenElement ? tokenElement.value : '';
+        }
+
+        function showError(message) {
+            alert(message);
+            // In a real app, you might show a nice toast or modal
+        }
+
+        function showLoginPrompt() {
+            // Show login modal or redirect
+            const result = confirm('Please log in to use the bookmark feature.\n\nOK to go to login page, Cancel to stay on current page.');
+            if (result) {
+                window.location.href = '/Account/Login';
+            }
         }
 
         // Handle keyboard shortcuts for testing
@@ -224,22 +309,26 @@
                 e.preventDefault();
                 if (isUserLoggedIn()) {
                     // Logout
-                    localStorage.removeItem('authToken');
-                    alert('Logged out successfully.');
+                    logoutUser().then(() => {
+                        alert('Logged out successfully.');
+                    });
                 } else {
-                    // Login
-                    localStorage.setItem('authToken', 'fake-jwt-token-for-testing');
-                    alert('Logged in successfully.');
+                    // Show login form
+                    showLoginForm();
                 }
-                updateUserLoginLink();
             }
         });
 
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
             updateUserLoginLink();
+            updateCartCount(); // Update cart count on initial load
+            
+            // Also update cart count periodically in case it changes elsewhere
+            setInterval(updateCartCount, 30000); // Every 30 seconds
         });
     </script>
+    @RenderSection("Scripts", required: false)
 
   </body>
 

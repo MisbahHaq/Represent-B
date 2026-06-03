@@ -63,22 +63,31 @@
             Prestige
           </a>
 
-          <a href="#" class="text-white">
-            <i class="bi bi-search"></i>
-          </a>
+           <a href="#" class="text-white">
+             <i class="bi bi-search"></i>
+           </a>
 
-          <a href="#" class="text-white" id="userLoginLink">
-            <i class="bi bi-person"></i>
-          </a>
+           <a asp-controller="Bookmark" asp-action="Index" class="text-white position-relative" id="bookmarkLink">
+             <i class="bi bi-bookmark"></i>
 
-          <a href="#" class="text-white position-relative">
-            <i class="bi bi-bag"></i>
+             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-light text-dark"
+                   style="font-size: 0.45rem;">
+               0
+             </span>
+           </a>
 
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-light text-dark"
-                  style="font-size: 0.45rem;">
-              0
-            </span>
-          </a>
+           <a href="#" class="text-white" id="userLoginLink">
+             <i class="bi bi-person"></i>
+           </a>
+
+           <a asp-controller="Cart" asp-action="Index" class="text-white position-relative" id="cartLink">
+             <i class="bi bi-bag"></i>
+
+             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-light text-dark"
+                   style="font-size: 0.45rem;">
+               0
+             </span>
+           </a>
 
         </div>
 
@@ -177,157 +186,171 @@
       </div>
     </footer>
 
-    <script>
-        function isUserLoggedIn() {
-            // Check session via AJAX
-            // For simplicity in this demo, we'll also check localStorage as fallback
-            const token = localStorage.getItem('authToken');
-            return token !== null && token !== '';
-        }
+     <script>
+         function isUserLoggedIn() {
+             // Check session via AJAX
+             // For simplicity in this demo, we'll also check localStorage as fallback
+             const token = localStorage.getItem('authToken');
+             return token !== null && token !== '';
+         }
 
-        function updateUserLoginLink() {
-            const loginLink = document.getElementById('userLoginLink');
-            if (isUserLoggedIn()) {
-                // Show account/logout option
-                loginLink.innerHTML = '<i class="bi bi-person-circle"></i> Account';
-                loginLink.title = 'Account';
-                loginLink.href = '/Account/Login'; // Link to login page which can show user info
-                loginLink.onclick = function(e) {
-                    e.preventDefault();
-                    // In a real app, you might show a dropdown here
-                    // For now, just go to login page
-                    window.location.href = '/Account/Login';
-                };
-            } else {
-                // Show login option
-                loginLink.innerHTML = '<i class="bi bi-person"></i>';
-                loginLink.title = 'Login';
-                loginLink.href = '/Account/Login';
-                loginLink.onclick = null; // Use default link behavior
-            }
-        }
+         function updateUserLoginLink() {
+             const loginLink = document.getElementById('userLoginLink');
+             if (isUserLoggedIn()) {
+                 // Show account/logout option
+                 loginLink.innerHTML = '<i class="bi bi-person-circle"></i> Account';
+                 loginLink.title = 'Account';
+                 loginLink.href = '/Account/Login'; // Link to login page which can show user info
+                 loginLink.onclick = function(e) {
+                     e.preventDefault();
+                     // In a real app, you might show a dropdown here
+                     // For now, just go to login page
+                     window.location.href = '/Account/Login';
+                 };
+             } else {
+                 // Show login option
+                 loginLink.innerHTML = '<i class="bi bi-person"></i>';
+                 loginLink.title = 'Login';
+                 loginLink.href = '/Account/Login';
+                 loginLink.onclick = null; // Use default link behavior
+             }
+         }
 
-        function updateCartCount() {
-            fetch('/Cart/GetCount')
-                .then(response => response.json())
-                .then(data => {
-                    // Update cart count in header
-                    const cartBadge = document.querySelector('.badge');
-                    if (cartBadge) {
-                        cartBadge.textContent = data.count;
-                    }
-                });
-        }
+         function updateCartCount() {
+             fetch('/Cart/GetCount')
+                 .then(response => response.json())
+                 .then(data => {
+                     // Update cart count in header
+                     const cartBadge = document.querySelector('#cartLink .badge');
+                     if (cartBadge) {
+                         cartBadge.textContent = data.count;
+                     }
+                 });
+         }
 
-        function showLoginForm() {
-            // Show login modal or redirect to login page
-            window.location.href = '/Account/Login';
-        }
+         function updateBookmarkCount() {
+             fetch('/Bookmark/GetCount')
+                 .then(response => response.json())
+                 .then(data => {
+                     // Update bookmark count in header
+                     const bookmarkBadge = document.querySelector('#bookmarkLink .badge');
+                     if (bookmarkBadge) {
+                         bookmarkBadge.textContent = data.count;
+                     }
+                 });
+         }
 
-        function showSignUpForm() {
-            // Show sign up modal or redirect to sign up page
-            window.location.href = '/Account/SignUp';
-        }
+         function showLoginForm() {
+             // Show login modal or redirect to login page
+             window.location.href = '/Account/Login';
+         }
 
-        function loginUser(email, password, rememberMe) {
-            return fetch('/Account/LoginAjax', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'RequestVerificationToken': getAntiForgeryToken()
-                },
-                body: JSON.stringify({ email: email, password: password, rememberMe: rememberMe })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    localStorage.setItem('authToken', 'fake-jwt-token');
-                    localStorage.setItem('userEmail', email);
-                    updateUserLoginLink();
-                    updateCartCount(); // Update cart count after login
-                    return true;
-                } else {
-                    showError('Login failed: ' + (data.errors ? data.errors.join('. ') : 'Invalid credentials'));
-                    return false;
-                }
-            })
-            .catch(error => {
-                showError('Network error: ' + error.message);
-                return false;
-            });
-        }
+         function showSignUpForm() {
+             // Show sign up modal or redirect to sign up page
+             window.location.href = '/Account/SignUp';
+         }
 
-        function logoutUser() {
-            return fetch('/Account/LogoutAjax', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'RequestVerificationToken': getAntiForgeryToken()
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    localStorage.removeItem('authToken');
-                    localStorage.removeItem('userEmail');
-                    updateUserLoginLink();
-                    updateCartCount(); // Update cart count after logout
-                    return true;
-                } else {
-                    showError('Logout failed');
-                    return false;
-                }
-            })
-            .catch(error => {
-                showError('Network error: ' + error.message);
-                return false;
-            });
-        }
+         function loginUser(email, password, rememberMe) {
+             return fetch('/Account/LoginAjax', {
+                 method: 'POST',
+                 headers: {
+                     'Content-Type': 'application/json',
+                     'RequestVerificationToken': getAntiForgeryToken()
+                 },
+                 body: JSON.stringify({ email: email, password: password, rememberMe: rememberMe })
+             })
+             .then(response => response.json())
+             .then(data => {
+                 if (data.success) {
+                     localStorage.setItem('authToken', 'fake-jwt-token');
+                     localStorage.setItem('userEmail', email);
+                     updateUserLoginLink();
+                     updateCartCount(); // Update cart count after login
+                     return true;
+                 } else {
+                     showError('Login failed: ' + (data.errors ? data.errors.join('. ') : 'Invalid credentials'));
+                     return false;
+                 }
+             })
+             .catch(error => {
+                 showError('Network error: ' + error.message);
+                 return false;
+             });
+         }
 
-        function getAntiForgeryToken() {
-            const tokenElement = document.querySelector('[name=__RequestVerificationToken]');
-            return tokenElement ? tokenElement.value : '';
-        }
+         function logoutUser() {
+             return fetch('/Account/LogoutAjax', {
+                 method: 'POST',
+                 headers: {
+                     'Content-Type': 'application/json',
+                     'RequestVerificationToken': getAntiForgeryToken()
+                 }
+             })
+             .then(response => response.json())
+             .then(data => {
+                 if (data.success) {
+                     localStorage.removeItem('authToken');
+                     localStorage.removeItem('userEmail');
+                     updateUserLoginLink();
+                     updateCartCount(); // Update cart count after logout
+                     return true;
+                 } else {
+                     showError('Logout failed');
+                     return false;
+                 }
+             })
+             .catch(error => {
+                 showError('Network error: ' + error.message);
+                 return false;
+             });
+         }
 
-        function showError(message) {
-            alert(message);
-            // In a real app, you might show a nice toast or modal
-        }
+         function getAntiForgeryToken() {
+             const tokenElement = document.querySelector('[name=__RequestVerificationToken]');
+             return tokenElement ? tokenElement.value : '';
+         }
 
-        function showLoginPrompt() {
-            // Show login modal or redirect
-            const result = confirm('Please log in to use the bookmark feature.\n\nOK to go to login page, Cancel to stay on current page.');
-            if (result) {
-                window.location.href = '/Account/Login';
-            }
-        }
+         function showError(message) {
+             alert(message);
+             // In a real app, you might show a nice toast or modal
+         }
 
-        // Handle keyboard shortcuts for testing
-        document.addEventListener('keydown', function(e) {
-            // Ctrl+Shift+L to toggle login state for testing
-            if (e.ctrlKey && e.shiftKey && e.key === 'L') {
-                e.preventDefault();
-                if (isUserLoggedIn()) {
-                    // Logout
-                    logoutUser().then(() => {
-                        alert('Logged out successfully.');
-                    });
-                } else {
-                    // Show login form
-                    showLoginForm();
-                }
-            }
-        });
+         function showLoginPrompt() {
+             // Show login modal or redirect
+             const result = confirm('Please log in to use the bookmark feature.\n\nOK to go to login page, Cancel to stay on current page.');
+             if (result) {
+                 window.location.href = '/Account/Login';
+             }
+         }
 
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            updateUserLoginLink();
-            updateCartCount(); // Update cart count on initial load
-            
-            // Also update cart count periodically in case it changes elsewhere
-            setInterval(updateCartCount, 30000); // Every 30 seconds
-        });
-    </script>
+         // Handle keyboard shortcuts for testing
+         document.addEventListener('keydown', function(e) {
+             // Ctrl+Shift+L to toggle login state for testing
+             if (e.ctrlKey && e.shiftKey && e.key === 'L') {
+                 e.preventDefault();
+                 if (isUserLoggedIn()) {
+                     // Logout
+                     logoutUser().then(() => {
+                         alert('Logged out successfully.');
+                     });
+                 } else {
+                     // Show login form
+                     showLoginForm();
+                 }
+             }
+         });
+
+         // Initialize on page load
+         document.addEventListener('DOMContentLoaded', function() {
+             updateUserLoginLink();
+             updateCartCount(); // Update cart count on initial load
+             updateBookmarkCount(); // Update bookmark count on initial load
+             
+             // Also update counts periodically in case they change elsewhere
+             setInterval(updateCartCount, 30000); // Every 30 seconds
+             setInterval(updateBookmarkCount, 30000); // Every 30 seconds
+         });
+     </script>
     @RenderSection("Scripts", required: false)
 
   </body>

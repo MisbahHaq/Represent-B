@@ -108,6 +108,18 @@ namespace representweb.Controllers
             return Json(new { success = true });
         }
 
+        // GET: Account/Profile
+        public IActionResult Profile()
+        {
+            var userEmail = HttpContext.Session.GetString("UserEmail");
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                return RedirectToAction("Login");
+            }
+            ViewData["Title"] = "My Account";
+            return View();
+        }
+
         // GET: Account/CheckAuth
         [HttpGet]
         public IActionResult CheckAuth()

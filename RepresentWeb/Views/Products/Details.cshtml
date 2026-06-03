@@ -95,51 +95,42 @@
                 Select A Size
             </button>
 
-            <div class="d-grid gap-2 mt-3">
-                <button id="addToCartBtn" class="btn btn-outline-dark w-100" style="font-size: 0.85rem;">
-                    <i class="bi bi-bag-plus me-2"></i> Add to Cart
-                </button>
-            </div>
-
             <ul class="list-unstyled mb-4 pb-2 border-bottom text-start" style="font-size: 0.8rem; line-height: 1.8;">
                 <li class="text-muted"><span class="me-2">&#9679;</span> EARN 240 PRESTIGE POINTS</li>
                 <li class="text-success"><span class="me-2">&#9679;</span> FREE SHIPPING OVER $300</li>
                 <li class="text-success"><span class="me-2">&#9679;</span> IN STOCK (Current Available: @Model.Stock units)</li>
             </ul>
 
-            <div class="accordion accordion-flush border-bottom" id="productMetaAccordion">
-                
-                <div class="accordion-item border-0">
-                    <h2 class="accordion-header" id="headingDetails">
-                        <button class="accordion-button collapsed px-0 py-3 fw-bold text-dark bg-white text-start" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDetails" aria-expanded="false" aria-controls="collapseDetails" style="font-size: 0.85rem;">
-                            Product Details
-                        </button>
-                    </h2>
-<div id="collapseDetails" class="accordion-collapse collapse" aria-labelledby="headingDetails" data-bs-parent="#productMetaAccordion">
-    <div class="accordion-body px-0 pt-1 pb-3 text-muted text-start" style="font-size: 0.85rem; line-height: 1.6; display: block;">
-                            @if(!string.IsNullOrEmpty(Model.Description)) {
-                                @Model.Description
-                            } else {
-                                <text>Introducing the All Over Print Towel Shirt in Aged White, crafted from heavyweight 300GSM reverse towelling cotton. Designed with a standard fit and revere collar, this shirt delivers relaxed vacation energy with a textured twist. The standout feature is its tonal all-over towelling logo pattern, offering depth and subtle visual contrast. Finished with side splits at the hem for ease of wear.</text>
-                            }
-                        </div>
-                    </div>
-                </div>
-
-                <div class="accordion-item border-0">
-                    <h2 class="accordion-header" id="headingShipping">
-                        <button class="accordion-button collapsed px-0 py-3 fw-bold text-dark bg-white text-start" type="button" data-bs-toggle="collapse" data-bs-target="#collapseShipping" aria-expanded="false" aria-controls="collapseShipping" style="font-size: 0.85rem;">
-                            Shipping & Returns
-                        </button>
-                    </h2>
-<div id="collapseShipping" class="accordion-collapse collapse" aria-labelledby="headingShipping" data-bs-parent="#productMetaAccordion">
-    <div class="accordion-body px-0 pt-1 pb-3 text-muted text-start" style="font-size: 0.85rem; line-height: 1.6; display: block;">
-                            Free shipping on orders over $300. Standard delivery takes 3-5 business days. Express delivery available. Free returns within 30 days.
-                        </div>
-                    </div>
-                </div>
-
+<div class="accordion accordion-flush border-bottom" id="productMetaAccordion">
+    <div class="accordion-item border-0">
+        <h2 class="accordion-header" id="headingDetails">
+            <button class="accordion-button collapsed px-0 py-3 fw-bold text-dark bg-white text-start" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDetails" aria-expanded="false" aria-controls="collapseDetails" style="font-size: 0.85rem;">
+                Product Details
+            </button>
+        </h2>
+        <div id="collapseDetails" class="accordion-collapse collapse" aria-labelledby="headingDetails" data-bs-parent="#productMetaAccordion">
+            <div class="accordion-body px-0 pt-1 pb-3 text-muted text-start" style="font-size: 0.85rem; line-height: 1.6;">
+                @if(!string.IsNullOrEmpty(Model.Description)) {
+                    @Model.Description
+                } else {
+                    <text>Introducing the All Over Print Towel Shirt in Aged White, crafted from heavyweight 300GSM reverse towelling cotton. Designed with a standard fit and revere collar, this shirt delivers relaxed vacation energy with a textured twist. The standout feature is its tonal all-over towelling logo pattern, offering depth and subtle visual contrast. Finished with side splits at the hem for ease of wear.</text>
+                }
             </div>
+        </div>
+    </div>
+    <div class="accordion-item border-0">
+        <h2 class="accordion-header" id="headingShipping">
+            <button class="accordion-button collapsed px-0 py-3 fw-bold text-dark bg-white text-start" type="button" data-bs-toggle="collapse" data-bs-target="#collapseShipping" aria-expanded="false" aria-controls="collapseShipping" style="font-size: 0.85rem;">
+                Shipping & Returns
+            </button>
+        </h2>
+        <div id="collapseShipping" class="accordion-collapse collapse" aria-labelledby="headingShipping" data-bs-parent="#productMetaAccordion">
+            <div class="accordion-body px-0 pt-1 pb-3 text-muted text-start" style="font-size: 0.85rem; line-height: 1.6;">
+                Free shipping on orders over $300. Standard delivery takes 3-5 business days. Express delivery available. Free returns within 30 days.
+            </div>
+        </div>
+    </div>
+</div>
         </div>
     </div>
 
@@ -170,201 +161,208 @@
 
     <script>
         function isUserLoggedIn() {
-            // Check if user is logged in by looking for token or user info in localStorage
-            // In a real app, this would check for a valid JWT token or session
-            const token = localStorage.getItem('authToken');
-            return token !== null && token !== '';
+            if (typeof appAuthCache !== 'undefined' && appAuthCache !== null) return Promise.resolve(appAuthCache);
+            if (typeof window.appAuthCache !== 'undefined' && window.appAuthCache !== null) return Promise.resolve(window.appAuthCache);
+            return fetch('/Account/CheckAuth')
+                .then(r => r.json())
+                .then(data => {
+                    window.appAuthCache = data.authenticated;
+                    return data.authenticated;
+                })
+                .catch(() => false);
         }
 
-        function showLoginPrompt() {
-            // Show a login prompt - in a real app, this would redirect to login page or show modal
-            alert('Please log in to use the bookmark feature.');
-            // Optionally redirect to login page:
-            // window.location.href = '/Account/Login';
-        }
+function showLoginPrompt() {
+             const result = confirm('Please log in to use the bookmark feature.\n\nOK to go to login page, Cancel to stay on current page.');
+             if (result) {
+                 window.location.href = '/Account/Login';
+             }
+         }
+
+         function showError(message) {
+             alert(message);
+         }
 
         function toggleBookmark(event, productId) {
-            // Check if user is logged in before allowing bookmark action
-            if (!isUserLoggedIn()) {
-                showLoginPrompt();
-                return;
-            }
-
-            const btn = event.currentTarget;
-            const isBookmarked = btn.classList.contains('text-dark');
-            const url = isBookmarked ? '/Bookmark/Remove/' + productId : '/Bookmark/Add/' + productId;
-
-            // Disable button during request
-            btn.disabled = true;
-
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'RequestVerificationToken': getAntiForgeryToken(),
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: 'id=' + productId
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Toggle button state
-                    btn.classList.toggle('text-dark');
-                    // Update bookmark count in header
-                    updateBookmarkCount();
-                    // Update localStorage to keep in sync
-                    const saved = localStorage.getItem('bookmarkedProducts') || '[]';
-                    let bookmarks = JSON.parse(saved);
-                    if (isBookmarked) {
-                        const index = bookmarks.indexOf(productId);
-                        if (index > -1) bookmarks.splice(index, 1);
-                    } else {
-                        if (!bookmarks.includes(productId)) bookmarks.push(productId);
-                    }
-                    localStorage.setItem('bookmarkedProducts', JSON.stringify(bookmarks));
-                } else {
-                    alert('Failed to update bookmark');
+            const btn = event.currentTarget || event.target.closest('.bookmark-btn');
+            if (!btn) return;
+            isUserLoggedIn().then(loggedIn => {
+                if (!loggedIn) {
+                    showLoginPrompt();
+                    return;
                 }
-                btn.disabled = false;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Network error');
-                btn.disabled = false;
+
+                const isBookmarked = btn.classList.contains('text-dark');
+                const url = isBookmarked ? '/Bookmark/Remove/' + productId : '/Bookmark/Add/' + productId;
+
+                btn.disabled = true;
+
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'RequestVerificationToken': getAntiForgeryToken(),
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: 'id=' + productId
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        btn.classList.toggle('text-dark');
+                        updateBookmarkCount();
+                        const saved = localStorage.getItem('bookmarkedProducts') || '[]';
+                        let bookmarks = JSON.parse(saved);
+                        if (isBookmarked) {
+                            const index = bookmarks.indexOf(productId);
+                            if (index > -1) bookmarks.splice(index, 1);
+                        } else {
+                            if (!bookmarks.includes(productId)) bookmarks.push(productId);
+                        }
+                        localStorage.setItem('bookmarkedProducts', JSON.stringify(bookmarks));
+                    } else {
+                        alert('Failed to update bookmark');
+                    }
+                    btn.disabled = false;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Network error');
+                    btn.disabled = false;
+                });
             });
         }
 
         // Helper functions for cart
-        function getAntiForgeryToken() {
-            const tokenElement = document.querySelector('[name=__RequestVerificationToken]');
-            return tokenElement ? tokenElement.value : '';
-        }
+function getAntiForgeryToken() {
+             const tokenElement = document.querySelector('[name=__RequestVerificationToken]');
+             return tokenElement ? tokenElement.value : '';
+         }
 
-        function updateCartCount() {
-            fetch('/Cart/GetCount')
-                .then(response => response.json())
-                .then(data => {
-                    // Update cart count in header if exists
-                    const cartBadge = document.querySelector('.badge');
-                    if (cartBadge) {
-                        cartBadge.textContent = data.count;
-                    }
-                });
-        }
+         function updateBookmarkCount() {
+             fetch('/Bookmark/GetCount')
+                 .then(response => response.json())
+                 .then(data => {
+                     const bookmarkBadge = document.querySelector('#bookmarkLink .badge');
+                     if (bookmarkBadge) {
+                         bookmarkBadge.textContent = data.count;
+                     }
+                 });
+         }
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const sizeButtons = document.querySelectorAll('.size-btn');
-            const ctaButton = document.getElementById('addToBagCta');
-            const bookmarkBtn = document.querySelector('.bookmark-btn');
-            const thumbnails = document.querySelectorAll('.thumbnail-selector');
-            
-            const carouselEl = document.getElementById('productCarousel');
-            let productCarousel = null;
-            if(carouselEl && typeof bootstrap !== 'undefined') {
-                productCarousel = new bootstrap.Carousel(carouselEl);
-            }
- 
-            if(thumbnails.length > 0) {
-                thumbnails[0].style.borderColor = '#111827';
-            }
- 
-            thumbnails.forEach(thumb => {
-                thumb.addEventListener('click', function() {
-                    const targetSlideIndex = parseInt(this.getAttribute('data-slide-to'));
-                    
-                    if(productCarousel) {
-                        productCarousel.to(targetSlideIndex);
-                    }
-                    
-                    thumbnails.forEach(t => t.style.borderColor = 'transparent');
-                    this.style.borderColor = '#111827';
-                });
-            });
- 
-            if (carouselEl) {
-                carouselEl.addEventListener('slide.bs.carousel', function (event) {
-                    thumbnails.forEach(t => t.style.borderColor = 'transparent');
-                    if(thumbnails[event.to]) {
-                        thumbnails[event.to].style.borderColor = '#111827';
-                    }
-                });
-            }
- 
-            sizeButtons.forEach(button => {
-                button.addEventListener('click', function () {
-                    sizeButtons.forEach(btn => {
-                        btn.style.backgroundColor = 'transparent';
-                        btn.style.color = '#212529';
-                    });
- 
-                    this.style.backgroundColor = '#111827';
-                    this.style.color = '#ffffff';
- 
-                    const selectedSize = this.getAttribute('data-size');
-                    ctaButton.innerText = 'ADD TO BAG - SIZE ' + selectedSize;
-                    ctaButton.style.backgroundColor = '#111827';
-                });
-            });
+function updateCartCount() {
+             fetch('/Cart/GetCount')
+                 .then(response => response.json())
+                 .then(data => {
+                     const cartBadge = document.querySelector('#cartLink .badge');
+                     if (cartBadge) {
+                         cartBadge.textContent = data.count;
+                     }
+                 });
+         }
 
-            // Add to cart functionality
-            const addToCartBtn = document.getElementById('addToCartBtn');
-            if (addToCartBtn) {
-                addToCartBtn.addEventListener('click', function() {
-                    const selectedSize = document.querySelector('.size-btn.active')?.getAttribute('data-size') || 'M';
-                    const quantity = 1; // Default quantity
-                    
-                    // Show loading state
-                    const originalText = this.innerHTML;
-                    this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Adding...';
-                    this.disabled = true;
-                    
-                     fetch('/Cart/Add/' + @Model.Id, {
-                         method: 'POST',
-                         headers: {
-                             'Content-Type': 'application/x-www-form-urlencoded',
-                             'RequestVerificationToken': getAntiForgeryToken(),
-                             'X-Requested-With': 'XMLHttpRequest'
-                         },
-                         body: 'id=' + @Model.Id + '&quantity=' + quantity
-                     })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            // Show success feedback
-                            this.innerHTML = '<i class="bi bi-check-circle me-2"></i> Added!';
-                            this.classList.remove('btn-outline-dark');
-                            this.classList.add('btn-success');
-                            
-                            // Update cart count in header
-                            updateCartCount();
-                            
-                            // Reset button after 2 seconds
-                            setTimeout(() => {
-                                this.innerHTML = originalText;
-                                this.classList.remove('btn-success');
-                                this.classList.add('btn-outline-dark');
-                                this.disabled = false;
-                            }, 2000);
-                        } else {
-                            alert('Failed to add item to cart');
-                            this.innerHTML = originalText;
-                            this.disabled = false;
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Network error');
-                        this.innerHTML = originalText;
-                        this.disabled = false;
-                    });
-                });
-            }
-
-            const saved = localStorage.getItem('bookmarkedProducts') || '[]';
-            const bookmarks = JSON.parse(saved);
-            if (bookmarks.includes(@Model.Id)) {
-                bookmarkBtn?.classList.add('text-dark');
-            }
-        });
-    </script>
+document.addEventListener('DOMContentLoaded', function () {
+             const sizeButtons = document.querySelectorAll('.size-btn');
+             const ctaButton = document.getElementById('addToBagCta');
+             const bookmarkBtn = document.querySelector('.bookmark-btn');
+             const thumbnails = document.querySelectorAll('.thumbnail-selector');
+             
+             const carouselEl = document.getElementById('productCarousel');
+             let productCarousel = null;
+             if(carouselEl && typeof bootstrap !== 'undefined') {
+                 productCarousel = new bootstrap.Carousel(carouselEl);
+             }
+  
+             if(thumbnails.length > 0) {
+                 thumbnails[0].style.borderColor = '#111827';
+             }
+  
+             thumbnails.forEach(thumb => {
+                 thumb.addEventListener('click', function() {
+                     const targetSlideIndex = parseInt(this.getAttribute('data-slide-to'));
+                     
+                     if(productCarousel) {
+                         productCarousel.to(targetSlideIndex);
+                     }
+                     
+                     thumbnails.forEach(t => t.style.borderColor = 'transparent');
+                     this.style.borderColor = '#111827';
+                 });
+             });
+  
+             if (carouselEl) {
+                 carouselEl.addEventListener('slide.bs.carousel', function (event) {
+                     thumbnails.forEach(t => t.style.borderColor = 'transparent');
+                     if(thumbnails[event.to]) {
+                         thumbnails[event.to].style.borderColor = '#111827';
+                     }
+                 });
+             }
+  
+             sizeButtons.forEach(button => {
+                 button.addEventListener('click', function () {
+                     sizeButtons.forEach(btn => {
+                         btn.style.backgroundColor = 'transparent';
+                         btn.style.color = '#212529';
+                     });
+  
+                     this.style.backgroundColor = '#111827';
+                     this.style.color = '#ffffff';
+                     this.classList.add('active');
+  
+                     const selectedSize = this.getAttribute('data-size');
+                     ctaButton.innerText = 'ADD TO BAG - SIZE ' + selectedSize;
+                     ctaButton.style.backgroundColor = '#111827';
+                 });
+             });
+  
+             ctaButton.addEventListener('click', function() {
+                 const selectedSize = document.querySelector('.size-btn.active')?.getAttribute('data-size');
+                 if (!selectedSize) {
+                     showError('Please select a size first');
+                     return;
+                 }
+                 
+                 const originalText = this.innerText;
+                 this.innerText = 'Adding...';
+                 this.disabled = true;
+                 
+                 fetch('/Cart/Add/' + @Model.Id, {
+                     method: 'POST',
+                     headers: {
+                         'Content-Type': 'application/x-www-form-urlencoded',
+                         'RequestVerificationToken': getAntiForgeryToken(),
+                         'X-Requested-With': 'XMLHttpRequest'
+                     },
+                     body: 'id=' + @Model.Id + '&quantity=1'
+                 })
+                 .then(response => response.json())
+                 .then(data => {
+                     if (data.success) {
+                         this.innerText = 'Added to Bag!';
+                         updateCartCount();
+                         
+                         setTimeout(() => {
+                             this.innerText = originalText;
+                             this.disabled = false;
+                         }, 2000);
+                     } else {
+                         showError('Failed to add item to cart');
+                         this.innerText = originalText;
+                         this.disabled = false;
+                     }
+                 })
+                 .catch(error => {
+                     showError('Network error');
+                     this.innerText = originalText;
+                     this.disabled = false;
+                 });
+             });
+  
+             const saved = localStorage.getItem('bookmarkedProducts') || '[]';
+             const bookmarks = JSON.parse(saved);
+             if (bookmarks.includes(@Model.Id)) {
+                 bookmarkBtn?.classList.add('text-dark');
+             }
+         });
+     </script>

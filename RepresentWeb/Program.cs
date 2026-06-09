@@ -40,4 +40,9 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+using (var scope = app.Services.CreateScope())
+{
+    await representweb.Data.DbInitializer.SeedAsync(scope.ServiceProvider);
+}
+
 app.Run();

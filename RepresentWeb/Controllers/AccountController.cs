@@ -31,20 +31,20 @@ namespace representweb.Controllers
         {
             if (ModelState.IsValid)
             {
-                // In a real app, validate credentials against database
-                // For demo, we'll accept any email/password combination
-                // Set session or cookie to indicate logged in state
                 HttpContext.Session.SetString("UserEmail", model.Email);
                 HttpContext.Session.SetString("AuthToken", "fake-jwt-token");
-                // Set default username (email without domain) and empty address
                 var username = model.Email.Split('@')[0];
                 HttpContext.Session.SetString("UserName", username);
                 HttpContext.Session.SetString("UserAddress", string.Empty);
                 
+                if (model.Email == "admin@represent.com" && model.Password == "admin123")
+                {
+                    HttpContext.Session.SetString("IsAdmin", "true");
+                    return RedirectToAction("Dashboard", "Admin");
+                }
+                
                 if (model.RememberMe)
                 {
-                    // Set longer expiration for remember me
-                    // This would be handled by cookie options in real app
                 }
                 
                 return RedirectToAction("Index", "Home");
@@ -59,10 +59,13 @@ namespace representweb.Controllers
         {
             if (ModelState.IsValid)
             {
-                // In a real app, validate credentials against database
-                // For demo, we'll accept any email/password combination
                 HttpContext.Session.SetString("UserEmail", model.Email);
                 HttpContext.Session.SetString("AuthToken", "fake-jwt-token");
+                
+                if (model.Email == "admin@represent.com" && model.Password == "admin123")
+                {
+                    HttpContext.Session.SetString("IsAdmin", "true");
+                }
                 
                 return Json(new { success = true });
             }
@@ -132,7 +135,8 @@ namespace representweb.Controllers
             {
                 return Json(new { authenticated = false });
             }
-            return Json(new { authenticated = true, userEmail = userEmail });
+            var isAdmin = HttpContext.Session.GetString("IsAdmin") == "true";
+            return Json(new { authenticated = true, userEmail = userEmail, isAdmin = isAdmin });
         }
 
         // GET: Account/Profile

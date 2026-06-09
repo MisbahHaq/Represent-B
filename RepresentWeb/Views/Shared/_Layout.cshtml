@@ -49,21 +49,21 @@
         </a>
 
         <!-- RIGHT -->
-        <div class="d-flex align-items-center gap-4 ms-auto">
+<div class="d-flex align-items-center gap-4 ms-auto">
 
-          <a class="nav-link text-white text-uppercase p-0 nav-small" asp-action="Retail" asp-controller="Home">
-            Retail
-          </a>
+           <a class="nav-link text-white text-uppercase p-0 nav-small" asp-action="Retail" asp-controller="Home">
+             Retail
+           </a>
 
-          <a class="nav-link text-white text-uppercase p-0 nav-small" asp-action="Vault" asp-controller="Home">
-            The Vault
-          </a>
+           <a class="nav-link text-white text-uppercase p-0 nav-small" asp-action="Vault" asp-controller="Home">
+             The Vault
+           </a>
 
-          <a class="nav-link text-white text-uppercase p-0 nav-small" asp-action="Prestige" asp-controller="Home">
-            Prestige
-          </a>
+<a class="nav-link text-white text-uppercase p-0 nav-small" asp-action="Prestige" asp-controller="Home">
+             Prestige
+           </a>
 
-            <a href="#" class="text-white" id="userLoginLink">
+             <a href="#" class="text-white" id="userLoginLink">
               <i class="bi bi-person"></i>
             </a>
 
@@ -188,36 +188,38 @@
                window.appAuthCache = null;
            }
 
-           function isUserLoggedIn() {
-               if (window.appAuthCache !== null) return Promise.resolve(window.appAuthCache);
-               return fetch('/Account/CheckAuth')
-                   .then(r => r.json())
-                   .then(data => {
-                       window.appAuthCache = data.authenticated;
-                       if (data.authenticated && data.userEmail) {
-                           localStorage.setItem('userEmail', data.userEmail);
-                       }
-                       return data.authenticated;
-                   })
-                   .catch(() => false);
-           }
+function isUserLoggedIn() {
+                if (window.appAuthCache !== null && window.appAuthCache.authenticated !== undefined) return Promise.resolve(window.appAuthCache);
+                return fetch('/Account/CheckAuth')
+                    .then(r => r.json())
+                    .then(data => {
+                        window.appAuthCache = data;
+                        if (data.authenticated && data.userEmail) {
+                            localStorage.setItem('userEmail', data.userEmail);
+                        }
+                        return data;
+                    })
+                    .catch(() => ({ authenticated: false, isAdmin: false }));
+            }
 
-          function updateUserLoginLink() {
-              isUserLoggedIn().then(loggedIn => {
-                  const loginLink = document.getElementById('userLoginLink');
-                  if (loggedIn) {
-                  loginLink.innerHTML = '<i class="bi bi-person-circle"></i>';
-                  loginLink.title = 'Account';
-                  loginLink.href = '/Account/Profile';
-                  loginLink.onclick = null;
-                  } else {
-                      loginLink.innerHTML = '<i class="bi bi-person"></i>';
-                      loginLink.title = 'Login';
-                      loginLink.href = '/Account/Login';
-                      loginLink.onclick = null;
-                  }
-              });
-          }
+function updateUserLoginLink() {
+               isUserLoggedIn().then(data => {
+                   const loggedIn = data.authenticated;
+                   const isAdmin = data.isAdmin;
+                   const loginLink = document.getElementById('userLoginLink');
+                   if (loggedIn) {
+                       loginLink.innerHTML = '<i class="bi bi-person-circle"></i>';
+                       loginLink.title = isAdmin ? 'Admin Panel' : 'Account';
+                       loginLink.href = isAdmin ? '/Admin/Dashboard' : '/Account/Profile';
+                       loginLink.onclick = null;
+                   } else {
+                       loginLink.innerHTML = '<i class="bi bi-person"></i>';
+                       loginLink.title = 'Login';
+                       loginLink.href = '/Account/Login';
+                       loginLink.onclick = null;
+                   }
+               });
+           }
 
           function updateCartCount() {
               fetch('/Cart/GetCount')
@@ -241,62 +243,62 @@
                   });
           }
 
-          function loginUser(email, password, rememberMe) {
-              return fetch('/Account/LoginAjax', {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/json',
-                      'RequestVerificationToken': getAntiForgeryToken()
-                  },
-                  body: JSON.stringify({ email: email, password: password, rememberMe: rememberMe })
-              })
-              .then(response => response.json())
-              .then(data => {
-                  if (data.success) {
-                      localStorage.setItem('authToken', 'fake-jwt-token');
-                      localStorage.setItem('userEmail', email);
-window.appAuthCache = true;
-                       updateUserLoginLink();
-                      updateCartCount();
-                      return true;
-                  } else {
-                      showError('Login failed: ' + (data.errors ? data.errors.join('. ') : 'Invalid credentials'));
-                      return false;
-                  }
-              })
-              .catch(error => {
-                  showError('Network error: ' + error.message);
-                  return false;
-              });
-          }
+function loginUser(email, password, rememberMe) {
+               return fetch('/Account/LoginAjax', {
+                   method: 'POST',
+                   headers: {
+                       'Content-Type': 'application/json',
+                       'RequestVerificationToken': getAntiForgeryToken()
+                   },
+                   body: JSON.stringify({ email: email, password: password, rememberMe: rememberMe })
+               })
+               .then(response => response.json())
+               .then(data => {
+                   if (data.success) {
+                       localStorage.setItem('authToken', 'fake-jwt-token');
+                       localStorage.setItem('userEmail', email);
+window.appAuthCache = { authenticated: true, isAdmin: email === 'admin@represent.com' };
+                        updateUserLoginLink();
+                       updateCartCount();
+                       return true;
+                   } else {
+                       showError('Login failed: ' + (data.errors ? data.errors.join('. ') : 'Invalid credentials'));
+                       return false;
+                   }
+               })
+               .catch(error => {
+                   showError('Network error: ' + error.message);
+                   return false;
+               });
+           }
 
-          function logoutUser() {
-              return fetch('/Account/LogoutAjax', {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/json',
-                      'RequestVerificationToken': getAntiForgeryToken()
-                  }
-              })
-              .then(response => response.json())
-              .then(data => {
-                  if (data.success) {
-                      window.appAuthCache = false;
-                      localStorage.removeItem('authToken');
-                      localStorage.removeItem('userEmail');
-                      updateUserLoginLink();
-                      updateCartCount();
-                      return true;
-                  } else {
-                      showError('Logout failed');
-                      return false;
-                  }
-              })
-              .catch(error => {
-                  showError('Network error: ' + error.message);
-                  return false;
-              });
-          }
+function logoutUser() {
+               return fetch('/Account/LogoutAjax', {
+                   method: 'POST',
+                   headers: {
+                       'Content-Type': 'application/json',
+                       'RequestVerificationToken': getAntiForgeryToken()
+                   }
+               })
+               .then(response => response.json())
+               .then(data => {
+                   if (data.success) {
+                       window.appAuthCache = { authenticated: false, isAdmin: false };
+                       localStorage.removeItem('authToken');
+                       localStorage.removeItem('userEmail');
+                       updateUserLoginLink();
+                       updateCartCount();
+                       return true;
+                   } else {
+                       showError('Logout failed');
+                       return false;
+                   }
+               })
+               .catch(error => {
+                   showError('Network error: ' + error.message);
+                   return false;
+               });
+           }
 
           function getAntiForgeryToken() {
               const tokenElement = document.querySelector('[name=__RequestVerificationToken]');

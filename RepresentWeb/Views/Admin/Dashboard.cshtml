@@ -1,0 +1,156 @@
+@model representweb.Controllers.AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-uppercase">Admin Dashboard</h2>
+        <form asp-action="Logout" method="post">
+            <button type="submit" class="btn btn-outline-secondary">Logout</button>
+        </form>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-dark text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Total Orders</h5>
+                    <h2 class="mb-0">@Model.TotalOrders</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-dark text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Total Products</h5>
+                    <h2 class="mb-0">@Model.TotalProducts</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark">
+                <div class="card-body">
+                    <h5 class="card-title">Pending Orders</h5>
+                    <h2 class="mb-0">@Model.PendingOrders</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-dark">
+                <div class="card-body">
+                    <h5 class="card-title">Out for Delivery</h5>
+                    <h2 class="mb-0">@Model.OutForDeliveryOrders</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4>Products</h4>
+                <a asp-action="CreateProduct" class="btn btn-dark">Add New Product</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-dark table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var product in Model.RecentProducts)
+                        {
+                            <tr>
+                                <td>@product.Name</td>
+                                <td>$@product.Price</td>
+                                <td>@product.Stock</td>
+                                <td>
+                                    <a asp-action="EditProduct" asp-route-id="@product.Id" class="btn btn-sm btn-outline-light">Edit</a>
+                                    <a asp-action="DeleteProduct" asp-route-id="@product.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <a asp-action="Products" class="btn btn-link">View All Products</a>
+        </div>
+
+        <div class="col-md-6">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4>Recent Orders</h4>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-dark table-striped">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model.RecentOrders)
+                        {
+                            <tr>
+                                <td>#@order.Id</td>
+                                <td>@order.UserEmail</td>
+                                <td>
+                                    <span class="badge bg-@(order.Status == "Pending" ? "warning" : order.Status == "Out for Delivery" ? "info" : order.Status == "Delivered" ? "success" : "secondary")">
+                                        @order.Status
+                                    </span>
+                                </td>
+                                <td>
+                                    <select class="form-select form-select-sm status-select" data-order-id="@order.Id" style="width: auto;">
+                                        <option value="Pending" selected="@(order.Status == "Pending")">Pending</option>
+                                        <option value="Out for Delivery" selected="@(order.Status == "Out for Delivery")">Out for Delivery</option>
+                                        <option value="Delivered" selected="@(order.Status == "Delivered")">Delivered</option>
+                                        <option value="Cancelled" selected="@(order.Status == "Cancelled")">Cancelled</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <a asp-action="Orders" class="btn btn-link">View All Orders</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.status-select').forEach(select => {
+                select.addEventListener('change', function() {
+                    const orderId = this.dataset.orderId;
+                    const status = this.value;
+                    
+                    fetch('/Admin/UpdateOrderStatus', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'RequestVerificationToken': document.querySelector('[name=__RequestVerificationToken]').value
+                        },
+                        body: JSON.stringify({ OrderId: parseInt(orderId), Status: status })
+                    })
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.reload();
+                        } else {
+                            alert('Error: ' + data.message);
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+}

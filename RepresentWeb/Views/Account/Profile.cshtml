@@ -17,12 +17,12 @@
                     <div class="tab-pane fade show active" id="orders" role="tabpanel">
                         <h3 class="mb-4">My Orders</h3>
                         
-                        <!-- To Ship -->
+                        <!-- Pending -->
                         <div class="order-section mb-4">
-                            <h4>To Ship</h4>
-                            @if (Model.Orders.Any(o => o.Status == "ToShip"))
+                            <h4>Pending</h4>
+                            @if (Model.Orders.Any(o => o.Status == "Pending"))
                             {
-                                foreach (var order in Model.Orders.Where(o => o.Status == "ToShip"))
+                                foreach (var order in Model.Orders.Where(o => o.Status == "Pending"))
                                 {
                                     <div class="order-card border rounded p-3 mb-3">
                                         <div class="d-flex justify-content-between">
@@ -31,7 +31,7 @@
                                                 <p class="text-muted">Placed on @order.OrderDate.ToString("MMM dd, yyyy")</p>
                                             </div>
                                             <div class="text-end">
-                                                <span class="badge bg-warning text-dark">To Ship</span>
+                                                <span class="badge bg-warning text-dark">Pending</span>
                                             </div>
                                         </div>
                                         <div class="order-items mt-3">
@@ -48,23 +48,22 @@
                                         </div>
                                         <div class="mt-3">
                                             <p class="fw-bold mb-1">Total: @order.TotalAmount.ToString("C")</p>
-                                            <a href="#" class="btn btn-sm btn-outline-primary">Track Order</a>
                                         </div>
                                     </div>
                                 }
                             }
                             else
                             {
-                                <p class="text-muted">No orders to ship.</p>
+                                <p class="text-muted">No pending orders.</p>
                             }
                         </div>
 
-                        <!-- To Review -->
+                        <!-- Out for Delivery -->
                         <div class="order-section mb-4">
-                            <h4>To Review</h4>
-                            @if (Model.Orders.Any(o => o.Status == "ToReview"))
+                            <h4>Out for Delivery</h4>
+                            @if (Model.Orders.Any(o => o.Status == "Out for Delivery"))
                             {
-                                foreach (var order in Model.Orders.Where(o => o.Status == "ToReview"))
+                                foreach (var order in Model.Orders.Where(o => o.Status == "Out for Delivery"))
                                 {
                                     <div class="order-card border rounded p-3 mb-3">
                                         <div class="d-flex justify-content-between">
@@ -73,7 +72,48 @@
                                                 <p class="text-muted">Placed on @order.OrderDate.ToString("MMM dd, yyyy")</p>
                                             </div>
                                             <div class="text-end">
-                                                <span class="badge bg-info text-dark">To Review</span>
+                                                <span class="badge bg-info text-dark">Out for Delivery</span>
+                                            </div>
+                                        </div>
+                                        <div class="order-items mt-3">
+                                            @foreach (var item in order.Items)
+                                            {
+                                                <div class="d-flex align-items-center mb-2">
+                                                    <img src="@item.ImageUrl" alt="@item.ProductName" class="me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                                    <div>
+                                                        <h6>@item.ProductName</h6>
+                                                        <p class="mb-0">@item.Quantity x @item.Price.ToString("C")</p>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div class="mt-3">
+                                            <p class="fw-bold mb-1">Total: @order.TotalAmount.ToString("C")</p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <p class="text-muted">No orders out for delivery.</p>
+                            }
+                        </div>
+
+                        <!-- Delivered -->
+                        <div class="order-section mb-4">
+                            <h4>Delivered</h4>
+                            @if (Model.Orders.Any(o => o.Status == "Delivered"))
+                            {
+                                foreach (var order in Model.Orders.Where(o => o.Status == "Delivered"))
+                                {
+                                    <div class="order-card border rounded p-3 mb-3">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h5>Order #@order.Id</h5>
+                                                <p class="text-muted">Placed on @order.OrderDate.ToString("MMM dd, yyyy")</p>
+                                            </div>
+                                            <div class="text-end">
+                                                <span class="badge bg-success">Delivered</span>
                                             </div>
                                         </div>
                                         <div class="order-items mt-3">
@@ -97,49 +137,7 @@
                             }
                             else
                             {
-                                <p class="text-muted">No orders to review.</p>
-                            }
-                        </div>
-
-                        <!-- Returned -->
-                        <div class="order-section mb-4">
-                            <h4>Returned</h4>
-                            @if (Model.Orders.Any(o => o.Status == "Returned"))
-                            {
-                                foreach (var order in Model.Orders.Where(o => o.Status == "Returned"))
-                                {
-                                    <div class="order-card border rounded p-3 mb-3">
-                                        <div class="d-flex justify-content-between">
-                                            <div>
-                                                <h5>Order #@order.Id</h5>
-                                                <p class="text-muted">Placed on @order.OrderDate.ToString("MMM dd, yyyy")</p>
-                                            </div>
-                                            <div class="text-end">
-                                                <span class="badge bg-secondary">Returned</span>
-                                            </div>
-                                        </div>
-                                        <div class="order-items mt-3">
-                                            @foreach (var item in order.Items)
-                                            {
-                                                <div class="d-flex align-items-center mb-2">
-                                                    <img src="@item.ImageUrl" alt="@item.ProductName" class="me-3" style="width: 50px; height: 50px; object-fit: cover;">
-                                                    <div>
-                                                        <h6>@item.ProductName</h6>
-                                                        <p class="mb-0">@item.Quantity x @item.Price.ToString("C")</p>
-                                                    </div>
-                                                </div>
-                                            }
-                                        </div>
-                                        <div class="mt-3">
-                                            <p class="fw-bold mb-1">Total: @order.TotalAmount.ToString("C")</p>
-                                            <a href="#" class="btn btn-sm btn-outline-primary">Return Details</a>
-                                        </div>
-                                    </div>
-                                }
-                            }
-                            else
-                            {
-                                <p class="text-muted">No returned orders.</p>
+                                <p class="text-muted">No delivered orders.</p>
                             }
                         </div>
 
@@ -174,7 +172,6 @@
                                         </div>
                                         <div class="mt-3">
                                             <p class="fw-bold mb-1">Total: @order.TotalAmount.ToString("C")</p>
-                                            <a href="#" class="btn btn-sm btn-outline-primary">Cancel Details</a>
                                         </div>
                                     </div>
                                 }

@@ -194,7 +194,7 @@ namespace representweb.Controllers
             {
                 UserEmail = userEmail,
                 OrderDate = DateTime.Now,
-                Status = "ToShip",
+                Status = "Pending",
                 TotalAmount = cartItems.Sum(item => item.Product.Price * item.Quantity),
                 Items = new List<OrderItem>()
             };

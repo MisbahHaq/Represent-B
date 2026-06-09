@@ -1,0 +1,80 @@
+@model List<representweb.Models.Order>
+@{
+    ViewData["Title"] = "Manage Orders";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid mt-4">
+    <h2 class="text-uppercase mb-4">Manage Orders</h2>
+
+    <div class="table-responsive">
+        <table class="table table-dark table-striped">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Date</th>
+                    <th>Customer</th>
+                    <th>Total</th>
+                    <th>Items</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in Model)
+                {
+                    <tr>
+                        <td>#@order.Id</td>
+                        <td>@order.OrderDate.ToString("MMM dd, yyyy")</td>
+                        <td>@order.UserEmail</td>
+                        <td>$@order.TotalAmount</td>
+                        <td>@order.Items.Count items</td>
+                        <td>
+                            <span class="badge bg-@(order.Status == "Pending" ? "warning" : order.Status == "Out for Delivery" ? "info" : order.Status == "Delivered" ? "success" : "secondary")">
+                                @order.Status
+                            </span>
+                        </td>
+                        <td>
+                            <select class="form-select form-select-sm status-select" data-order-id="@order.Id">
+                                <option value="Pending" selected="@(order.Status == "Pending")">Pending</option>
+                                <option value="Out for Delivery" selected="@(order.Status == "Out for Delivery")">Out for Delivery</option>
+                                <option value="Delivered" selected="@(order.Status == "Delivered")">Delivered</option>
+                                <option value="Cancelled" selected="@(order.Status == "Cancelled")">Cancelled</option>
+                            </select>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.status-select').forEach(select => {
+                select.addEventListener('change', function() {
+                    const orderId = this.dataset.orderId;
+                    const status = this.value;
+                    
+                    fetch('/Admin/UpdateOrderStatus', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'RequestVerificationToken': document.querySelector('[name=__RequestVerificationToken]').value
+                        },
+                        body: JSON.stringify({ OrderId: parseInt(orderId), Status: status })
+                    })
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.reload();
+                        } else {
+                            alert('Error: ' + data.message);
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+}

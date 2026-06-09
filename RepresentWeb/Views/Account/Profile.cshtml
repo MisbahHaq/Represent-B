@@ -5,267 +5,172 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-9">
-            <div class="account-wrapper">
-                <div class="account-heading">
-                    <h2>My Account</h2>
-                </div>
-                <div class="tab-content">
-                    <!-- Orders Section -->
-                    <div class="tab-pane fade show active" id="orders" role="tabpanel">
-                        <h3 class="mb-4">My Orders</h3>
-                        
-                        <!-- Pending -->
-                        <div class="order-section mb-4">
-                            <h4>Pending</h4>
-                            @if (Model.Orders.Any(o => o.Status == "Pending"))
-                            {
-                                foreach (var order in Model.Orders.Where(o => o.Status == "Pending"))
-                                {
-                                    <div class="order-card border rounded p-3 mb-3">
-                                        <div class="d-flex justify-content-between">
-                                            <div>
-                                                <h5>Order #@order.Id</h5>
-                                                <p class="text-muted">Placed on @order.OrderDate.ToString("MMM dd, yyyy")</p>
-                                            </div>
-                                            <div class="text-end">
-                                                <span class="badge bg-warning text-dark">Pending</span>
-                                            </div>
-                                        </div>
-                                        <div class="order-items mt-3">
-                                            @foreach (var item in order.Items)
-                                            {
-                                                <div class="d-flex align-items-center mb-2">
-                                                    <img src="@item.ImageUrl" alt="@item.ProductName" class="me-3" style="width: 50px; height: 50px; object-fit: cover;">
-                                                    <div>
-                                                        <h6>@item.ProductName</h6>
-                                                        <p class="mb-0">@item.Quantity x @item.Price.ToString("C")</p>
-                                                    </div>
-                                                </div>
-                                            }
-                                        </div>
-                                        <div class="mt-3">
-                                            <p class="fw-bold mb-1">Total: @order.TotalAmount.ToString("C")</p>
-                                        </div>
-                                    </div>
-                                }
-                            }
-                            else
-                            {
-                                <p class="text-muted">No pending orders.</p>
-                            }
-                        </div>
+<div class="section-spacer bg-white">
+    <div class="container-fluid" style="max-width: 1300px; padding: 0 clamp(1.5rem, 4vw, 4rem);">
 
-                        <!-- Out for Delivery -->
-                        <div class="order-section mb-4">
-                            <h4>Out for Delivery</h4>
-                            @if (Model.Orders.Any(o => o.Status == "Out for Delivery"))
-                            {
-                                foreach (var order in Model.Orders.Where(o => o.Status == "Out for Delivery"))
-                                {
-                                    <div class="order-card border rounded p-3 mb-3">
-                                        <div class="d-flex justify-content-between">
-                                            <div>
-                                                <h5>Order #@order.Id</h5>
-                                                <p class="text-muted">Placed on @order.OrderDate.ToString("MMM dd, yyyy")</p>
-                                            </div>
-                                            <div class="text-end">
-                                                <span class="badge bg-info text-dark">Out for Delivery</span>
-                                            </div>
-                                        </div>
-                                        <div class="order-items mt-3">
-                                            @foreach (var item in order.Items)
-                                            {
-                                                <div class="d-flex align-items-center mb-2">
-                                                    <img src="@item.ImageUrl" alt="@item.ProductName" class="me-3" style="width: 50px; height: 50px; object-fit: cover;">
-                                                    <div>
-                                                        <h6>@item.ProductName</h6>
-                                                        <p class="mb-0">@item.Quantity x @item.Price.ToString("C")</p>
-                                                    </div>
-                                                </div>
-                                            }
-                                        </div>
-                                        <div class="mt-3">
-                                            <p class="fw-bold mb-1">Total: @order.TotalAmount.ToString("C")</p>
-                                        </div>
-                                    </div>
-                                }
-                            }
-                            else
-                            {
-                                <p class="text-muted">No orders out for delivery.</p>
-                            }
-                        </div>
-
-                        <!-- Delivered -->
-                        <div class="order-section mb-4">
-                            <h4>Delivered</h4>
-                            @if (Model.Orders.Any(o => o.Status == "Delivered"))
-                            {
-                                foreach (var order in Model.Orders.Where(o => o.Status == "Delivered"))
-                                {
-                                    <div class="order-card border rounded p-3 mb-3">
-                                        <div class="d-flex justify-content-between">
-                                            <div>
-                                                <h5>Order #@order.Id</h5>
-                                                <p class="text-muted">Placed on @order.OrderDate.ToString("MMM dd, yyyy")</p>
-                                            </div>
-                                            <div class="text-end">
-                                                <span class="badge bg-success">Delivered</span>
-                                            </div>
-                                        </div>
-                                        <div class="order-items mt-3">
-                                            @foreach (var item in order.Items)
-                                            {
-                                                <div class="d-flex align-items-center mb-2">
-                                                    <img src="@item.ImageUrl" alt="@item.ProductName" class="me-3" style="width: 50px; height: 50px; object-fit: cover;">
-                                                    <div>
-                                                        <h6>@item.ProductName</h6>
-                                                        <p class="mb-0">@item.Quantity x @item.Price.ToString("C")</p>
-                                                    </div>
-                                                </div>
-                                            }
-                                        </div>
-                                        <div class="mt-3">
-                                            <p class="fw-bold mb-1">Total: @order.TotalAmount.ToString("C")</p>
-                                            <a href="#" class="btn btn-sm btn-outline-primary">Add Review</a>
-                                        </div>
-                                    </div>
-                                }
-                            }
-                            else
-                            {
-                                <p class="text-muted">No delivered orders.</p>
-                            }
-                        </div>
-
-                        <!-- Cancelled -->
-                        <div class="order-section mb-4">
-                            <h4>Cancelled</h4>
-                            @if (Model.Orders.Any(o => o.Status == "Cancelled"))
-                            {
-                                foreach (var order in Model.Orders.Where(o => o.Status == "Cancelled"))
-                                {
-                                    <div class="order-card border rounded p-3 mb-3">
-                                        <div class="d-flex justify-content-between">
-                                            <div>
-                                                <h5>Order #@order.Id</h5>
-                                                <p class="text-muted">Placed on @order.OrderDate.ToString("MMM dd, yyyy")</p>
-                                            </div>
-                                            <div class="text-end">
-                                                <span class="badge bg-danger">Cancelled</span>
-                                            </div>
-                                        </div>
-                                        <div class="order-items mt-3">
-                                            @foreach (var item in order.Items)
-                                            {
-                                                <div class="d-flex align-items-center mb-2">
-                                                    <img src="@item.ImageUrl" alt="@item.ProductName" class="me-3" style="width: 50px; height: 50px; object-fit: cover;">
-                                                    <div>
-                                                        <h6>@item.ProductName</h6>
-                                                        <p class="mb-0">@item.Quantity x @item.Price.ToString("C")</p>
-                                                    </div>
-                                                </div>
-                                            }
-                                        </div>
-                                        <div class="mt-3">
-                                            <p class="fw-bold mb-1">Total: @order.TotalAmount.ToString("C")</p>
-                                        </div>
-                                    </div>
-                                }
-                            }
-                            else
-                            {
-                                <p class="text-muted">No cancelled orders.</p>
-                            }
-                        </div>
-                    </div>
-
-                    <!-- Recently Viewed Products Section -->
-                    <div class="tab-pane fade" id="recently-viewed" role="tabpanel" aria-labelledby="recently-viewed-tab">
-                        <h3 class="mb-4">Recently Viewed Products</h3>
-                        @if (Model.RecentlyViewed.Any())
-                        {
-                            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-                                @foreach (var product in Model.RecentlyViewed)
-                                {
-                                    <div class="col">
-                                        <div class="product-card h-100 border rounded p-3">
-                                            <img src="@product.ImageUrl" alt="@product.Name" class="product-img img-fluid mb-3" style="height: 150px; object-fit: cover;">
-                                            <h5 class="product-name">@product.Name</h5>
-                                            <p class="product-price text-muted">@product.Price.ToString("C")</p>
-                                            <a asp-action="Details" asp-controller="Products" asp-route-id="@product.Id" class="btn btn-sm btn-outline-primary w-100">View Details</a>
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                        }
-                        else
-                        {
-                            <p class="text-muted">No recently viewed products.</p>
-                        }
-                    </div>
+        <!-- Header -->
+        <div class="mb-6 animate-fade-in">
+            <p class="text-caption" style="color: #999;">Account</p>
+            <div class="d-flex justify-content-between align-items-end flex-wrap gap-3 mt-3">
+                <h1 class="text-heading text-primary m-0" style="font-size: 1.4rem;">@Model.UserName</h1>
+                <div class="d-flex gap-3">
+                    <a asp-action="UpdateUsername" asp-controller="Account"
+                       class="btn-minimal text-only">Change Username</a>
+                    <a asp-action="UpdateAddress" asp-controller="Account"
+                       class="btn-minimal text-only">Change Address</a>
                 </div>
             </div>
+            <div style="width: 30px; height: 1px; background: #1a1a1a; margin-top: 1.2rem;"></div>
         </div>
-        <div class="col-md-3">
-            <div class="account-sidebar">
-                <div class="profile-info mb-4">
-                    <img src="https://via.placeholder.com/100" alt="Profile" class="rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover;">
-                    <h5 class="mb-1">@Model.UserName</h5>
-                    <p class="text-muted mb-0">@Model.UserEmail</p>
-                    <p class="small mb-2">@Model.UserAddress</p>
-                    <a asp-action="UpdateUsername" asp-controller="Account" class="btn btn-sm btn-outline-primary w-100 mb-2">Change Username</a>
-                    <a asp-action="UpdateAddress" asp-controller="Account" class="btn btn-sm btn-outline-primary w-100 mb-2">Change Address</a>
+
+        <div class="row gx-5 gy-5">
+
+            <!-- Main Content -->
+            <div class="col-12 col-lg-8">
+
+                <div class="animate-fade-in animate-delay-1">
+
+                    <p class="text-subheading mb-5" style="color: #999; font-size: 0.72rem;">Orders</p>
+
+                    @foreach (var status in new[] { "Pending", "Out for Delivery", "Delivered", "Cancelled" })
+                    {
+                        var orders = Model.Orders.Where(o => o.Status == status).ToList();
+                        <div class="mb-6">
+                            <p class="text-heading mb-4"
+                               style="font-size: 0.85rem; letter-spacing: 0.12em; text-transform: uppercase;">
+                                @status
+                                @if (orders.Any())
+                                {
+                                    <span style="font-weight: 200; color: #bbb;">(@orders.Count)</span>
+                                }
+                            </p>
+
+                            @if (orders.Any())
+                            {
+                                <div class="row g-3 gx-0">
+                                    @foreach (var order in orders)
+                                    {
+                                        <div class="col-12" style="padding: 1.4rem 0; border-bottom: 1px solid #f0f0ee;">
+                                            <div class="row align-items-center g-3">
+                                                <div class="col-12 col-md-4">
+                                                    <p style="font-size: 0.82rem; font-weight: 400; letter-spacing: 0.04em; text-transform: uppercase;">
+                                                        Order #@order.Id
+                                                    </p>
+                                                    <p style="font-size: 0.72rem; font-weight: 300; color: #999; margin-top: 0.15rem;">
+                                                        @order.OrderDate.ToString("MMM dd, yyyy")
+                                                    </p>
+                                                </div>
+                                                <div class="col-12 col-md-4">
+                                                    <div class="d-flex flex-wrap gap-3">
+                                                        @foreach (var item in order.Items)
+                                                        {
+                                                            <div class="img-container"
+                                                                 style="width: 42px; height: 52px; aspect-ratio: 3/4; background: #f7f7f5;">
+                                                                <img src="@item.ImageUrl"
+                                                                     alt="@item.ProductName"
+                                                                     style="object-fit: contain; padding: 0.25rem;" />
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                                <div class="col-6 col-md-2 text-start text-md-center">
+                                                    <p style="font-size: 0.78rem; font-weight: 300; color: #666;">
+                                                        @order.Items.Sum(i => i.Quantity) item(s)
+                                                    </p>
+                                                </div>
+                                                <div class="col-6 col-md-2 text-end">
+                                                    <p style="font-size: 0.88rem; font-weight: 400; letter-spacing: 0.03em;">
+                                                        Rs @order.TotalAmount.ToString("N2")
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <p style="font-size: 0.78rem; font-weight: 300; color: #bbb; font-style: italic;">
+                                    No orders.
+                                </p>
+                            }
+                        </div>
+                    }
+
                 </div>
-                <nav class="nav flex-column">
-                    <a class="nav-link active" data-bs-toggle="tab" href="#orders" role="tab" aria-selected="true">My Orders</a>
-                    <a class="nav-link" data-bs-toggle="tab" href="#recently-viewed" role="tab" aria-selected="false">Recently Viewed</a>
-                    <a asp-action="Logout" asp-controller="Account" class="nav-link mt-3">Logout</a>
-                </nav>
+
+                <!-- Recently Viewed -->
+                <div class="animate-fade-in animate-delay-2 mt-6">
+                    <p class="text-subheading mb-5" style="color: #999; font-size: 0.72rem;">Recently Viewed</p>
+
+                    @if (Model.RecentlyViewed.Any())
+                    {
+                        <div class="row gx-4 gy-5">
+                            @foreach (var product in Model.RecentlyViewed)
+                            {
+                                <div class="col-6 col-md-3">
+                                    <a asp-action="Details" asp-controller="Products" asp-route-id="@product.Id"
+                                       class="d-block text-decoration-none" style="color: inherit;">
+                                        <div class="img-container aspect-square mb-3" style="background: #f7f7f5;">
+                                            @if (!string.IsNullOrEmpty(product.ImageUrl))
+                                            {
+                                                <img src="@product.ImageUrl"
+                                                     alt="@product.Name"
+                                                     style="object-fit: contain; padding: 0.8rem;" />
+                                            }
+                                        </div>
+                                        <p class="m-0"
+                                           style="font-size: 0.75rem; font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase;">
+                                            @product.Name
+                                        </p>
+                                        <p class="m-0 mt-1" style="font-size: 0.73rem; font-weight: 300; color: #999;">
+                                            Rs @product.Price.ToString("N2")
+                                        </p>
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p style="font-size: 0.78rem; font-weight: 300; color: #bbb; font-style: italic;">
+                            No recently viewed products.
+                        </p>
+                    }
+                </div>
             </div>
+
+            <!-- Sidebar -->
+            <div class="col-12 col-lg-3 offset-lg-1" style="padding-top: 0.5rem;">
+                <div class="animate-fade-in animate-delay-3">
+                    <p class="text-caption mb-4" style="color: #999;">Profile</p>
+
+                    <div class="mb-5">
+                        <p style="font-size: 0.85rem; font-weight: 300; color: #666;">
+                            @Model.UserEmail
+                        </p>
+                        @if (!string.IsNullOrEmpty(Model.UserAddress))
+                        {
+                            <p style="font-size: 0.78rem; font-weight: 300; color: #bbb; margin-top: 0.3rem;">
+                                @Model.UserAddress
+                            </p>
+                        }
+                    </div>
+
+                    <hr class="divider thin">
+
+                    <nav class="list-unstyled" style="font-size: 0.78rem; font-weight: 300; line-height: 2.4;">
+                        <li>
+                            <a class="d-block hover-fade"
+                               asp-action="Logout" asp-controller="Account"
+                               style="color: #1a1a1a; text-decoration: none; text-transform: uppercase; letter-spacing: 0.12em;">
+                                Logout
+                            </a>
+                        </li>
+                    </nav>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
-
-<style>
-    .account-wrapper {
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        padding: 20px;
-    }
-    .account-heading {
-        border-bottom: 1px solid #eee;
-        padding-bottom: 10px;
-        margin-bottom: 20px;
-    }
-    .order-card {
-        background-color: #f8f9fa;
-    }
-    .order-items img {
-        border-radius: 4px;
-    }
-    .account-sidebar {
-        background-color: #f8f9fa;
-        padding: 20px;
-        border-radius: 8px;
-        height: fit-content;
-    }
-    .profile-info img {
-        border: 2px solid #ddd;
-    }
-    .product-card {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-    .product-card h5 {
-        flex-grow: 1;
-    }
-    .product-card .btn {
-        margin-top: auto;
-    }
-</style>

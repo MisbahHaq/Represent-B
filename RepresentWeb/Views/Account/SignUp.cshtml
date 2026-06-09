@@ -1,47 +1,55 @@
 @model representweb.Controllers.SignUpViewModel
 @{
-    ViewData["Title"] = "Sign Up";
+    ViewData["Title"] = "Create Account";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="text-center">Create New Account</h3>
-                </div>
-                <div class="card-body">
-                    <form asp-action="SignUp" method="post">
-                        <div asp-validation-summary="All" class="text-danger"></div>
-                        
-                        <div class="mb-3">
-                            <label asp-for="Email" class="form-label">Email address</label>
-                            <input asp-for="Email" class="form-control" placeholder="Enter email">
-                            <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label asp-for="Password" class="form-label">Password</label>
-                            <input asp-for="Password" class="form-control" type="password" placeholder="Create password">
-                            <span asp-validation-for="Password" class="text-danger"></span>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
-                            <input asp-for="ConfirmPassword" class="form-control" type="password" placeholder="Confirm password">
-                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary w-100">Sign Up</button>
-                    </form>
-                    
-                    <div class="text-center mt-3">
-                        <p>Already have an account? <a asp-action="Login">Login here</a></p>
-                    </div>
-                </div>
-            </div>
+<div class="section-spacer bg-white">
+    <div class="container-fluid" style="max-width: 460px; padding: 0 clamp(1.5rem, 4vw, 4rem); margin: 0 auto;">
+
+        <div class="text-center mb-5 animate-fade-in">
+            <p class="text-caption" style="color: #999;">Account</p>
+            <h1 class="text-heading text-primary m-0 mt-2" style="font-size: 1.4rem;">Create Account</h1>
+            <div style="width: 30px; height: 1px; background: #1a1a1a; margin: 1.2rem auto 0;"></div>
         </div>
+
+        <div class="animate-fade-in animate-delay-1">
+            <form asp-action="SignUp" method="post" autocomplete="off">
+                <div asp-validation-summary="All" class="mb-4 text-danger" style="font-size: 0.78rem; font-weight: 300;"></div>
+
+                <div class="mb-4">
+                    <label asp-for="Email" class="text-caption d-block mb-2" style="color: #999;">Email Address</label>
+                    <input asp-for="Email" class="form-minimal" placeholder="your@email.com" autocomplete="email" />
+                    <span asp-validation-for="Email" class="text-danger" style="font-size: 0.75rem;"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Password" class="text-caption d-block mb-2" style="color: #999;">Password</label>
+                    <input asp-for="Password" class="form-minimal" type="password" placeholder="Min 6 characters" autocomplete="new-password" />
+                    <span asp-validation-for="Password" class="text-danger" style="font-size: 0.75rem;"></span>
+                </div>
+
+                <div class="mb-5">
+                    <label asp-for="ConfirmPassword" class="text-caption d-block mb-2" style="color: #999;">Confirm Password</label>
+                    <input asp-for="ConfirmPassword" class="form-minimal" type="password" placeholder="Re-enter password" autocomplete="new-password" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger" style="font-size: 0.75rem;"></span>
+                </div>
+
+                <button type="submit" class="btn-minimal btn-filled w-100 py-3 mb-4">
+                    Create Account
+                </button>
+
+                <div class="text-center" style="font-size: 0.78rem; font-weight: 300; color: #888;">
+                    Already have an account?
+                    <a asp-action="Login"
+                       class="hover-reveal"
+                       style="color: #1a1a1a; text-decoration: none; border-bottom: 1px solid #1a1a1a; padding-bottom: 2px; margin-left: 0.3rem;">
+                        Sign in
+                    </a>
+                </div>
+            </form>
+        </div>
+
     </div>
 </div>
 

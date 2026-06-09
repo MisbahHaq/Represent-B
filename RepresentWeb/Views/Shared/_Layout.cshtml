@@ -13,11 +13,42 @@
 </head>
 
 <style>
-  .nav-small {
-    font-size: 0.72rem;
+  .nav-link-minimal {
+    font-size: 0.68rem;
+    font-weight: 400;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #fff;
+    text-decoration: none;
+    padding: 0;
+    opacity: 0.75;
+    transition: opacity 0.5s ease;
+  }
+  .nav-link-minimal:hover { opacity: 1; color: #fff; }
+  .badge-count {
+    font-size: 0.6rem;
+    font-weight: 400;
     letter-spacing: 0.08em;
+    padding: 0.3em 0.55em;
+    border-radius: 0;
+    background: #1a1a1a;
+    color: #fff;
+    min-width: 18px;
+    text-align: center;
     line-height: 1;
   }
+  .icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    opacity: 0.75;
+    transition: opacity 0.5s ease;
+    color: #fff;
+    text-decoration: none;
+  }
+  .icon-btn:hover { opacity: 1; color: #fff; }
 </style>
 
 <body>
@@ -30,157 +61,104 @@
       <div class="container-fluid px-4 d-flex align-items-center justify-content-between">
 
           <!-- LEFT -->
-         <div class="d-flex align-items-center gap-4">
+          <div class="d-none d-md-flex align-items-center" style="gap: 2.8rem;">
 
-           <a class="nav-link text-white text-uppercase p-0 nav-small" asp-controller="Home" asp-action="Men">
-             Men
-           </a>
+            <a class="nav-link-minimal" asp-controller="Home" asp-action="Men">Men</a>
+            <a class="nav-link-minimal" asp-controller="Home" asp-action="Women">Women</a>
 
-           <a class="nav-link text-white text-uppercase p-0 nav-small" asp-controller="Home" asp-action="Women">
-             Woman
-           </a>
+          </div>
 
-         </div>
+         <!-- CENTER -->
+         <a class="navbar-brand position-absolute start-50 translate-middle-x text-white m-0"
+            asp-controller="Home" asp-action="Index"
+            style="letter-spacing: 0.35em; font-size: 0.9rem; font-weight: 200; text-transform: uppercase;">
+           Represent
+         </a>
 
-        <!-- CENTER -->
-        <a class="navbar-brand position-absolute start-50 translate-middle-x text-white fw-semibold m-0"
-           asp-controller="Home" asp-action="Index" style="letter-spacing: 0.3em; font-size: 0.95rem;">
-          REPRESENT
-        </a>
+          <!-- RIGHT -->
+          <div class="d-flex align-items-center" style="gap: 2.2rem;">
 
-        <!-- RIGHT -->
-<div class="d-flex align-items-center gap-4 ms-auto">
+            <a class="nav-link-minimal d-none d-md-block" asp-action="Vault" asp-controller="Home">The Vault</a>
+            <a class="nav-link-minimal d-none d-md-block" asp-action="Prestige" asp-controller="Home">Prestige</a>
 
-           <a class="nav-link text-white text-uppercase p-0 nav-small" asp-action="Retail" asp-controller="Home">
-             Retail
-           </a>
+     <a href="#" class="icon-btn" id="userLoginLink">
+      <i class="bi bi-person" style="font-size: 0.95rem;"></i>
+    </a>
 
-           <a class="nav-link text-white text-uppercase p-0 nav-small" asp-action="Vault" asp-controller="Home">
-             The Vault
-           </a>
-
-<a class="nav-link text-white text-uppercase p-0 nav-small" asp-action="Prestige" asp-controller="Home">
-             Prestige
-           </a>
-
-             <a href="#" class="text-white" id="userLoginLink">
-              <i class="bi bi-person"></i>
+            <a asp-controller="Bookmark" asp-action="Index" class="icon-btn position-relative" id="bookmarkLink">
+              <i class="bi bi-bookmark bookmark-icon" style="font-size: 0.95rem; color: #fff; transition: color 0.5s ease;"></i>
+              <span class="badge-count position-absolute"
+                    style="top: -6px; right: -8px; display: none;">0</span>
             </a>
 
-           <a asp-controller="Bookmark" asp-action="Index" class="text-white position-relative" id="bookmarkLink">
-             <i class="bi bi-bookmark"></i>
+             <a asp-controller="Cart" asp-action="Index" class="icon-btn position-relative" id="cartLink">
+              <i class="bi bi-bag" style="font-size: 0.95rem;"></i>
+              <span class="badge-count position-absolute"
+                    style="top: -4px; right: -8px;">0</span>
+            </a>
 
-             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-light text-dark"
-                   style="font-size: 0.45rem;">
-               0
-             </span>
-           </a>
-
-            <a asp-controller="Cart" asp-action="Index" class="text-white position-relative" id="cartLink">
-             <i class="bi bi-bag"></i>
-
-             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-light text-dark"
-                   style="font-size: 0.45rem;">
-               0
-             </span>
-           </a>
-
-        </div>
+          </div>
 
       </div>
     </nav>
 
   </header>
 
-  <main role="main" class="pb-3">
+  <main role="main" class="pb-0">
     @RenderBody()
   </main>
 
-  <footer class="bg-black text-white border-top border-secondary">
-    <div class="container py-5">
-      <div class="row g-5">
+  <footer class="bg-dark text-white" style="padding-top: 5rem; padding-bottom: 3rem;">
+    <div class="container-fluid px-4 px-lg-5" style="max-width: 1400px;">
 
-        <!-- Logo + Newsletter -->
-        <div class="col-lg-5">
-          <h2 class="fw-semibold mb-4" style="letter-spacing: 0.3em;">
-            REPRESENT
+      <div class="row g-4 gx-0" style="border-top: 1px solid #222; padding-top: 3rem;">
+
+        <div class="col-12 col-lg-4 mb-4 mb-lg-0">
+          <h2 class="m-0 mb-4"
+              style="font-size: 0.85rem; font-weight: 200; letter-spacing: 0.35em; text-transform: uppercase;">
+            Represent
           </h2>
 
-          <p class="text-secondary small mb-4" style="max-width: 400px; line-height: 1.8;">
-            Sign up to receive exclusive access to new drops, restocks and
-            members-only releases.
+          <p class="m-0" style="max-width: 340px; font-size: 0.8rem; font-weight: 300; color: #777; line-height: 1.8; letter-spacing: 0.03em;">
+            Sign up to receive exclusive access to new drops, restocks and members-only releases.
           </p>
-
-          <form class="d-flex flex-column flex-sm-row gap-3">
-            <input type="email" placeholder="Your email"
-                   class="form-control bg-dark text-white border-secondary rounded-0" />
-
-            <button class="btn btn-light rounded-0 px-4">
-              Subscribe
-            </button>
-          </form>
         </div>
 
-        <!-- Help -->
-        <div class="col-6 col-md-3 col-lg-2">
-          <h6 class="text-uppercase fw-bold mb-4">Help</h6>
-
-          <ul class="list-unstyled d-flex flex-row gap-3 ">
-            <li>
-              <a href="#" class="text-secondary text-decoration-none">
-                Contact
-              </a>
-            </li>
-
-            <li>
-              <a href="#" class="text-secondary text-decoration-none">
-                Shipping
-              </a>
-            </li>
-
-            <li>
-              <a href="#" class="text-secondary text-decoration-none">
-                Returns
-              </a>
-            </li>
-
-            <li>
-              <a href="#" class="text-secondary text-decoration-none">
-                FAQs
-              </a>
-            </li>
-
-            <li>
-              <a href="#" class="text-secondary text-decoration-none">
-                Privacy Policy
-              </a>
-            </li>
+        <div class="col-6 col-lg-2 offset-lg-1">
+          <p class="text-caption mb-3" style="color: #555;">Help</p>
+          <ul class="list-unstyled" style="font-size: 0.78rem; font-weight: 300; color: #888; line-height: 2.2;">
+            <li><a href="#" class="text-decoration-none hover-fade" style="color: #888;">Contact</a></li>
+            <li><a href="#" class="text-decoration-none hover-fade" style="color: #888;">Shipping</a></li>
+            <li><a href="#" class="text-decoration-none hover-fade" style="color: #888;">Returns</a></li>
+            <li><a href="#" class="text-decoration-none hover-fade" style="color: #888;">FAQs</a></li>
+            <li><a href="#" class="text-decoration-none hover-fade" style="color: #888;">Privacy Policy</a></li>
           </ul>
         </div>
 
-        <!-- Bottom -->
-        <div
-          class="border-top border-secondary mt-5 pt-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-          <p class="text-secondary small mb-0">
-            © 2026 REPRESENT. All rights reserved.
-          </p>
+        <div class="col-6 col-lg-2">
+          <p class="text-caption mb-3" style="color: #555;">Connect</p>
+          <ul class="list-unstyled" style="font-size: 0.78rem; font-weight: 300; color: #888; line-height: 2.2;">
+            <li><a href="#" class="text-decoration-none hover-fade" style="color: #888;">Instagram</a></li>
+            <li><a href="#" class="text-decoration-none hover-fade" style="color: #888;">Twitter / X</a></li>
+            <li><a href="#" class="text-decoration-none hover-fade" style="color: #888;">YouTube</a></li>
+            <li><a href="#" class="text-decoration-none hover-fade" style="color: #888;">TikTok</a></li>
+          </ul>
+        </div>
 
-          <div class="d-flex gap-4">
-            <a href="#" class="text-secondary text-decoration-none small">
-              Terms
-            </a>
-
-            <a href="#" class="text-secondary text-decoration-none small">
-              Privacy
-            </a>
-
-            <a href="#" class="text-secondary text-decoration-none small">
-              Cookies
-            </a>
+        <div class="col-12 mt-5 pt-4">
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+            <p class="text-caption m-0" style="color: #444;">© 2026 Represent. All rights reserved.</p>
+            <div class="d-flex gap-4">
+              <a href="#" class="text-decoration-none text-caption hover-fade" style="color: #555;">Terms</a>
+              <a href="#" class="text-decoration-none text-caption hover-fade" style="color: #555;">Privacy</a>
+              <a href="#" class="text-decoration-none text-caption hover-fade" style="color: #555;">Cookies</a>
+            </div>
           </div>
         </div>
+
       </div>
-    </footer>
+    </div>
+  </footer>
 
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -202,46 +180,57 @@ function isUserLoggedIn() {
                     .catch(() => ({ authenticated: false, isAdmin: false }));
             }
 
-function updateUserLoginLink() {
-               isUserLoggedIn().then(data => {
-                   const loggedIn = data.authenticated;
-                   const isAdmin = data.isAdmin;
-                   const loginLink = document.getElementById('userLoginLink');
-                   if (loggedIn) {
-                       loginLink.innerHTML = '<i class="bi bi-person-circle"></i>';
-                       loginLink.title = isAdmin ? 'Admin Panel' : 'Account';
-                       loginLink.href = isAdmin ? '/Admin/Dashboard' : '/Account/Profile';
-                       loginLink.onclick = null;
-                   } else {
-                       loginLink.innerHTML = '<i class="bi bi-person"></i>';
-                       loginLink.title = 'Login';
-                       loginLink.href = '/Account/Login';
-                       loginLink.onclick = null;
-                   }
-               });
-           }
+ function updateUserLoginLink() {
+                isUserLoggedIn().then(data => {
+                    const loggedIn = data.authenticated;
+                    const isAdmin = data.isAdmin;
+                    const loginLinks = document.querySelectorAll('#userLoginLink, #userLoginLinkDesktop');
+                    loginLinks.forEach(loginLink => {
+                        if (loggedIn) {
+                            loginLink.innerHTML = '<i class="bi bi-person-circle"></i>';
+                            loginLink.title = isAdmin ? 'Admin Panel' : 'Account';
+                            loginLink.href = isAdmin ? '/Admin/Dashboard' : '/Account/Profile';
+                            loginLink.onclick = null;
+                        } else {
+                            loginLink.innerHTML = '<i class="bi bi-person"></i>';
+                            loginLink.title = 'Login';
+                            loginLink.href = '/Account/Login';
+                            loginLink.onclick = null;
+                        }
+                    });
+                });
+            }
 
           function updateCartCount() {
               fetch('/Cart/GetCount')
                   .then(response => response.json())
-                  .then(data => {
-                      const cartBadge = document.querySelector('#cartLink .badge');
-                      if (cartBadge) {
-                          cartBadge.textContent = data.count;
-                      }
-                  });
-          }
+                   .then(data => {
+                       const cartBadge = document.querySelector('#cartLink .badge-count');
+                       if (cartBadge) {
+                           cartBadge.textContent = data.count;
+                       }
+                   });
+           }
 
-          function updateBookmarkCount() {
-              fetch('/Bookmark/GetCount')
-                  .then(response => response.json())
-                  .then(data => {
-                      const bookmarkBadge = document.querySelector('#bookmarkLink .badge');
-                      if (bookmarkBadge) {
-                          bookmarkBadge.textContent = data.count;
-                      }
-                  });
-          }
+           function updateBookmarkCount() {
+               fetch('/Bookmark/GetCount')
+                   .then(response => response.json())
+                   .then(data => {
+                       const bookmarkBadge = document.querySelector('#bookmarkLink .badge-count');
+                       const bookmarkIcon = document.querySelector('#bookmarkLink .bookmark-icon');
+                       if (bookmarkBadge) {
+                           bookmarkBadge.textContent = data.count;
+                           if (data.count > 0) {
+                               bookmarkBadge.style.display = 'inline-block';
+                           } else {
+                               bookmarkBadge.style.display = 'none';
+                           }
+                       }
+                       if (bookmarkIcon) {
+                           bookmarkIcon.style.color = data.count > 0 ? '#1a1a1a' : '#fff';
+                       }
+                   });
+           }
 
 function loginUser(email, password, rememberMe) {
                return fetch('/Account/LoginAjax', {
@@ -257,9 +246,10 @@ function loginUser(email, password, rememberMe) {
                    if (data.success) {
                        localStorage.setItem('authToken', 'fake-jwt-token');
                        localStorage.setItem('userEmail', email);
-window.appAuthCache = { authenticated: true, isAdmin: email === 'admin@represent.com' };
-                        updateUserLoginLink();
-                       updateCartCount();
+ window.appAuthCache = { authenticated: true, isAdmin: email === 'admin@represent.com' };
+                         updateUserLoginLink();
+                        updateCartCount();
+                        updateBookmarkCount();
                        return true;
                    } else {
                        showError('Login failed: ' + (data.errors ? data.errors.join('. ') : 'Invalid credentials'));
@@ -286,9 +276,10 @@ function logoutUser() {
                        window.appAuthCache = { authenticated: false, isAdmin: false };
                        localStorage.removeItem('authToken');
                        localStorage.removeItem('userEmail');
-                       updateUserLoginLink();
-                       updateCartCount();
-                       return true;
+                        updateUserLoginLink();
+                        updateCartCount();
+                        updateBookmarkCount();
+                        return true;
                    } else {
                        showError('Logout failed');
                        return false;
@@ -309,10 +300,11 @@ function logoutUser() {
               alert(message);
           }
 
-          document.addEventListener('DOMContentLoaded', function() {
-              updateUserLoginLink();
-              updateCartCount();
-          });
+           document.addEventListener('DOMContentLoaded', function() {
+               updateUserLoginLink();
+               updateCartCount();
+               updateBookmarkCount();
+           });
       </script>
     @RenderSection("Scripts", required: false)
 

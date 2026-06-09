@@ -1,69 +1,99 @@
 @model representweb.Controllers.CartViewModel
-
 @{
     ViewData["Title"] = "Checkout";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="text-center">Checkout</h3>
-                </div>
-                <div class="card-body">
-                    <form asp-action="Checkout" method="post">
-                        <div class="mb-4">
-                            <h5>Order Summary</h5>
-                            <div class="list-group">
-                                @foreach (var item in Model.Items)
-                                {
-                                    <div class="list-item d-flex justify-content-between align-items-center p-2 border-bottom">
-                                        <div>
-                                            <h6 class="mb-1">@item.Product.Name</h6>
-                                            <p class="mb-0 text-muted">@item.Quantity x @item.Product.Price.ToString("C")</p>
-                                        </div>
-                                        <span class="fw-bold">@item.Subtotal.ToString("C")</span>
-                                    </div>
-                                }
-                            </div>
-                            <div class="d-flex justify-content-between mt-3 pt-2 border-top">
-                                <h5>Total:</h5>
-                                <h5>@Model.TotalAmount.ToString("C")</h5>
-                            </div>
-                        </div>
+<div class="section-spacer bg-white">
+    <div class="container-fluid" style="max-width: 1000px; padding: 0 clamp(1.5rem, 4vw, 4rem);">
 
-                        <div class="mb-4">
-                            <h5>Shipping Address</h5>
-                            <p class="text-muted">@Context.Session.GetString("UserAddress")</p>
-                            <a asp-action="UpdateAddress" asp-controller="Account" class="btn btn-sm btn-outline-link">Change Address</a>
-                        </div>
-
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg">Place Order</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+        <div class="mb-5 animate-fade-in">
+            <p class="text-caption" style="color: #999;">Checkout</p>
+            <div style="width: 30px; height: 1px; background: #1a1a1a; margin-top: 0.8rem;"></div>
         </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="text-center">Order Summary</h3>
-                </div>
-                <div class="card-body">
-                    <p class="text-center">
-                        <i class="bi bi-truck fs-1 text-primary"></i>
+
+        <div class="row gx-5 gy-5">
+
+            <div class="col-12 col-lg-7 animate-fade-in animate-delay-1">
+                <form asp-action="Checkout" method="post">
+
+                    <p class="text-heading mb-4" style="font-size: 1rem;">Order Summary</p>
+
+                    @foreach (var item in Model.Items)
+                    {
+                        <div style="padding: 1.2rem 0; border-bottom: 1px solid #f0f0ee;">
+                            <div class="row align-items-center g-3">
+                                <div class="col-4 col-md-5">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="img-container flex-shrink-0"
+                                             style="width: 55px; height: 68px; aspect-ratio: 3/4; background: #f7f7f5;">
+                                            @if (!string.IsNullOrEmpty(item.Product.ImageUrl))
+                                            {
+                                                <img src="@item.Product.ImageUrl"
+                                                     alt="@item.Product.Name"
+                                                     style="object-fit: contain; padding: 0.3rem;" />
+                                            }
+                                        </div>
+                                        <span style="font-size: 0.82rem; font-weight: 400; letter-spacing: 0.05em; text-transform: uppercase;">
+                                            @item.Product.Name
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-4 col-md-3">
+                                    <span style="font-size: 0.8rem; font-weight: 300; color: #888;">
+                                        @item.Quantity × Rs @item.Product.Price.ToString("N2")
+                                    </span>
+                                </div>
+                                <div class="col-4 col-md-4 text-end">
+                                    <span style="font-size: 0.88rem; font-weight: 400;">
+                                        Rs @item.Subtotal.ToString("N2")
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="d-flex justify-content-between mt-4 mb-5">
+                        <span style="font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;">Total</span>
+                        <span style="font-size: 1rem; font-weight: 300;">Rs @Model.TotalAmount.ToString("N2")</span>
+                    </div>
+
+                    <hr class="divider">
+
+                    <p class="text-heading mb-4 mt-5" style="font-size: 1rem;">Shipping Address</p>
+
+                    <div class="mb-5">
+                        <p style="font-size: 0.85rem; font-weight: 300; color: #666; line-height: 1.8;">
+                            @Context.Session.GetString("UserAddress")
+                        </p>
+                        <a asp-action="UpdateAddress" asp-controller="Account"
+                           class="hover-reveal"
+                           style="font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; color: #1a1a1a; border-bottom: 1px solid #1a1a1a; padding-bottom: 2px;">
+                            Change Address
+                        </a>
+                    </div>
+
+                    <button type="submit" class="btn-minimal btn-filled w-100 py-3">
+                        Place Order
+                    </button>
+                </form>
+            </div>
+
+            <div class="col-12 col-lg-4 offset-lg-1" style="padding-top: 0.5rem;">
+                <div class="animate-fade-in animate-delay-2">
+                    <p class="text-caption mb-4" style="color: #999;">Estimated Delivery</p>
+                    <p style="font-size: 0.82rem; font-weight: 300; color: #666; line-height: 1.8;">
+                        3–5 business days via standard courier.<br>
+                        Tracking information will be emailed once dispatched.
                     </p>
-                    <p class="text-center">Your order will be shipped to:</p>
-                    <p class="text-center fw-bold">@Context.Session.GetString("UserAddress")</p>
-                    <hr>
-                    <p class="text-center">
-                        <small>Estimated delivery: 3-5 business days</small>
+                    <hr class="divider thin">
+                    <p class="text-caption" style="color: #999;">Shipping To</p>
+                    <p style="font-size: 0.82rem; font-weight: 300; color: #666; margin-top: 0.5rem;">
+                        @Context.Session.GetString("UserAddress")
                     </p>
                 </div>
             </div>
+
         </div>
     </div>
 </div>

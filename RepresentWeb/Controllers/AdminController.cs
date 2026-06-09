@@ -36,7 +36,7 @@ namespace representweb.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (model.Email == "admin@represent.com" && model.Password == "admin123")
+                if (model.Email == "admin@represent.com" && model.Password == "Qwerty123")
                 {
                     HttpContext.Session.SetString("IsAdmin", "true");
                     HttpContext.Session.SetString("AdminEmail", model.Email);

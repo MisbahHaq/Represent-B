@@ -37,7 +37,7 @@ namespace representweb.Controllers
                 HttpContext.Session.SetString("UserName", username);
                 HttpContext.Session.SetString("UserAddress", string.Empty);
                 
-                if (model.Email == "admin@represent.com" && model.Password == "admin123")
+                if (model.Email == "admin@represent.com" && model.Password == "Qwerty123")
                 {
                     HttpContext.Session.SetString("IsAdmin", "true");
                     return RedirectToAction("Dashboard", "Admin");
@@ -62,7 +62,7 @@ namespace representweb.Controllers
                 HttpContext.Session.SetString("UserEmail", model.Email);
                 HttpContext.Session.SetString("AuthToken", "fake-jwt-token");
                 
-                if (model.Email == "admin@represent.com" && model.Password == "admin123")
+                if (model.Email == "admin@represent.com" && model.Password == "Qwerty123")
                 {
                     HttpContext.Session.SetString("IsAdmin", "true");
                 }
@@ -147,6 +147,10 @@ namespace representweb.Controllers
             {
                 return RedirectToAction("Login");
             }
+            if (HttpContext.Session.GetString("IsAdmin") == "true")
+            {
+                return RedirectToAction("Dashboard", "Admin");
+            }
             ViewData["Title"] = "My Account";
 
             var model = new ProfileViewModel
@@ -170,6 +174,10 @@ namespace representweb.Controllers
             {
                 return RedirectToAction("Login");
             }
+            if (HttpContext.Session.GetString("IsAdmin") == "true")
+            {
+                return RedirectToAction("Dashboard", "Admin");
+            }
             var username = HttpContext.Session.GetString("UserName");
             var model = new UpdateUsernameViewModel { Username = username };
             return View(model);
@@ -184,6 +192,10 @@ namespace representweb.Controllers
             if (string.IsNullOrEmpty(userEmail))
             {
                 return RedirectToAction("Login");
+            }
+            if (HttpContext.Session.GetString("IsAdmin") == "true")
+            {
+                return RedirectToAction("Dashboard", "Admin");
             }
             if (ModelState.IsValid)
             {
@@ -202,6 +214,10 @@ namespace representweb.Controllers
             {
                 return RedirectToAction("Login");
             }
+            if (HttpContext.Session.GetString("IsAdmin") == "true")
+            {
+                return RedirectToAction("Dashboard", "Admin");
+            }
             var address = HttpContext.Session.GetString("UserAddress");
             var model = new UpdateAddressViewModel { Address = address };
             return View(model);
@@ -216,6 +232,10 @@ namespace representweb.Controllers
             if (string.IsNullOrEmpty(userEmail))
             {
                 return RedirectToAction("Login");
+            }
+            if (HttpContext.Session.GetString("IsAdmin") == "true")
+            {
+                return RedirectToAction("Dashboard", "Admin");
             }
             if (ModelState.IsValid)
             {

@@ -1,505 +1,82 @@
 [
   {
-    "name": "Black Oversized Hoodie",
-    "description": "Premium heavyweight cotton hoodie.",
+    "name": "Track Star Jacket",
+    "description": "Introducing the Track Star Jacket in Jet Black, a relaxed fit track jacket crafted from nylon with a funnel neck and full zip fastening. The silhouette draws in at the waist through raglan sleeves and contrast panelling, with binding running into the raglan and side body for a defined, retro-inspired shape.",
     "price": 59.99,
     "stock": 25,
     "gender": "Men",
-    "imageUrl": "/images/hoodie-black-1.jpg",
-    "imageUrls": "/images/hoodie-black-2.jpg,/images/hoodie-black-3.jpg",
+    "imageUrl": "https://sfycdn.speedsize.com/d31641c5-60cb-4a0b-8662-59094f81bb6e/row.representclo.com/cdn/shop/files/WEBRES_0055_HIGHRES_0001s_0004_Layer6.jpg?v=1780500115&width=992",
+    "imageUrls": "https://sfycdn.speedsize.com/d31641c5-60cb-4a0b-8662-59094f81bb6e/row.representclo.com/cdn/shop/files/ZWU_tUf_z1yYcuPu-NBWSheqsvp7bavrZLoOpuI92KY.jpg?v=1780500115&width=992,https://sfycdn.speedsize.com/d31641c5-60cb-4a0b-8662-59094f81bb6e/row.representclo.com/cdn/shop/files/MVTyurbExmXT1NANTZEf4z2PWedfW81Awm2BnxmCmwM.jpg?v=1780500115&width=992, https://sfycdn.speedsize.com/d31641c5-60cb-4a0b-8662-59094f81bb6e/row.representclo.com/cdn/shop/files/AEzoKk0NUs0kbgk9uWLqoIF0Hh5B4uspNaQipViKdbs.jpg?v=1780500115&width=992",
     "tags": "hoodie,black,oversized,winter"
   },
   {
-    "name": "White Essential T-Shirt",
-    "description": "Relaxed fit everyday t-shirt.",
+    "name": "Represent England Bag",
+    "description": "Introducing the Represent England Bag in Washed Black, a drawcord bag crafted from 100% polyester jacquard artwork fabric with a vegetal dye finish. The same archive artwork that runs through the Champions jerseys carries across to this piece, with mesh panels and a printed finish adding depth and detail.",
     "price": 24.99,
     "stock": 60,
     "gender": "Unisex",
-    "imageUrl": "/images/tshirt-white-1.jpg",
-    "imageUrls": "/images/tshirt-white-2.jpg,/images/tshirt-white-3.jpg",
-    "tags": "tshirt,white,basics"
+    "imageUrl": "https://sfycdn.speedsize.com/d31641c5-60cb-4a0b-8662-59094f81bb6e/row.representclo.com/cdn/shop/files/ElGUc7r7-sRoFs307FtUKsQwpZonOEGG5d7CGvymfgE.jpg?v=1780394156&width=992",
+    "imageUrls": "https://sfycdn.speedsize.com/d31641c5-60cb-4a0b-8662-59094f81bb6e/row.representclo.com/cdn/shop/files/snFMC6BWBWiPOYybFxbK7yK4gaLMMIVGpCHs8HCCiCw.jpg?v=1780394156&width=992, https://sfycdn.speedsize.com/d31641c5-60cb-4a0b-8662-59094f81bb6e/row.representclo.com/cdn/shop/files/JksetiBXPY7Qkd8phREJjxczrwSo6W9v0gUfch8xN0U.jpg?v=1780394156&width=992",
+    "tags": "bag"
   },
   {
-    "name": "Grey Joggers",
-    "description": "Soft fleece joggers with tapered fit.",
+    "name": "Terrier",
+    "description": "Reintroducing the Terrier in Black, a lightweight, hand-made sneaker built for the everyday wearer. Set on a sloping Vibram outsole, the sneaker features a matte body cage and breathable membrane, wrapped in tonal textures with a chunky knitted sock insert for all-day comfort. The upper is finished with hiking-style laces threaded through a rubber-dipped R-bar, matte piping, and 3M reflective detailing. A carbon-effect bubble showcases the Represent logo, while additional laces offer versatility straight out of the box.",
     "price": 39.99,
     "stock": 40,
     "gender": "Men",
-    "imageUrl": "/images/jogger-grey-1.jpg",
-    "imageUrls": "/images/jogger-grey-2.jpg,/images/jogger-grey-3.jpg",
+    "imageUrl": "https://sfycdn.speedsize.com/d31641c5-60cb-4a0b-8662-59094f81bb6e/row.representclo.com/cdn/shop/files/Terrier-Black00002.jpg?v=1743014470&width=992",
+    "imageUrls": "https://sfycdn.speedsize.com/d31641c5-60cb-4a0b-8662-59094f81bb6e/row.representclo.com/cdn/shop/files/Terrier-Black00001.jpg?v=1743014470&width=992, https://sfycdn.speedsize.com/d31641c5-60cb-4a0b-8662-59094f81bb6e/row.representclo.com/cdn/shop/files/Terrier-Black00005.jpg?v=1743014470&width=992",
     "tags": "joggers,grey,casual"
   },
   {
-    "name": "Beige Cargo Pants",
-    "description": "Utility-inspired cargo trousers.",
+    "name": "Heaton Workwear Pant",
+    "description": "Introducing the Heaton Workwear Pant in Jet Black, a wide straight leg carpenter pant crafted from hardwearing cotton canvas. Built for structure and durability, this piece delivers a clean, utilitarian silhouette with refined detailing throughout.Carpenter panelling across the front leg is reinforced with metal rivets, while functional pocket placement enhances everyday practicality. Finished with a branded leather back pocket patch and zip fly fastening for a timeless workwear look.",
     "price": 49.99,
     "stock": 35,
     "gender": "Men",
-    "imageUrl": "/images/cargo-beige-1.jpg",
-    "imageUrls": "/images/cargo-beige-2.jpg,/images/cargo-beige-3.jpg",
+    "imageUrl": "https://sfycdn.speedsize.com/d31641c5-60cb-4a0b-8662-59094f81bb6e/row.representclo.com/cdn/shop/files/VoDthQiN_iqbTcFWqJYGtkJ8BtW057ssN8UQJGe0jY.jpg?v=1769418167&width=992",
+    "imageUrls": "https://sfycdn.speedsize.com/d31641c5-60cb-4a0b-8662-59094f81bb6e/row.representclo.com/cdn/shop/files/P9YOYH23DBMn5R4jOvd2aND8hdKfNvZfrrZ3SuAzkcU.jpg?v=1769418167&width=992, https://sfycdn.speedsize.com/d31641c5-60cb-4a0b-8662-59094f81bb6e/row.representclo.com/cdn/shop/files/qp6iluMX0XSJoEX_dVwZffyYAYCOaGB80xgcxwb-kcs.jpg?v=1769418167&width=992",
     "tags": "cargo,beige,streetwear"
   },
   {
-    "name": "Navy Crewneck Sweatshirt",
-    "description": "Classic crewneck with brushed interior.",
+    "name": "Spike Jersey",
+    "description": "Introducing the Spike Jersey in Flat White, a standard oversized football jersey crafted from 100% polyester jacquard fabric with a red sublimation print across the surface. The archive artwork runs through the jacquard weave, bringing depth and heritage detail to a classic football silhouette.",
     "price": 44.99,
     "stock": 30,
-    "gender": "Unisex",
-    "imageUrl": "/images/crewneck-navy-1.jpg",
-    "imageUrls": "/images/crewneck-navy-2.jpg,/images/crewneck-navy-3.jpg",
+    "gender": "Women",
+    "imageUrl": "https://sfycdn.speedsize.com/d31641c5-60cb-4a0b-8662-59094f81bb6e/row.representclo.com/cdn/shop/files/YPuKJlB5agtEz-RnFaQMqJeb1YrhafLYbG3HdO03XZg.jpg?v=1780393823&width=992",
+    "imageUrls": "https://sfycdn.speedsize.com/d31641c5-60cb-4a0b-8662-59094f81bb6e/row.representclo.com/cdn/shop/files/NrpzP1MH9_6tCJBG_7WotxaVUdqvA3kPh9k1qs-w1ls.jpg?v=1780393823&width=992, https://sfycdn.speedsize.com/d31641c5-60cb-4a0b-8662-59094f81bb6e/row.representclo.com/cdn/shop/files/Uujas6QA8NFzmb1yecI-bmGal7TANQvwN8l7KODyQig.jpg?v=1780393823&width=992",
     "tags": "crewneck,navy,winter"
   },
   {
-    "name": "Black Skinny Jeans",
-    "description": "Stretch denim slim-fit jeans.",
+    "name": "Printed Vest",
+    "description": "Introducing the Printed Vest in Flat White, a sleeveless piece crafted from 100% cotton rib jersey with a trompe l'oeil-style jumbo screen print across the front and back. The artwork was designed around the garment itself, applied after construction to create a seamless graphic that wraps the body naturally.",
     "price": 54.99,
     "stock": 45,
-    "gender": "Men",
-    "imageUrl": "/images/jeans-black-1.jpg",
-    "imageUrls": "/images/jeans-black-2.jpg,/images/jeans-black-3.jpg",
+    "gender": "Women",
+    "imageUrl": "https://sfycdn.speedsize.com/d31641c5-60cb-4a0b-8662-59094f81bb6e/row.representclo.com/cdn/shop/files/mPNp_3JrEJHiwYksNYpEQr2YOdaqcIGUBz3vYzhI7Mo.jpg?v=1780394157&width=992",
+    "imageUrls": "https://sfycdn.speedsize.com/d31641c5-60cb-4a0b-8662-59094f81bb6e/row.representclo.com/cdn/shop/files/5RyJfU4EZvLR9By9qmC73maUlnq9qB1rScgCHP0_I30.jpg?v=1780394157&width=992, https://sfycdn.speedsize.com/d31641c5-60cb-4a0b-8662-59094f81bb6e/row.representclo.com/cdn/shop/files/jgGcC-NMBWeKLo_TNxsYclna7Gepr-H74myeG5DnuB8.jpg?v=1780394157&width=992",
     "tags": "jeans,black,denim"
   },
   {
-    "name": "Olive Bomber Jacket",
-    "description": "Lightweight bomber jacket.",
+    "name": "Represent Owners Club Jersey Short",
+    "description": "Introducing the Owners Club Jersey Short in Sky Blue, a wide leg short crafted from 100% cotton with a carbon finish at 380gsm. A new fit with shaping to the outer leg for a flattering flare, designed for everyday wear with a minimal, considered aesthetic.",
     "price": 79.99,
     "stock": 20,
-    "gender": "Men",
-    "imageUrl": "/images/bomber-olive-1.jpg",
+    "gender": "Women",
+    "imageUrl": "https://sfycdn.speedsize.com/d31641c5-60cb-4a0b-8662-59094f81bb6e/row.representclo.com/cdn/shop/files/r1pgHpzrl_JgfzMUt2WZidfpqfkuP5mQWWhCJCfNl80.jpg?v=1778078908&width=992",
     "imageUrls": "/images/bomber-olive-2.jpg,/images/bomber-olive-3.jpg",
     "tags": "jacket,bomber,olive"
   },
   {
-    "name": "Cream Knit Sweater",
-    "description": "Soft knit sweater for cold weather.",
+    "name": "Represent Owners Club Rib Vest",
+    "description": "Introducing the Owners Club Rib Vest in Jet Black, a fitted ribbed vest crafted from 95% cotton and 5% elastane at 330gsm. A new introduction to the Owners Club womens line, designed with a clean, body-conscious silhouette and contrast branding in a soft water based screen print with a vintage finish.",
     "price": 64.99,
     "stock": 18,
     "gender": "Women",
-    "imageUrl": "/images/sweater-cream-1.jpg",
-    "imageUrls": "/images/sweater-cream-2.jpg,/images/sweater-cream-3.jpg",
+    "imageUrl": "https://sfycdn.speedsize.com/d31641c5-60cb-4a0b-8662-59094f81bb6e/row.representclo.com/cdn/shop/files/aBfzZFolK2YyWs66CNRAxPRRKBMTWIgCtJ1f0KPBK1k.jpg?v=1778078908&width=992",
+    "imageUrls": "https://sfycdn.speedsize.com/d31641c5-60cb-4a0b-8662-59094f81bb6e/row.representclo.com/cdn/shop/files/A5Pn6gi6E5yeqUrAkwPqET3l5LXxTCx2M7WnonAqUtM.jpg?v=1778078908&width=992, https://sfycdn.speedsize.com/d31641c5-60cb-4a0b-8662-59094f81bb6e/row.representclo.com/cdn/shop/files/gBPWfi6Z9yUHasfd13byVTuncWLFJ_i3ZmxWg38V9U.jpg?v=1778078908&width=992",
     "tags": "sweater,cream,knit"
-  },
-  {
-    "name": "Blue Denim Jacket",
-    "description": "Vintage-inspired denim jacket.",
-    "price": 69.99,
-    "stock": 22,
-    "gender": "Unisex",
-    "imageUrl": "/images/denim-blue-1.jpg",
-    "imageUrls": "/images/denim-blue-2.jpg,/images/denim-blue-3.jpg",
-    "tags": "denim,jacket,blue"
-  },
-  {
-    "name": "Black Graphic Tee",
-    "description": "Streetwear graphic print t-shirt.",
-    "price": 29.99,
-    "stock": 75,
-    "gender": "Unisex",
-    "imageUrl": "/images/graphic-black-1.jpg",
-    "imageUrls": "/images/graphic-black-2.jpg,/images/graphic-black-3.jpg",
-    "tags": "graphic,tshirt,black"
-  },
-  {
-    "name": "Sand Overshirt",
-    "description": "Layering overshirt with chest pockets.",
-    "price": 54.99,
-    "stock": 28,
-    "gender": "Men",
-    "imageUrl": "/images/overshirt-sand-1.jpg",
-    "imageUrls": "/images/overshirt-sand-2.jpg,/images/overshirt-sand-3.jpg",
-    "tags": "overshirt,sand,casual"
-  },
-  {
-    "name": "White Linen Shirt",
-    "description": "Breathable linen button-down.",
-    "price": 42.99,
-    "stock": 38,
-    "gender": "Men",
-    "imageUrl": "/images/linen-white-1.jpg",
-    "imageUrls": "/images/linen-white-2.jpg,/images/linen-white-3.jpg",
-    "tags": "linen,shirt,summer"
-  },
-  {
-    "name": "Black Puffer Jacket",
-    "description": "Warm insulated winter jacket.",
-    "price": 99.99,
-    "stock": 15,
-    "gender": "Unisex",
-    "imageUrl": "/images/puffer-black-1.jpg",
-    "imageUrls": "/images/puffer-black-2.jpg,/images/puffer-black-3.jpg",
-    "tags": "puffer,jacket,winter"
-  },
-  {
-    "name": "Charcoal Polo Shirt",
-    "description": "Minimal premium polo shirt.",
-    "price": 34.99,
-    "stock": 50,
-    "gender": "Men",
-    "imageUrl": "/images/polo-charcoal-1.jpg",
-    "imageUrls": "/images/polo-charcoal-2.jpg,/images/polo-charcoal-3.jpg",
-    "tags": "polo,charcoal,smartcasual"
-  },
-  {
-    "name": "Brown Chino Pants",
-    "description": "Comfort stretch chino trousers.",
-    "price": 46.99,
-    "stock": 42,
-    "gender": "Men",
-    "imageUrl": "/images/chino-brown-1.jpg",
-    "imageUrls": "/images/chino-brown-2.jpg,/images/chino-brown-3.jpg",
-    "tags": "chino,brown,formal"
-  },
-  {
-    "name": "Black Track Pants",
-    "description": "Athletic fit track pants.",
-    "price": 35.99,
-    "stock": 55,
-    "gender": "Unisex",
-    "imageUrl": "/images/track-black-1.jpg",
-    "imageUrls": "/images/track-black-2.jpg,/images/track-black-3.jpg",
-    "tags": "trackpants,sports,black"
-  },
-  {
-    "name": "Forest Green Hoodie",
-    "description": "Relaxed fit hoodie with kangaroo pocket.",
-    "price": 57.99,
-    "stock": 24,
-    "gender": "Unisex",
-    "imageUrl": "/images/hoodie-green-1.jpg",
-    "imageUrls": "/images/hoodie-green-2.jpg,/images/hoodie-green-3.jpg",
-    "tags": "hoodie,green,casual"
-  },
-  {
-    "name": "Stone Washed Jeans",
-    "description": "Vintage stone wash denim.",
-    "price": 58.99,
-    "stock": 33,
-    "gender": "Men",
-    "imageUrl": "/images/jeans-stone-1.jpg",
-    "imageUrls": "/images/jeans-stone-2.jpg,/images/jeans-stone-3.jpg",
-    "tags": "jeans,stonewash,denim"
-  },
-  {
-    "name": "Minimal Black Shorts",
-    "description": "Comfortable everyday shorts.",
-    "price": 27.99,
-    "stock": 70,
-    "gender": "Men",
-    "imageUrl": "/images/shorts-black-1.jpg",
-    "imageUrls": "/images/shorts-black-2.jpg,/images/shorts-black-3.jpg",
-    "tags": "shorts,black,summer"
-  },
-  {
-    "name": "Light Blue Oxford Shirt",
-    "description": "Classic oxford weave shirt.",
-    "price": 48.99,
-    "stock": 31,
-    "gender": "Men",
-    "imageUrl": "/images/oxford-blue-1.jpg",
-    "imageUrls": "/images/oxford-blue-2.jpg,/images/oxford-blue-3.jpg",
-    "tags": "shirt,oxford,blue"
-  },
-
-  {
-    "name": "Product 21",
-    "description": "Fashion item description.",
-    "price": 31.99,
-    "stock": 40,
-    "gender": "Women",
-    "imageUrl": "/images/product21-1.jpg",
-    "imageUrls": "/images/product21-2.jpg,/images/product21-3.jpg",
-    "tags": "fashion,trending"
-  },
-  {
-    "name": "Product 22",
-    "description": "Fashion item description.",
-    "price": 36.99,
-    "stock": 50,
-    "gender": "Women",
-    "imageUrl": "/images/product22-1.jpg",
-    "imageUrls": "/images/product22-2.jpg,/images/product22-3.jpg",
-    "tags": "fashion,trending"
-  },
-  {
-    "name": "Product 23",
-    "description": "Fashion item description.",
-    "price": 41.99,
-    "stock": 25,
-    "gender": "Unisex",
-    "imageUrl": "/images/product23-1.jpg",
-    "imageUrls": "/images/product23-2.jpg,/images/product23-3.jpg",
-    "tags": "fashion,new"
-  },
-  {
-    "name": "Product 24",
-    "description": "Fashion item description.",
-    "price": 52.99,
-    "stock": 19,
-    "gender": "Men",
-    "imageUrl": "/images/product24-1.jpg",
-    "imageUrls": "/images/product24-2.jpg,/images/product24-3.jpg",
-    "tags": "streetwear"
-  },
-  {
-    "name": "Product 25",
-    "description": "Fashion item description.",
-    "price": 63.99,
-    "stock": 20,
-    "gender": "Women",
-    "imageUrl": "/images/product25-1.jpg",
-    "imageUrls": "/images/product25-2.jpg,/images/product25-3.jpg",
-    "tags": "premium"
-  },
-  {
-    "name": "Product 26",
-    "description": "Fashion item description.",
-    "price": 28.99,
-    "stock": 65,
-    "gender": "Unisex",
-    "imageUrl": "/images/product26-1.jpg",
-    "imageUrls": "/images/product26-2.jpg,/images/product26-3.jpg",
-    "tags": "casual"
-  },
-  {
-    "name": "Product 27",
-    "description": "Fashion item description.",
-    "price": 39.99,
-    "stock": 37,
-    "gender": "Men",
-    "imageUrl": "/images/product27-1.jpg",
-    "imageUrls": "/images/product27-2.jpg,/images/product27-3.jpg",
-    "tags": "fashion"
-  },
-  {
-    "name": "Product 28",
-    "description": "Fashion item description.",
-    "price": 45.99,
-    "stock": 44,
-    "gender": "Women",
-    "imageUrl": "/images/product28-1.jpg",
-    "imageUrls": "/images/product28-2.jpg,/images/product28-3.jpg",
-    "tags": "summer"
-  },
-  {
-    "name": "Product 29",
-    "description": "Fashion item description.",
-    "price": 56.99,
-    "stock": 29,
-    "gender": "Men",
-    "imageUrl": "/images/product29-1.jpg",
-    "imageUrls": "/images/product29-2.jpg,/images/product29-3.jpg",
-    "tags": "winter"
-  },
-  {
-    "name": "Product 30",
-    "description": "Fashion item description.",
-    "price": 61.99,
-    "stock": 18,
-    "gender": "Unisex",
-    "imageUrl": "/images/product30-1.jpg",
-    "imageUrls": "/images/product30-2.jpg,/images/product30-3.jpg",
-    "tags": "premium"
-  },
-
-  {
-    "name": "Product 31",
-    "description": "Fashion item description.",
-    "price": 33.99,
-    "stock": 54,
-    "gender": "Women",
-    "imageUrl": "/images/product31-1.jpg",
-    "imageUrls": "/images/product31-2.jpg,/images/product31-3.jpg",
-    "tags": "casual"
-  },
-  {
-    "name": "Product 32",
-    "description": "Fashion item description.",
-    "price": 43.99,
-    "stock": 21,
-    "gender": "Men",
-    "imageUrl": "/images/product32-1.jpg",
-    "imageUrls": "/images/product32-2.jpg,/images/product32-3.jpg",
-    "tags": "streetwear"
-  },
-  {
-    "name": "Product 33",
-    "description": "Fashion item description.",
-    "price": 72.99,
-    "stock": 11,
-    "gender": "Women",
-    "imageUrl": "/images/product33-1.jpg",
-    "imageUrls": "/images/product33-2.jpg,/images/product33-3.jpg",
-    "tags": "luxury"
-  },
-  {
-    "name": "Product 34",
-    "description": "Fashion item description.",
-    "price": 25.99,
-    "stock": 77,
-    "gender": "Unisex",
-    "imageUrl": "/images/product34-1.jpg",
-    "imageUrls": "/images/product34-2.jpg,/images/product34-3.jpg",
-    "tags": "basic"
-  },
-  {
-    "name": "Product 35",
-    "description": "Fashion item description.",
-    "price": 49.99,
-    "stock": 32,
-    "gender": "Men",
-    "imageUrl": "/images/product35-1.jpg",
-    "imageUrls": "/images/product35-2.jpg,/images/product35-3.jpg",
-    "tags": "fashion"
-  },
-  {
-    "name": "Product 36",
-    "description": "Fashion item description.",
-    "price": 59.99,
-    "stock": 24,
-    "gender": "Women",
-    "imageUrl": "/images/product36-1.jpg",
-    "imageUrls": "/images/product36-2.jpg,/images/product36-3.jpg",
-    "tags": "premium"
-  },
-  {
-    "name": "Product 37",
-    "description": "Fashion item description.",
-    "price": 54.99,
-    "stock": 30,
-    "gender": "Unisex",
-    "imageUrl": "/images/product37-1.jpg",
-    "imageUrls": "/images/product37-2.jpg,/images/product37-3.jpg",
-    "tags": "casual"
-  },
-  {
-    "name": "Product 38",
-    "description": "Fashion item description.",
-    "price": 38.99,
-    "stock": 61,
-    "gender": "Men",
-    "imageUrl": "/images/product38-1.jpg",
-    "imageUrls": "/images/product38-2.jpg,/images/product38-3.jpg",
-    "tags": "summer"
-  },
-  {
-    "name": "Product 39",
-    "description": "Fashion item description.",
-    "price": 44.99,
-    "stock": 39,
-    "gender": "Women",
-    "imageUrl": "/images/product39-1.jpg",
-    "imageUrls": "/images/product39-2.jpg,/images/product39-3.jpg",
-    "tags": "fashion"
-  },
-  {
-    "name": "Product 40",
-    "description": "Fashion item description.",
-    "price": 69.99,
-    "stock": 16,
-    "gender": "Unisex",
-    "imageUrl": "/images/product40-1.jpg",
-    "imageUrls": "/images/product40-2.jpg,/images/product40-3.jpg",
-    "tags": "winter"
-  },
-
-  {
-    "name": "Product 41",
-    "description": "Fashion item description.",
-    "price": 29.99,
-    "stock": 70,
-    "gender": "Men",
-    "imageUrl": "/images/product41-1.jpg",
-    "imageUrls": "/images/product41-2.jpg,/images/product41-3.jpg",
-    "tags": "basic"
-  },
-  {
-    "name": "Product 42",
-    "description": "Fashion item description.",
-    "price": 79.99,
-    "stock": 12,
-    "gender": "Women",
-    "imageUrl": "/images/product42-1.jpg",
-    "imageUrls": "/images/product42-2.jpg,/images/product42-3.jpg",
-    "tags": "luxury"
-  },
-  {
-    "name": "Product 43",
-    "description": "Fashion item description.",
-    "price": 57.99,
-    "stock": 28,
-    "gender": "Unisex",
-    "imageUrl": "/images/product43-1.jpg",
-    "imageUrls": "/images/product43-2.jpg,/images/product43-3.jpg",
-    "tags": "streetwear"
-  },
-  {
-    "name": "Product 44",
-    "description": "Fashion item description.",
-    "price": 34.99,
-    "stock": 43,
-    "gender": "Men",
-    "imageUrl": "/images/product44-1.jpg",
-    "imageUrls": "/images/product44-2.jpg,/images/product44-3.jpg",
-    "tags": "casual"
-  },
-  {
-    "name": "Product 45",
-    "description": "Fashion item description.",
-    "price": 47.99,
-    "stock": 35,
-    "gender": "Women",
-    "imageUrl": "/images/product45-1.jpg",
-    "imageUrls": "/images/product45-2.jpg,/images/product45-3.jpg",
-    "tags": "fashion"
-  },
-  {
-    "name": "Product 46",
-    "description": "Fashion item description.",
-    "price": 53.99,
-    "stock": 26,
-    "gender": "Unisex",
-    "imageUrl": "/images/product46-1.jpg",
-    "imageUrls": "/images/product46-2.jpg,/images/product46-3.jpg",
-    "tags": "premium"
-  },
-  {
-    "name": "Product 47",
-    "description": "Fashion item description.",
-    "price": 41.99,
-    "stock": 41,
-    "gender": "Men",
-    "imageUrl": "/images/product47-1.jpg",
-    "imageUrls": "/images/product47-2.jpg,/images/product47-3.jpg",
-    "tags": "summer"
-  },
-  {
-    "name": "Product 48",
-    "description": "Fashion item description.",
-    "price": 62.99,
-    "stock": 20,
-    "gender": "Women",
-    "imageUrl": "/images/product48-1.jpg",
-    "imageUrls": "/images/product48-2.jpg,/images/product48-3.jpg",
-    "tags": "winter"
-  },
-  {
-    "name": "Product 49",
-    "description": "Fashion item description.",
-    "price": 58.99,
-    "stock": 22,
-    "gender": "Unisex",
-    "imageUrl": "/images/product49-1.jpg",
-    "imageUrls": "/images/product49-2.jpg,/images/product49-3.jpg",
-    "tags": "fashion"
-  },
-  {
-    "name": "Product 50",
-    "description": "Fashion item description.",
-    "price": 37.99,
-    "stock": 48,
-    "gender": "Men",
-    "imageUrl": "/images/product50-1.jpg",
-    "imageUrls": "/images/product50-2.jpg,/images/product50-3.jpg",
-    "tags": "casual"
   }
 ]

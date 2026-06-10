@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using RepresentWeb.Models;
+using representweb.Models;
 using representweb.Data;
 
 namespace RepresentWeb.Controllers;
@@ -31,25 +33,61 @@ public class HomeController : Controller
         return View();
     }
 
-    public IActionResult Prestige()
-    {
-        return View();
-    }
-
     public IActionResult Men()
     {
         var products = _context.Products.Where(p => p.Gender == "Men").ToList();
         return View(products);
     }
 
-    public IActionResult Women()
-    {
-        var products = _context.Products.Where(p => p.Gender == "Women").ToList();
-        return View(products);
-    }
+public IActionResult Women()
+        {
+            var products = _context.Products.Where(p => p.Gender == "Women").ToList();
+            return View(products);
+        }
 
+        public IActionResult Search(string q)
+        {
+            if (string.IsNullOrWhiteSpace(q))
+            {
+                return View(new List<Product>());
+            }
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+            var products = _context.Products
+                .Where(p => p.Name.Contains(q) || 
+                           (p.Description != null && p.Description.Contains(q)) ||
+                           (p.Tags != null && p.Tags.Contains(q)))
+                .ToList();
+
+            ViewData["SearchQuery"] = q;
+            return View(products);
+        }
+
+        [HttpGet]
+        public JsonResult GetSuggestions(string q)
+        {
+            if (string.IsNullOrWhiteSpace(q))
+            {
+                return Json(new List<object>());
+            }
+
+            var suggestions = _context.Products
+                .Where(p => p.Name.Contains(q) || 
+                           (p.Description != null && p.Description.Contains(q)) ||
+                           (p.Tags != null && p.Tags.Contains(q)))
+                .Select(p => new
+                {
+                    id = p.Id,
+                    name = p.Name,
+                    price = p.Price,
+                    image = p.ImageUrl
+                })
+                .Take(6)
+                .ToList();
+
+            return Json(suggestions);
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

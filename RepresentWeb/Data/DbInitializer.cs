@@ -17,11 +17,8 @@ namespace representweb.Data
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             await context.Database.MigrateAsync();
 
-            if (await context.Products.AnyAsync())
-            {
-                context.Products.RemoveRange(await context.Products.ToListAsync());
-                await context.SaveChangesAsync();
-            }
+            // Only seed if no products exist
+            if (await context.Products.AnyAsync()) return;
 
             var productsPath = Path.Combine(AppContext.BaseDirectory, "Data", "products.json");
             if (!File.Exists(productsPath))

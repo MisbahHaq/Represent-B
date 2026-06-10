@@ -5,83 +5,113 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="section-spacer bg-white">
-    <div class="container-fluid" style="max-width: 1300px; padding: 0 clamp(1.5rem, 4vw, 4rem);">
-
-        <!-- Header -->
-        <div class="mb-6 animate-fade-in">
-            <p class="text-caption" style="color: #999;">Account</p>
-            <div class="d-flex justify-content-between align-items-end flex-wrap gap-3 mt-3">
-                <h1 class="text-heading text-primary m-0" style="font-size: 1.4rem;">@Model.UserName</h1>
-                <div class="d-flex gap-3">
-                    <a asp-action="UpdateUsername" asp-controller="Account"
-                       class="btn-minimal text-only">Change Username</a>
-                    <a asp-action="UpdateAddress" asp-controller="Account"
-                       class="btn-minimal text-only">Change Address</a>
+<div class="w-100 min-vh-100 text-white" style="background-color: #0a0a0a; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding-bottom: 5rem;">
+    
+    <div class="w-100 py-5 position-relative" style="background: linear-gradient(180deg, #111 0%, #0a0a0a 100%); border-bottom: 1px solid #1a1a1a;">
+        <div class="container-fluid" style="max-width: 1240px; padding: 0 2rem;">
+            <div class="row align-items-center g-4">
+                <div class="col-md-8">
+                    <span class="text-uppercase tracking-widest fw-semibold" style="font-size: 0.65rem; color: #888; letter-spacing: 0.2em;">Account</span>
+                    <h1 class="fw-light tracking-tight m-0 mt-1" style="font-size: 2.5rem; color: #fff;">Welcome, @Model.UserName</h1>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="d-inline-flex gap-3 bg-black p-3 rounded border" style="border-color: #1a1a1a !important;">
+                        <div class="text-start pe-3 border-end" style="border-color: #222 !important;">
+                            <p class="m-0 text-uppercase tracking-wider" style="font-size: 0.55rem; color: #555; font-weight: 700;">Total Orders</p>
+                            <p class="m-0 fw-semibold" style="font-size: 1.1rem; color: #fff;">@Model.Orders.Count</p>
+                        </div>
+                        <div class="text-start">
+                            <p class="m-0 text-uppercase tracking-wider" style="font-size: 0.55rem; color: #555; font-weight: 700;">Status</p>
+                            <p class="m-0 fw-semibold text-success" style="font-size: 0.85rem; padding-top: 0.2rem;">Verified Account</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div style="width: 30px; height: 1px; background: #1a1a1a; margin-top: 1.2rem;"></div>
         </div>
+    </div>
 
+    <div class="container-fluid mt-5" style="max-width: 1240px; padding: 0 2rem;">
         <div class="row gx-5 gy-5">
-
-            <!-- Main Content -->
+            
             <div class="col-12 col-lg-8">
+                
+                <div class="mb-4">
+                    <ul class="nav nav-tabs border-0 gap-2" id="orderTab" role="tablist" style="background: #111; padding: 6px; border-radius: 8px;">
+                        @{ var first = true; }
+                        @foreach (var status in new[] { "Pending", "Out for Delivery", "Delivered", "Cancelled" })
+                        {
+                            var ordersCount = Model.Orders.Where(o => o.Status == status).Count();
+                            var cleanId = status.Replace(" ", "");
+                            
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link border-0 text-uppercase tracking-wider @(first ? "active" : "")" 
+                                        id="@(cleanId)-tab" data-bs-toggle="tab" data-bs-target="#@(cleanId)" type="button" role="tab"
+                                        style="font-size: 0.68rem; font-weight: 600; padding: 8px 16px; border-radius: 6px; transition: all 0.2s; color: @(first ? "#000" : "#888"); background-color: @(first ? "#fff" : "transparent");"
+                                        onclick="switchTab(this)">
+                                    @status @if(ordersCount > 0){ <span class="badge ms-1 bg-secondary text-white" style="font-size: 0.55rem;">@ordersCount</span> }
+                                </button>
+                            </li>
+                            first = false;
+                        }
+                    </ul>
+                </div>
 
-                <div class="animate-fade-in animate-delay-1">
-
-                    <p class="text-subheading mb-5" style="color: #999; font-size: 0.72rem;">Orders</p>
-
+                <div class="tab-content" id="orderTabContent">
+                    @{ first = true; }
                     @foreach (var status in new[] { "Pending", "Out for Delivery", "Delivered", "Cancelled" })
                     {
                         var orders = Model.Orders.Where(o => o.Status == status).ToList();
-                        <div class="mb-6">
-                            <p class="text-heading mb-4"
-                               style="font-size: 0.85rem; letter-spacing: 0.12em; text-transform: uppercase;">
-                                @status
-                                @if (orders.Any())
-                                {
-                                    <span style="font-weight: 200; color: #bbb;">(@orders.Count)</span>
-                                }
-                            </p>
+                        var cleanId = status.Replace(" ", "");
 
+                        <div class="tab-pane fade @(first ? "show active" : "")" id="@(cleanId)" role="tabpanel" aria-labelledby="@(cleanId)-tab">
                             @if (orders.Any())
                             {
-                                <div class="row g-3 gx-0">
+                                <div class="d-flex flex-column gap-3">
                                     @foreach (var order in orders)
                                     {
-                                        <div class="col-12" style="padding: 1.4rem 0; border-bottom: 1px solid #f0f0ee;">
-                                            <div class="row align-items-center g-3">
-                                                <div class="col-12 col-md-4">
-                                                    <p style="font-size: 0.82rem; font-weight: 400; letter-spacing: 0.04em; text-transform: uppercase;">
-                                                        Order #@order.Id
-                                                    </p>
-                                                    <p style="font-size: 0.72rem; font-weight: 300; color: #999; margin-top: 0.15rem;">
-                                                        @order.OrderDate.ToString("MMM dd, yyyy")
-                                                    </p>
+                                        <div class="w-100 rounded p-4" style="background-color: #111; border: 1px solid #1c1c1c;">
+                                            <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3" style="border-color: #222 !important;">
+                                                <div>
+                                                    <span class="text-uppercase tracking-wider d-block" style="font-size: 0.6rem; color: #666; font-weight: 700;">Order ID</span>
+                                                    <span class="text-white fw-mono" style="font-size: 0.85rem;">#@order.Id</span>
                                                 </div>
-                                                <div class="col-12 col-md-4">
-                                                    <div class="d-flex flex-wrap gap-3">
-                                                        @foreach (var item in order.Items)
-                                                        {
-                                                            <div class="img-container"
-                                                                 style="width: 42px; height: 52px; aspect-ratio: 3/4; background: #f7f7f5;">
-                                                                <img src="@item.ImageUrl"
-                                                                     alt="@item.ProductName"
-                                                                     style="object-fit: contain; padding: 0.25rem;" />
-                                                            </div>
-                                                        }
+                                                <div class="text-md-end">
+                                                    <span class="text-uppercase tracking-wider d-block" style="font-size: 0.6rem; color: #666; font-weight: 700;">Placed On</span>
+                                                    <span class="text-white-50" style="font-size: 0.8rem;">@order.OrderDate.ToString("MMM dd, yyyy")</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="row align-items-center g-3">
+                                                <div class="col-md-6">
+                                                    <div class="d-flex align-items-center gap-3">
+                                                        <div class="d-flex gap-2">
+                                                            @foreach (var item in order.Items)
+                                                            {
+                                                                <div class="position-relative" style="width: 50px; height: 60px; background: #000; border: 1px solid #222; padding: 4px; border-radius: 4px;">
+                                                                    <img src="@item.ImageUrl" alt="@item.ProductName" class="w-100 h-100" style="object-fit: contain;" />
+                                                                    <span class="position-absolute bottom-0 end-0 bg-white text-black rounded-circle d-flex align-items-center justify-content-center fw-bold" style="font-size: 0.55rem; width: 14px; height: 14px; transform: translate(3px, 3px);">@item.Quantity</span>
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                        <div class="text-truncate">
+                                                            <p class="m-0 text-white text-truncate" style="font-size: 0.8rem; max-width: 200px;">
+                                                                @order.Items.FirstOrDefault()?.ProductName
+                                                            </p>
+                                                            @if (order.Items.Count > 1)
+                                                            {
+                                                                <span class="text-muted" style="font-size: 0.7rem;">and @(order.Items.Count - 1) other item(s)</span>
+                                                            }
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-6 col-md-2 text-start text-md-center">
-                                                    <p style="font-size: 0.78rem; font-weight: 300; color: #666;">
-                                                        @order.Items.Sum(i => i.Quantity) item(s)
-                                                    </p>
+                                                <div class="col-6 col-md-3 text-start text-md-center">
+                                                    <span class="badge tracking-wider px-2 py-1 rounded" style="font-size: 0.6rem; background-color: #1a1a1a; color: #aaa; border: 1px solid #333;">
+                                                        @status
+                                                    </span>
                                                 </div>
-                                                <div class="col-6 col-md-2 text-end">
-                                                    <p style="font-size: 0.88rem; font-weight: 400; letter-spacing: 0.03em;">
-                                                        Rs @order.TotalAmount.ToString("N2")
-                                                    </p>
+                                                <div class="col-6 col-md-3 text-end">
+                                                    <span class="text-uppercase tracking-wider d-block" style="font-size: 0.55rem; color: #555; font-weight: 700;">Total Paid</span>
+                                                    <p class="m-0 fw-semibold text-white" style="font-size: 1rem;">Rs @order.TotalAmount.ToString("N2")</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -90,42 +120,33 @@
                             }
                             else
                             {
-                                <p style="font-size: 0.78rem; font-weight: 300; color: #bbb; font-style: italic;">
-                                    No orders.
-                                </p>
+                                <div class="text-center py-5 rounded" style="background: #111; border: 1px solid #1a1a1a;">
+                                    <p class="m-0 text-muted" style="font-size: 0.8rem; font-style: italic;">No current orders found under "@status".</p>
+                                </div>
                             }
                         </div>
+                        first = false;
                     }
-
                 </div>
 
-                <!-- Recently Viewed -->
-                <div class="animate-fade-in animate-delay-2 mt-6">
-                    <p class="text-subheading mb-5" style="color: #999; font-size: 0.72rem;">Recently Viewed</p>
-
+                <div class="mt-5 pt-4" style="border-top: 1px solid #1c1c1c;">
+                    <h5 class="text-uppercase tracking-widest mb-4" style="color: #666; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em;">Browsing History</h5>
+                    
                     @if (Model.RecentlyViewed.Any())
                     {
-                        <div class="row gx-4 gy-5">
+                        <div class="row gx-3 gy-4">
                             @foreach (var product in Model.RecentlyViewed)
                             {
-                                <div class="col-6 col-md-3">
-                                    <a asp-action="Details" asp-controller="Products" asp-route-id="@product.Id"
-                                       class="d-block text-decoration-none" style="color: inherit;">
-                                        <div class="img-container aspect-square mb-3" style="background: #f7f7f5;">
+                                <div class="col-6 col-sm-4 col-md-3">
+                                    <a asp-action="Details" asp-controller="Products" asp-route-id="@product.Id" class="d-block text-decoration-none" style="color: inherit;">
+                                        <div class="w-100 aspect-square rounded mb-2 d-flex align-items-center justify-content-center position-relative" style="background: #111; border: 1px solid #1c1c1c; transition: all 0.2s;" onmouseover="this.style.borderColor='#333'" onmouseout="this.style.borderColor='#1c1c1c'">
                                             @if (!string.IsNullOrEmpty(product.ImageUrl))
                                             {
-                                                <img src="@product.ImageUrl"
-                                                     alt="@product.Name"
-                                                     style="object-fit: contain; padding: 0.8rem;" />
+                                                <img src="@product.ImageUrl" alt="@product.Name" class="w-100 h-100" style="object-fit: contain; padding: 0.8rem;" />
                                             }
                                         </div>
-                                        <p class="m-0"
-                                           style="font-size: 0.75rem; font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase;">
-                                            @product.Name
-                                        </p>
-                                        <p class="m-0 mt-1" style="font-size: 0.73rem; font-weight: 300; color: #999;">
-                                            Rs @product.Price.ToString("N2")
-                                        </p>
+                                        <p class="m-0 text-truncate text-white" style="font-size: 0.72rem; text-transform: uppercase; tracking-spacing: 0.3px;">@product.Name</p>
+                                        <p class="m-0 mt-1" style="font-size: 0.7rem; color: #888;">Rs @product.Price.ToString("N2")</p>
                                     </a>
                                 </div>
                             }
@@ -133,44 +154,71 @@
                     }
                     else
                     {
-                        <p style="font-size: 0.78rem; font-weight: 300; color: #bbb; font-style: italic;">
-                            No recently viewed products.
-                        </p>
+                        <p style="font-size: 0.75rem; color: #444; font-style: italic;">Your browsing trail will assemble here automatically.</p>
                     }
                 </div>
             </div>
 
-            <!-- Sidebar -->
-            <div class="col-12 col-lg-3 offset-lg-1" style="padding-top: 0.5rem;">
-                <div class="animate-fade-in animate-delay-3">
-                    <p class="text-caption mb-4" style="color: #999;">Profile</p>
-
-                    <div class="mb-5">
-                        <p style="font-size: 0.85rem; font-weight: 300; color: #666;">
-                            @Model.UserEmail
-                        </p>
-                        @if (!string.IsNullOrEmpty(Model.UserAddress))
-                        {
-                            <p style="font-size: 0.78rem; font-weight: 300; color: #bbb; margin-top: 0.3rem;">
-                                @Model.UserAddress
-                            </p>
-                        }
+            <div class="col-12 col-lg-4">
+                <div class="p-4 rounded position-sticky" style="background-color: #111; border: 1px solid #1c1c1c; top: 2rem;">
+                    
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold text-black bg-white" style="width: 44px; height: 44px; font-size: 1rem;">
+                            @Model.UserName.Substring(0, 1).ToUpper()
+                        </div>
+                        <div>
+                            <h6 class="m-0 text-white fw-normal">@Model.UserName</h6>
+                            <span style="font-size: 0.72rem; color: #555;">Customer Profile</span>
+                        </div>
                     </div>
 
-                    <hr class="divider thin">
+                    <div class="w-100 mb-4" style="height: 1px; background-color: #1c1c1c;"></div>
 
-                    <nav class="list-unstyled" style="font-size: 0.78rem; font-weight: 300; line-height: 2.4;">
-                        <li>
-                            <a class="d-block hover-fade"
-                               asp-action="Logout" asp-controller="Account"
-                               style="color: #1a1a1a; text-decoration: none; text-transform: uppercase; letter-spacing: 0.12em;">
-                                Logout
-                            </a>
-                        </li>
-                    </nav>
+                    <div class="d-flex flex-column gap-3 mb-4">
+                        <div>
+                            <span class="text-uppercase tracking-wider d-block" style="font-size: 0.55rem; color: #555; font-weight: 700; margin-bottom: 2px;">Email Endpoint</span>
+                            <span class="text-white-50" style="font-size: 0.8rem; word-break: break-all;">@Model.UserEmail</span>
+                        </div>
+                        <div>
+                            <span class="text-uppercase tracking-wider d-block" style="font-size: 0.55rem; color: #555; font-weight: 700; margin-bottom: 2px;">Default Delivery Node</span>
+                            <span class="text-white-50 lh-base" style="font-size: 0.8rem;">
+                                @(string.IsNullOrEmpty(Model.UserAddress) ? "No physical delivery destination configured yet." : Model.UserAddress)
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="w-100 mb-4" style="height: 1px; background-color: #1c1c1c;"></div>
+
+                    <div class="d-flex flex-column gap-2">
+                        <a asp-action="UpdateUsername" asp-controller="Account" class="btn btn-dark text-start py-2 px-3 border border-dark text-uppercase tracking-wider d-flex justify-content-between align-items-center" style="font-size: 0.65rem; background: #0a0a0a; transition: background 0.2s;" onmouseover="this.style.background='#161616'" onmouseout="this.style.background='#0a0a0a'">
+                            <span>Change User Name</span> →
+                        </a>
+                        <a asp-action="UpdateAddress" asp-controller="Account" class="btn btn-dark text-start py-2 px-3 border border-dark text-uppercase tracking-wider d-flex justify-content-between align-items-center" style="font-size: 0.65rem; background: #0a0a0a; transition: background 0.2s;" onmouseover="this.style.background='#161616'" onmouseout="this.style.background='#0a0a0a'">
+                            <span>Edit Address</span> →
+                        </a>
+                        <a asp-action="Logout" asp-controller="Account" class="btn btn-link text-center text-decoration-none mt-2 text-uppercase tracking-wider" style="font-size: 0.65rem; color: #ff4444; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                            Logout
+                        </a>
+                    </div>
+
                 </div>
             </div>
 
         </div>
     </div>
 </div>
+
+<script>
+    function switchTab(button) {
+        // Clear old states
+        const tabs = document.querySelectorAll('#orderTab .nav-link');
+        tabs.forEach(t => {
+            t.style.backgroundColor = 'transparent';
+            t.style.color = '#888';
+        });
+        
+        // Active state formatting injection 
+        button.style.backgroundColor = '#ffffff';
+        button.style.color = '#000000';
+    }
+</script>

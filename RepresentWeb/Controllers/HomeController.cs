@@ -20,6 +20,11 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
+        var bestSellers = _context.Products
+            .OrderByDescending(p => p.Id)
+            .Take(8)
+            .ToList();
+        ViewBag.BestSellers = bestSellers;
         return View();
     }
 

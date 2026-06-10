@@ -247,7 +247,7 @@ namespace RepresentWeb.Controllers
             var paymentFee = 0m;
             if (paymentMethod == "cod")
             {
-                paymentFee = 50m;
+                paymentFee = 800m;
             }
 
             // Create order

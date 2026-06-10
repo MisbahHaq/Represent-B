@@ -143,7 +143,7 @@
                                     <input type="radio" name="payment" value="cod" style="width: 18px; height: 18px; accent-color: #000; cursor: pointer;" />
                                     <span style="font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 500; color: #000;">Cash on Delivery</span>
                                 </div>
-                                <span style="font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 500; color: #000;">+ Rs 50</span>
+                                <span style="font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 500; color: #000;">+ Rs 800</span>
                             </label>
                         </div>
 
@@ -250,8 +250,8 @@
                 }
 
                 if (checkedPayment.value === 'cod') {
-                    paymentFee = 50;
-                    document.getElementById('paymentFee').textContent = 'Rs 50';
+                    paymentFee = 800;
+                    document.getElementById('paymentFee').textContent = 'Rs 800';
                 } else {
                     paymentFee = 0;
                     document.getElementById('paymentFee').textContent = 'Rs 0';

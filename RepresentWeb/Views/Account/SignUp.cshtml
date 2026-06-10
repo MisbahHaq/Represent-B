@@ -18,9 +18,27 @@
                 <div asp-validation-summary="All" class="mb-4 text-danger" style="font-size: 0.78rem; font-weight: 300;"></div>
 
                 <div class="mb-4">
+                    <label asp-for="Name" class="text-caption d-block mb-2" style="color: #999;">Name</label>
+                    <input asp-for="Name" class="form-minimal" placeholder="Full Name" autocomplete="name" />
+                    <span asp-validation-for="Name" class="text-danger" style="font-size: 0.75rem;"></span>
+                </div>
+
+                <div class="mb-4">
                     <label asp-for="Email" class="text-caption d-block mb-2" style="color: #999;">Email Address</label>
                     <input asp-for="Email" class="form-minimal" placeholder="your@email.com" autocomplete="email" />
                     <span asp-validation-for="Email" class="text-danger" style="font-size: 0.75rem;"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="DateOfBirth" class="text-caption d-block mb-2" style="color: #999;">Date of Birth</label>
+                    <input asp-for="DateOfBirth" class="form-minimal" type="date" autocomplete="bday" />
+                    <span asp-validation-for="DateOfBirth" class="text-danger" style="font-size: 0.75rem;"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Address" class="text-caption d-block mb-2" style="color: #999;">Address</label>
+                    <textarea asp-for="Address" class="form-minimal" placeholder="Street address, city, country" autocomplete="street-address" rows="3"></textarea>
+                    <span asp-validation-for="Address" class="text-danger" style="font-size: 0.75rem;"></span>
                 </div>
 
                 <div class="mb-4">

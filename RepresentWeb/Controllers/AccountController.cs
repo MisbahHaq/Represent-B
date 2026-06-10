@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using System.Linq;
+using System;
 using representweb.Models;
 using representweb.Data;
 using Microsoft.EntityFrameworkCore;
@@ -50,7 +51,13 @@ namespace representweb.Controllers
                     ModelState.AddModelError(string.Empty, "Invalid email or password.");
                     return View(model);
                 }
-                
+
+                // Restore cart from database to session
+                var dbCartItems = _context.ShoppingCarts.Where(c => c.UserEmail == model.Email).ToList();
+                var sessionCart = dbCartItems.Select(c => new representweb.Models.CartItem { ProductId = c.ProductId, Quantity = c.Quantity }).ToList();
+                var cartJson = System.Text.Json.JsonSerializer.Serialize(sessionCart);
+                HttpContext.Session.SetString("Cart", cartJson);
+
                 HttpContext.Session.SetString("UserEmail", model.Email);
                 HttpContext.Session.SetString("AuthToken", "fake-jwt-token");
                 HttpContext.Session.SetString("UserName", user.Name);
@@ -85,15 +92,21 @@ namespace representweb.Controllers
                 
                 // Check regular user in database
                 var user = _context.Users.FirstOrDefault(u => u.Email == model.Email && u.Password == model.Password);
-                
+
                 if (user == null)
                 {
                     return Json(new { success = false, errors = new[] { "Invalid email or password." } });
                 }
-                
+
+                // Restore cart from database to session
+                var dbCartItems = _context.ShoppingCarts.Where(c => c.UserEmail == model.Email).ToList();
+                var sessionCart = dbCartItems.Select(c => new representweb.Models.CartItem { ProductId = c.ProductId, Quantity = c.Quantity }).ToList();
+                var cartJson = System.Text.Json.JsonSerializer.Serialize(sessionCart);
+                HttpContext.Session.SetString("Cart", cartJson);
+
                 HttpContext.Session.SetString("UserEmail", model.Email);
                 HttpContext.Session.SetString("AuthToken", "fake-jwt-token");
-                
+
                 return Json(new { success = true });
             }
             
@@ -174,6 +187,38 @@ namespace representweb.Controllers
         // GET: Account/Logout
         public IActionResult Logout()
         {
+            // Save cart to database before clearing session
+            var userEmail = HttpContext.Session.GetString("UserEmail");
+            if (!string.IsNullOrEmpty(userEmail))
+            {
+                var cartJson = HttpContext.Session.GetString("Cart");
+                if (!string.IsNullOrEmpty(cartJson))
+                {
+                    var cart = System.Text.Json.JsonSerializer.Deserialize<List<representweb.Models.CartItem>>(cartJson) ?? new List<representweb.Models.CartItem>();
+
+                    // Sync session cart to database
+                    foreach (var item in cart)
+                    {
+                        var dbItem = _context.ShoppingCarts.FirstOrDefault(c => c.UserEmail == userEmail && c.ProductId == item.ProductId);
+                        if (dbItem != null)
+                        {
+                            dbItem.Quantity = item.Quantity;
+                        }
+                        else
+                        {
+                            _context.ShoppingCarts.Add(new representweb.Models.ShoppingCart
+                            {
+                                UserEmail = userEmail,
+                                ProductId = item.ProductId,
+                                Quantity = item.Quantity,
+                                CreatedAt = DateTime.Now
+                            });
+                        }
+                    }
+                    _context.SaveChanges();
+                }
+            }
+
             HttpContext.Session.Clear();
             return RedirectToAction("Index", "Home");
         }
@@ -182,6 +227,38 @@ namespace representweb.Controllers
         [HttpPost]
         public IActionResult LogoutAjax()
         {
+            // Save cart to database before clearing session
+            var userEmail = HttpContext.Session.GetString("UserEmail");
+            if (!string.IsNullOrEmpty(userEmail))
+            {
+                var cartJson = HttpContext.Session.GetString("Cart");
+                if (!string.IsNullOrEmpty(cartJson))
+                {
+                    var cart = System.Text.Json.JsonSerializer.Deserialize<List<representweb.Models.CartItem>>(cartJson) ?? new List<representweb.Models.CartItem>();
+
+                    // Sync session cart to database
+                    foreach (var item in cart)
+                    {
+                        var dbItem = _context.ShoppingCarts.FirstOrDefault(c => c.UserEmail == userEmail && c.ProductId == item.ProductId);
+                        if (dbItem != null)
+                        {
+                            dbItem.Quantity = item.Quantity;
+                        }
+                        else
+                        {
+                            _context.ShoppingCarts.Add(new representweb.Models.ShoppingCart
+                            {
+                                UserEmail = userEmail,
+                                ProductId = item.ProductId,
+                                Quantity = item.Quantity,
+                                CreatedAt = DateTime.Now
+                            });
+                        }
+                    }
+                    _context.SaveChanges();
+                }
+            }
+
             HttpContext.Session.Clear();
             return Json(new { success = true });
         }

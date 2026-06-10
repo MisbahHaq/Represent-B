@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
-namespace representweb.Controllers
+namespace RepresentWeb.Controllers
 {
     public class CartController : Controller
     {
@@ -44,9 +44,25 @@ namespace representweb.Controllers
                 quantity = 1;
             }
 
-            // Add to cart (stored in session)
+            // Add to cart (stored in session and database if logged in)
             var cart = GetCart();
             var cartItem = cart.FirstOrDefault(item => item.ProductId == id);
+
+            // Also save to database if user is logged in
+            var userEmail = HttpContext.Session.GetString("UserEmail");
+            if (!string.IsNullOrEmpty(userEmail))
+            {
+                var dbCartItem = _context.ShoppingCarts.FirstOrDefault(c => c.UserEmail == userEmail && c.ProductId == id);
+                if (dbCartItem != null)
+                {
+                    dbCartItem.Quantity += quantity;
+                }
+                else
+                {
+                    _context.ShoppingCarts.Add(new ShoppingCart { UserEmail = userEmail, ProductId = id, Quantity = quantity });
+                }
+                _context.SaveChanges();
+            }
 
             if (cartItem != null)
             {
@@ -79,11 +95,23 @@ namespace representweb.Controllers
         {
             var cart = GetCart();
             var cartItem = cart.FirstOrDefault(item => item.ProductId == id);
-            
+
             if (cartItem != null)
             {
                 cart.Remove(cartItem);
                 SaveCart(cart);
+
+                // Also remove from database if logged in
+                var userEmail = HttpContext.Session.GetString("UserEmail");
+                if (!string.IsNullOrEmpty(userEmail))
+                {
+                    var dbCartItem = _context.ShoppingCarts.FirstOrDefault(c => c.UserEmail == userEmail && c.ProductId == id);
+                    if (dbCartItem != null)
+                    {
+                        _context.ShoppingCarts.Remove(dbCartItem);
+                        _context.SaveChanges();
+                    }
+                }
             }
 
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
@@ -108,11 +136,23 @@ namespace representweb.Controllers
 
             var cart = GetCart();
             var cartItem = cart.FirstOrDefault(item => item.ProductId == id);
-            
+
             if (cartItem != null)
             {
                 cartItem.Quantity = quantity;
                 SaveCart(cart);
+
+                // Also update in database if logged in
+                var userEmail = HttpContext.Session.GetString("UserEmail");
+                if (!string.IsNullOrEmpty(userEmail))
+                {
+                    var dbCartItem = _context.ShoppingCarts.FirstOrDefault(c => c.UserEmail == userEmail && c.ProductId == id);
+                    if (dbCartItem != null)
+                    {
+                        dbCartItem.Quantity = quantity;
+                        _context.SaveChanges();
+                    }
+                }
             }
 
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
@@ -147,9 +187,13 @@ namespace representweb.Controllers
             var address = HttpContext.Session.GetString("UserAddress");
             if (string.IsNullOrEmpty(address))
             {
-                // Redirect to update address
                 return RedirectToAction("UpdateAddress", "Account");
             }
+
+            var fullName = HttpContext.Session.GetString("UserName") ?? string.Empty;
+            var nameParts = fullName.Split(' ', 2);
+            var firstName = nameParts.Length > 0 ? nameParts[0] : string.Empty;
+            var lastName = nameParts.Length > 1 ? nameParts[1] : string.Empty;
 
             var cartItems = GetCartItems();
             if (!cartItems.Any())
@@ -160,7 +204,11 @@ namespace representweb.Controllers
             var viewModel = new CartViewModel
             {
                 Items = cartItems,
-                TotalAmount = cartItems.Sum(item => item.Product.Price * item.Quantity)
+                TotalAmount = cartItems.Sum(item => item.Product.Price * item.Quantity),
+                FirstName = firstName,
+                LastName = lastName,
+                Email = userEmail,
+                Address = address
             };
 
             return View(viewModel);
@@ -169,7 +217,7 @@ namespace representweb.Controllers
         // POST: Cart/Checkout
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Checkout(CartViewModel model)
+        public IActionResult Checkout(CartViewModel model, string deliveryMethod, string paymentMethod)
         {
             var userEmail = HttpContext.Session.GetString("UserEmail");
             if (string.IsNullOrEmpty(userEmail))
@@ -189,13 +237,26 @@ namespace representweb.Controllers
                 return RedirectToAction("Index");
             }
 
+            var subtotal = cartItems.Sum(item => item.Product.Price * item.Quantity);
+            var deliveryFee = 0m;
+            if (deliveryMethod == "express")
+            {
+                deliveryFee = 500m;
+            }
+
+            var paymentFee = 0m;
+            if (paymentMethod == "cod")
+            {
+                paymentFee = 50m;
+            }
+
             // Create order
             var order = new Order
             {
                 UserEmail = userEmail,
                 OrderDate = DateTime.Now,
                 Status = "Pending",
-                TotalAmount = cartItems.Sum(item => item.Product.Price * item.Quantity),
+                TotalAmount = subtotal + deliveryFee + paymentFee,
                 Items = new List<OrderItem>()
             };
 
@@ -214,10 +275,17 @@ namespace representweb.Controllers
             _context.Orders.Add(order);
             _context.SaveChanges();
 
-            // Clear cart
+            // Clear cart from both session and database
             var cart = GetCart();
             cart.Clear();
             SaveCart(cart);
+
+            if (!string.IsNullOrEmpty(userEmail))
+            {
+                var dbCartItems = _context.ShoppingCarts.Where(c => c.UserEmail == userEmail);
+                _context.ShoppingCarts.RemoveRange(dbCartItems);
+                _context.SaveChanges();
+            }
 
             return RedirectToAction("OrderConfirmation", new { id = order.Id });
         }
@@ -244,12 +312,35 @@ namespace representweb.Controllers
 
         private List<CartItem> GetCart()
         {
+            var userEmail = HttpContext.Session.GetString("UserEmail");
+
+            // If user is logged in, try to merge database cart into session
+            if (!string.IsNullOrEmpty(userEmail))
+            {
+                var dbCartItems = _context.ShoppingCarts.Where(c => c.UserEmail == userEmail).ToList();
+
+                // Only merge if session is empty
+                var sessionCartJson = HttpContext.Session.GetString("Cart");
+                if (string.IsNullOrEmpty(sessionCartJson))
+                {
+                    var mergedCart = dbCartItems.Select(c => new CartItem
+                    {
+                        ProductId = c.ProductId,
+                        Quantity = c.Quantity
+                    }).ToList();
+
+                    var cartJsonToSave = System.Text.Json.JsonSerializer.Serialize(mergedCart);
+                    HttpContext.Session.SetString("Cart", cartJsonToSave);
+                    return mergedCart;
+                }
+            }
+
             var cartJson = HttpContext.Session.GetString("Cart");
             if (string.IsNullOrEmpty(cartJson))
             {
                 return new List<CartItem>();
             }
-            
+
             return System.Text.Json.JsonSerializer.Deserialize<List<CartItem>>(cartJson) ?? new List<CartItem>();
         }
 
@@ -278,27 +369,25 @@ namespace representweb.Controllers
                     });
                 }
             }
-            
+
             return cartItems;
         }
-    }
 
-    public class CartViewModel
-    {
-        public List<CartItemViewModel> Items { get; set; } = new List<CartItemViewModel>();
-        public decimal TotalAmount { get; set; }
-
-        public class CartItemViewModel
+        public class CartViewModel
         {
-            public Product Product { get; set; }
-            public int Quantity { get; set; }
-            public decimal Subtotal => Product.Price * Quantity;
-        }
-    }
+            public List<CartItemViewModel> Items { get; set; } = new List<CartItemViewModel>();
+            public decimal TotalAmount { get; set; }
+            public string FirstName { get; set; } = string.Empty;
+            public string LastName { get; set; } = string.Empty;
+            public string Email { get; set; } = string.Empty;
+            public string Address { get; set; } = string.Empty;
 
-    public class CartItem
-    {
-        public int ProductId { get; set; }
-        public int Quantity { get; set; }
+            public class CartItemViewModel
+            {
+                public Product? Product { get; set; }
+                public int Quantity { get; set; }
+                public decimal Subtotal => Product?.Price * Quantity ?? 0;
+            }
+        }
     }
 }

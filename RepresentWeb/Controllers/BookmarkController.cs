@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using representweb.Data;
 using representweb.Models;
 using System.Collections.Generic;
@@ -16,9 +17,9 @@ namespace representweb.Controllers
         }
 
         // GET: Bookmark
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var bookmarkedItems = GetBookmarkedItems();
+            var bookmarkedItems = await GetBookmarkedItemsAsync();
             var viewModel = new BookmarkViewModel
             {
                 Items = bookmarkedItems
@@ -29,20 +30,39 @@ namespace representweb.Controllers
         // POST: Bookmark/Add/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Add(int id)
+        public async Task<IActionResult> Add(int id)
         {
-            var product = _context.Products.Find(id);
+            var product = await _context.Products.FindAsync(id);
             if (product == null)
             {
                 return NotFound();
             }
 
-            // Add to bookmarks (stored in session)
+            var email = HttpContext.Session.GetString("UserEmail") ?? HttpContext.Session.GetString("AdminEmail");
+
+            // Add to bookmarks (stored in session and database)
             var bookmarks = GetBookmarks();
             if (!bookmarks.Contains(id))
             {
                 bookmarks.Add(id);
                 SaveBookmarks(bookmarks);
+
+                // Also save to database for analytics (if user is signed in)
+                if (!string.IsNullOrEmpty(email))
+                {
+                    var existingBookmark = await _context.Bookmarks
+                        .FirstOrDefaultAsync(b => b.ProductId == id && b.UserEmail == email);
+                    if (existingBookmark == null)
+                    {
+                        _context.Bookmarks.Add(new Bookmark
+                        {
+                            ProductId = id,
+                            UserEmail = email,
+                            CreatedAt = DateTime.UtcNow
+                        });
+                        await _context.SaveChangesAsync();
+                    }
+                }
             }
 
             // Return JSON for AJAX requests
@@ -57,13 +77,27 @@ namespace representweb.Controllers
         // POST: Bookmark/Remove/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Remove(int id)
+        public async Task<IActionResult> Remove(int id)
         {
             var bookmarks = GetBookmarks();
+            var email = HttpContext.Session.GetString("UserEmail") ?? HttpContext.Session.GetString("AdminEmail");
+
             if (bookmarks.Contains(id))
             {
                 bookmarks.Remove(id);
                 SaveBookmarks(bookmarks);
+
+                // Also remove from database
+                if (!string.IsNullOrEmpty(email))
+                {
+                    var bookmark = await _context.Bookmarks
+                        .FirstOrDefaultAsync(b => b.ProductId == id && b.UserEmail == email);
+                    if (bookmark != null)
+                    {
+                        _context.Bookmarks.Remove(bookmark);
+                        await _context.SaveChangesAsync();
+                    }
+                }
             }
 
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
@@ -100,10 +134,10 @@ namespace representweb.Controllers
             HttpContext.Session.SetString("Bookmarks", bookmarksJson);
         }
 
-        private List<BookmarkItemViewModel> GetBookmarkedItems()
+        private async Task<List<BookmarkItemViewModel>> GetBookmarkedItemsAsync()
         {
             var bookmarkIds = GetBookmarks();
-            var products = _context.Products.Where(p => bookmarkIds.Contains(p.Id)).ToList();
+            var products = await _context.Products.Where(p => bookmarkIds.Contains(p.Id)).ToListAsync();
 
             var bookmarkedItems = new List<BookmarkItemViewModel>();
             foreach (var bookmarkId in bookmarkIds)

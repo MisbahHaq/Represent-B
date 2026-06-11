@@ -74,6 +74,38 @@ namespace representweb.Controllers
 
             var products = await _context.Products.Take(10).ToListAsync();
 
+            // Calculate best selling product
+            var bestSellingProduct = await _context.OrderItems
+                .GroupBy(oi => oi.ProductId)
+                .Select(g => new { ProductId = g.Key, TotalQuantity = g.Sum(oi => oi.Quantity) })
+                .OrderByDescending(x => x.TotalQuantity)
+                .FirstOrDefaultAsync();
+
+            Product? bestSellingProductInfo = null;
+            int bestSellingProductQuantity = 0;
+
+            if (bestSellingProduct != null)
+            {
+                bestSellingProductInfo = await _context.Products.FindAsync(bestSellingProduct.ProductId);
+                bestSellingProductQuantity = bestSellingProduct.TotalQuantity;
+            }
+
+            // Calculate most bookmarked product
+            var mostBookmarkedProduct = await _context.Bookmarks
+                .GroupBy(b => b.ProductId)
+                .Select(g => new { ProductId = g.Key, Count = g.Count() })
+                .OrderByDescending(x => x.Count)
+                .FirstOrDefaultAsync();
+
+            Product? mostBookmarkedProductInfo = null;
+            int mostBookmarkedProductCount = 0;
+
+            if (mostBookmarkedProduct != null)
+            {
+                mostBookmarkedProductInfo = await _context.Products.FindAsync(mostBookmarkedProduct.ProductId);
+                mostBookmarkedProductCount = mostBookmarkedProduct.Count;
+            }
+
             var model = new AdminDashboardViewModel
             {
                 TotalOrders = await _context.Orders.CountAsync(),
@@ -81,7 +113,11 @@ namespace representweb.Controllers
                 PendingOrders = await _context.Orders.CountAsync(o => o.Status == "Pending"),
                 OutForDeliveryOrders = await _context.Orders.CountAsync(o => o.Status == "Out for Delivery"),
                 RecentOrders = orders,
-                RecentProducts = products
+                RecentProducts = products,
+                BestSellingProduct = bestSellingProductInfo,
+                BestSellingProductQuantity = bestSellingProductQuantity,
+                MostBookmarkedProduct = mostBookmarkedProductInfo,
+                MostBookmarkedProductCount = mostBookmarkedProductCount
             };
 
             return View(model);

@@ -47,6 +47,52 @@
         </div>
     </div>
 
+    @if (Model.BestSellingProduct != null)
+    {
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card bg-dark text-white">
+                    <div class="card-body">
+                        <h5 class="card-title text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.1em; color: #888;">Analytics - Best Selling Product</h5>
+                        <div class="d-flex align-items-center gap-3">
+                            @if (!string.IsNullOrEmpty(Model.BestSellingProduct.ImageUrl))
+                            {
+                                <img src="@Model.BestSellingProduct.ImageUrl" alt="@Model.BestSellingProduct.Name" style="width: 80px; height: 80px; object-fit: cover; background: #222;" />
+                            }
+                            <div>
+                                <h4 class="mb-1">@Model.BestSellingProduct.Name</h4>
+                                <p class="mb-0" style="color: #888;">Total Sold: @Model.BestSellingProductQuantity units | Price: $@Model.BestSellingProduct.Price</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (Model.MostBookmarkedProduct != null)
+    {
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card bg-dark text-white">
+                    <div class="card-body">
+                        <h5 class="card-title text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.1em; color: #888;">Analytics - Most Bookmarked Product</h5>
+                        <div class="d-flex align-items-center gap-3">
+                            @if (!string.IsNullOrEmpty(Model.MostBookmarkedProduct.ImageUrl))
+                            {
+                                <img src="@Model.MostBookmarkedProduct.ImageUrl" alt="@Model.MostBookmarkedProduct.Name" style="width: 80px; height: 80px; object-fit: cover; background: #222;" />
+                            }
+                            <div>
+                                <h4 class="mb-1">@Model.MostBookmarkedProduct.Name</h4>
+                                <p class="mb-0" style="color: #888;">Bookmarks: @Model.MostBookmarkedProductCount users | Price: $@Model.MostBookmarkedProduct.Price</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
     <div class="row">
         <div class="col-md-6">
             <div class="d-flex justify-content-between align-items-center mb-3">

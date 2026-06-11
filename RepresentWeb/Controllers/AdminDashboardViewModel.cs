@@ -10,5 +10,9 @@ namespace representweb.Controllers
         public int OutForDeliveryOrders { get; set; }
         public List<Order> RecentOrders { get; set; } = new();
         public List<Product> RecentProducts { get; set; } = new();
+        public Product? BestSellingProduct { get; set; }
+        public int BestSellingProductQuantity { get; set; }
+        public Product? MostBookmarkedProduct { get; set; }
+        public int MostBookmarkedProductCount { get; set; }
     }
 }

@@ -100,7 +100,7 @@
                         @foreach (var order in Model.RecentOrders)
                         {
                             <tr>
-                                <td>#@order.Id</td>
+                                <td><a asp-action="OrderDetail" asp-route-id="@order.Id" class="text-light text-decoration-none" style="cursor: pointer;">#@order.Id</a></td>
                                 <td>@order.UserEmail</td>
                                 <td>
                                     <span class="badge bg-@(order.Status == "Pending" ? "warning" : order.Status == "Out for Delivery" ? "info" : order.Status == "Delivered" ? "success" : "secondary")">

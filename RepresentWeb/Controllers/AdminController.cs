@@ -248,6 +248,25 @@ namespace representweb.Controllers
             return Json(new { success = true, message = "Status updated" });
         }
 
+        // GET: Admin/OrderDetail/5
+        public async Task<IActionResult> OrderDetail(int? id)
+        {
+            if (!IsAdminLoggedIn())
+            {
+                return RedirectToAction("Login", "Admin");
+            }
+
+            if (id == null) return NotFound();
+
+            var order = await _context.Orders
+                .Include(o => o.Items)
+                .FirstOrDefaultAsync(o => o.Id == id);
+
+            if (order == null) return NotFound();
+
+            return View(order);
+        }
+
         private bool ProductExists(int id)
         {
             return _context.Products.Any(e => e.Id == id);

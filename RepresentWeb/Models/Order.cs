@@ -7,8 +7,12 @@ namespace representweb.Models
     {
         public int Id { get; set; }
         public string UserEmail { get; set; } = string.Empty;
+        public string? Address { get; set; }
+        public string? PhoneNumber { get; set; }
         public DateTime OrderDate { get; set; }
-        public string Status { get; set; } = string.Empty; // e.g., ToShip, ToReview, Returned, Cancelled
+        public string Status { get; set; } = string.Empty;
+        public string? DeliveryMethod { get; set; }
+        public string? PaymentMethod { get; set; }
         public decimal TotalAmount { get; set; }
         public List<OrderItem> Items { get; set; } = new List<OrderItem>();
     }

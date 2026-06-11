@@ -254,8 +254,12 @@ namespace RepresentWeb.Controllers
             var order = new Order
             {
                 UserEmail = userEmail,
+                Address = address,
+                PhoneNumber = model.Phone,
                 OrderDate = DateTime.Now,
                 Status = "Pending",
+                DeliveryMethod = deliveryMethod,
+                PaymentMethod = paymentMethod,
                 TotalAmount = subtotal + deliveryFee + paymentFee,
                 Items = new List<OrderItem>()
             };
@@ -381,6 +385,7 @@ namespace RepresentWeb.Controllers
             public string LastName { get; set; } = string.Empty;
             public string Email { get; set; } = string.Empty;
             public string Address { get; set; } = string.Empty;
+            public string Phone { get; set; } = string.Empty;
 
             public class CartItemViewModel
             {

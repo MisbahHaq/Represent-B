@@ -77,6 +77,18 @@
     color: #fff;
   }
   #searchWrap input::placeholder { color: rgba(255,255,255,0.5); }
+  @@media (max-width: 575.98px) {
+    #searchWrap {
+      max-width: 150px;
+    }
+    #searchWrap.open {
+      max-width: 150px;
+    }
+    #searchWrap input {
+      width: 150px;
+      font-size: 0.7rem;
+    }
+  }
   #searchSuggestions {
     position: absolute;
     top: 100%;
@@ -86,9 +98,23 @@
     background: #111;
     border: 1px solid #333;
     z-index: 1050;
-    display: none;
     max-height: 320px;
     overflow-y: auto;
+  }
+  @@media (max-width: 991.98px) {
+    #searchWrap {
+      max-width: 100%;
+    }
+    #searchWrap.open {
+      max-width: 100%;
+    }
+    #searchWrap input {
+      width: 100%;
+      font-size: 0.75rem;
+    }
+    #searchSuggestions {
+      width: 100%;
+    }
   }
   #searchSuggestions .suggestion-item {
     display: flex;
@@ -143,61 +169,60 @@
    <header>
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-black border-bottom border-secondary py-3">
-      <div class="container-fluid px-4 d-flex align-items-center justify-content-between">
+      <div class="container-fluid px-3 px-md-4 position-relative">
 
-          <!-- LEFT -->
-          <div class="d-none d-md-flex align-items-center" style="gap: 2.8rem;">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <a class="nav-link-minimal" asp-controller="Home" asp-action="Men">Men</a>
-            <a class="nav-link-minimal" asp-controller="Home" asp-action="Women">Women</a>
+        <a class="navbar-brand position-absolute start-50 translate-middle-x text-white m-0"
+           asp-controller="Home" asp-action="Index"
+           style="letter-spacing: 0.35em; font-size: 0.9rem; font-weight: 200; text-transform: uppercase;">
+          Represent
+        </a>
 
+        <div class="collapse navbar-collapse order-3" id="navbarContent">
+          <div class="d-flex align-items-center justify-content-between w-100 gap-3">
+            <div class="d-flex align-items-center gap-3 gap-md-5">
+              <a class="nav-link-minimal" asp-controller="Home" asp-action="Men">Men</a>
+              <a class="nav-link-minimal" asp-controller="Home" asp-action="Women">Women</a>
+            </div>
+
+            <div class="d-flex align-items-center gap-2 gap-md-4">
+              <a class="nav-link-minimal d-none d-lg-block" asp-action="Vault" asp-controller="Home">The Vault</a>
+
+              <div class="d-flex align-items-center" style="position: relative; gap: 0;">
+                <button type="button" class="icon-btn" id="searchToggle" aria-label="Search" style="flex-shrink: 0;">
+                  <i class="bi bi-search" style="font-size: 0.95rem;"></i>
+                </button>
+
+                <div id="searchWrap">
+                  <form asp-controller="Home" asp-action="Search" method="get" id="searchForm" class="d-flex align-items-center" style="gap: 0.4rem;">
+                    <input type="text" name="q" id="searchInput" class="form-control" placeholder="Search..."
+                           autocomplete="off" />
+                  </form>
+                  <div id="searchSuggestions"></div>
+                </div>
+              </div>
+
+              <a href="#" class="icon-btn" id="userLoginLink">
+                <i class="bi bi-person" style="font-size: 0.95rem;"></i>
+              </a>
+
+              <a asp-controller="Bookmark" asp-action="Index" class="icon-btn position-relative" id="bookmarkLink">
+                <i class="bi bi-bookmark bookmark-icon" style="font-size: 0.95rem; color: #fff; transition: color 0.5s ease;"></i>
+                <span class="badge-count position-absolute"
+                      style="top: -6px; right: -8px; display: none;">0</span>
+              </a>
+
+              <a asp-controller="Cart" asp-action="Index" class="icon-btn position-relative" id="cartLink">
+                <i class="bi bi-bag" style="font-size: 0.95rem;"></i>
+                <span class="badge-count position-absolute"
+                      style="top: -4px; right: -8px;">0</span>
+              </a>
+            </div>
           </div>
-
-<!-- CENTER -->
-          <a class="navbar-brand position-absolute start-50 translate-middle-x text-white m-0"
-             asp-controller="Home" asp-action="Index"
-             style="letter-spacing: 0.35em; font-size: 0.9rem; font-weight: 200; text-transform: uppercase;">
-            Represent
-          </a>
-
-           <!-- RIGHT -->
-           <div class="d-flex align-items-center" style="gap: 2.2rem;">
-
-             <a class="nav-link-minimal d-none d-md-block" asp-action="Vault" asp-controller="Home">The Vault</a>
-
-             <div class="d-flex align-items-center" style="position: relative; gap: 0;">
-
-               <button type="button" class="icon-btn" id="searchToggle" aria-label="Search" style="flex-shrink: 0;">
-                 <i class="bi bi-search" style="font-size: 0.95rem;"></i>
-               </button>
-
-               <div id="searchWrap">
-                 <form asp-controller="Home" asp-action="Search" method="get" id="searchForm" class="d-flex align-items-center" style="gap: 0.4rem;">
-                   <input type="text" name="q" id="searchInput" class="form-control" placeholder="Search..."
-                          autocomplete="off" />
-                 </form>
-                 <div id="searchSuggestions"></div>
-               </div>
-
-             </div>
-
-      <a href="#" class="icon-btn" id="userLoginLink">
-      <i class="bi bi-person" style="font-size: 0.95rem;"></i>
-    </a>
-
-            <a asp-controller="Bookmark" asp-action="Index" class="icon-btn position-relative" id="bookmarkLink">
-              <i class="bi bi-bookmark bookmark-icon" style="font-size: 0.95rem; color: #fff; transition: color 0.5s ease;"></i>
-              <span class="badge-count position-absolute"
-                    style="top: -6px; right: -8px; display: none;">0</span>
-            </a>
-
-             <a asp-controller="Cart" asp-action="Index" class="icon-btn position-relative" id="cartLink">
-              <i class="bi bi-bag" style="font-size: 0.95rem;"></i>
-              <span class="badge-count position-absolute"
-                    style="top: -4px; right: -8px;">0</span>
-            </a>
-
-          </div>
+        </div>
 
       </div>
     </nav>
@@ -478,6 +503,30 @@ function logoutUser() {
                     suggestions.style.display = 'none';
                 }
             });
+
+            const navbar = document.querySelector('.navbar');
+            const navbarToggler = document.querySelector('.navbar-toggler');
+            const navbarContent = document.getElementById('navbarContent');
+
+            if (navbarToggler && navbarContent) {
+                navbarToggler.addEventListener('click', function () {
+                    const isOpening = !navbarContent.classList.contains('show');
+                    if (navbar) {
+                        navbar.classList.toggle('navbar-toggled', isOpening);
+                    }
+                });
+
+                navbarContent.addEventListener('click', function (e) {
+                    if (!e.target.closest('a')) return;
+                    if (window.bootstrap) {
+                        const collapse = bootstrap.Collapse.getOrCreateInstance(navbarContent);
+                        collapse.hide();
+                    }
+                    if (navbar) {
+                        navbar.classList.remove('navbar-toggled');
+                    }
+                });
+            }
 
             document.addEventListener('DOMContentLoaded', function() {
                 updateUserLoginLink();

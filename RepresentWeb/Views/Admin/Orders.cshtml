@@ -33,13 +33,14 @@
                         <td>$@order.TotalAmount</td>
                         <td>@order.Items.Count items</td>
                         <td>
-                            <span class="badge bg-@(order.Status == "Pending" ? "warning" : order.Status == "Out for Delivery" ? "info" : order.Status == "Delivered" ? "success" : "secondary")">
+                            <span class="badge bg-@(order.Status == "Order Received" ? "light text-dark" : order.Status == "Pending" ? "warning" : order.Status == "Out for Delivery" ? "info" : order.Status == "Delivered" ? "success" : "secondary")">
                                 @order.Status
                             </span>
                         </td>
                         <td>
                             <select class="form-select form-select-sm status-select" data-order-id="@order.Id">
                                 <option value="Pending" selected="@(order.Status == "Pending")">Pending</option>
+                                <option value="Order Received" selected="@(order.Status == "Order Received")">Order Received</option>
                                 <option value="Out for Delivery" selected="@(order.Status == "Out for Delivery")">Out for Delivery</option>
                                 <option value="Delivered" selected="@(order.Status == "Delivered")">Delivered</option>
                                 <option value="Cancelled" selected="@(order.Status == "Cancelled")">Cancelled</option>

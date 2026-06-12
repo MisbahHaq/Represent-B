@@ -38,7 +38,7 @@
                 <div class="mb-4">
                     <ul class="nav nav-tabs border-0 gap-2" id="orderTab" role="tablist" style="background: #111; padding: 6px; border-radius: 8px;">
                         @{ var first = true; }
-                        @foreach (var status in new[] { "Pending", "Out for Delivery", "Delivered", "Cancelled" })
+                        @foreach (var status in new[] { "Pending", "Order Received", "Out for Delivery", "Delivered", "Cancelled" })
                         {
                             var ordersCount = Model.Orders.Where(o => o.Status == status).Count();
                             var cleanId = status.Replace(" ", "");
@@ -58,7 +58,7 @@
 
                 <div class="tab-content" id="orderTabContent">
                     @{ first = true; }
-                    @foreach (var status in new[] { "Pending", "Out for Delivery", "Delivered", "Cancelled" })
+                    @foreach (var status in new[] { "Pending", "Order Received", "Out for Delivery", "Delivered", "Cancelled" })
                     {
                         var orders = Model.Orders.Where(o => o.Status == status).ToList();
                         var cleanId = status.Replace(" ", "");

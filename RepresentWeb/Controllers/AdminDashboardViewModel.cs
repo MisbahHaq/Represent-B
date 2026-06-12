@@ -7,6 +7,7 @@ namespace representweb.Controllers
         public int TotalOrders { get; set; }
         public int TotalProducts { get; set; }
         public int PendingOrders { get; set; }
+        public int OrderReceivedOrders { get; set; }
         public int OutForDeliveryOrders { get; set; }
         public List<Order> RecentOrders { get; set; } = new();
         public List<Product> RecentProducts { get; set; } = new();

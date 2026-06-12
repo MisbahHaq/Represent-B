@@ -111,6 +111,7 @@ namespace representweb.Controllers
                 TotalOrders = await _context.Orders.CountAsync(),
                 TotalProducts = await _context.Products.CountAsync(),
                 PendingOrders = await _context.Orders.CountAsync(o => o.Status == "Pending"),
+                OrderReceivedOrders = await _context.Orders.CountAsync(o => o.Status == "Order Received"),
                 OutForDeliveryOrders = await _context.Orders.CountAsync(o => o.Status == "Out for Delivery"),
                 RecentOrders = orders,
                 RecentProducts = products,
@@ -272,7 +273,7 @@ namespace representweb.Controllers
                 return Json(new { success = false, message = "Order not found" });
             }
 
-            var validStatuses = new[] { "Pending", "Out for Delivery", "Delivered", "Cancelled" };
+            var validStatuses = new[] { "Pending", "Order Received", "Out for Delivery", "Delivered", "Cancelled" };
             if (!validStatuses.Contains(model.Status))
             {
                 return Json(new { success = false, message = "Invalid status" });

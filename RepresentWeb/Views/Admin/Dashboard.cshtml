@@ -30,10 +30,18 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card bg-warning text-dark">
+            <div class="card bg-dark text-white">
                 <div class="card-body">
                     <h5 class="card-title">Pending Orders</h5>
                     <h2 class="mb-0">@Model.PendingOrders</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-light text-dark">
+                <div class="card-body">
+                    <h5 class="card-title">Order Received</h5>
+                    <h2 class="mb-0">@Model.OrderReceivedOrders</h2>
                 </div>
             </div>
         </div>
@@ -149,13 +157,14 @@
                                 <td><a asp-action="OrderDetail" asp-route-id="@order.Id" class="text-light text-decoration-none" style="cursor: pointer;">#@order.Id</a></td>
                                 <td>@order.UserEmail</td>
                                 <td>
-                                    <span class="badge bg-@(order.Status == "Pending" ? "warning" : order.Status == "Out for Delivery" ? "info" : order.Status == "Delivered" ? "success" : "secondary")">
+                                    <span class="badge bg-@(order.Status == "Order Received" ? "light text-dark" : order.Status == "Pending" ? "warning" : order.Status == "Out for Delivery" ? "info" : order.Status == "Delivered" ? "success" : "secondary")">
                                         @order.Status
                                     </span>
                                 </td>
                                 <td>
                                     <select class="form-select form-select-sm status-select" data-order-id="@order.Id" style="width: auto;">
                                         <option value="Pending" selected="@(order.Status == "Pending")">Pending</option>
+                                        <option value="Order Received" selected="@(order.Status == "Order Received")">Order Received</option>
                                         <option value="Out for Delivery" selected="@(order.Status == "Out for Delivery")">Out for Delivery</option>
                                         <option value="Delivered" selected="@(order.Status == "Delivered")">Delivered</option>
                                         <option value="Cancelled" selected="@(order.Status == "Cancelled")">Cancelled</option>

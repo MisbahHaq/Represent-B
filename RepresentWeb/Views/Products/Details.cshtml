@@ -18,11 +18,13 @@
         color: #000000;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
     }
 
     .editorial-wrapper {
         background-color: #e5e7eb;
         padding-bottom: 80px;
+        overflow-x: hidden; /* Contain inner elements */
     }
 
     /* --- TWO-COLUMN ASYMMETRIC GRID DISPLAY --- */
@@ -41,19 +43,23 @@
         align-items: flex-start;
         padding: 40px;
         position: relative;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .main-image-display-frame {
         width: 100%;
-        height: 78vh;
+        height: 72vh;
         display: flex;
-        align-items: flex-start;
-        justify-content: flex-start;
+        align-items: center;
+        justify-content: center;
         overflow: hidden;
     }
 
     .main-image-display-frame img {
-        max-width: 95%;
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
         max-height: 100%;
         object-fit: contain;
         transition: opacity 0.4s ease;
@@ -64,17 +70,22 @@
         gap: 12px;
         margin-top: 30px;
         width: 100%;
-        max-width: 95%;
+        max-width: 100%;
         overflow-x: auto;
+        padding-bottom: 5px;
     }
 
+    /* Hide scrollbars but preserve functionality */
     .editorial-thumbnails-strip::-webkit-scrollbar {
-        display: none;
+        height: 4px;
+    }
+    .editorial-thumbnails-strip::-webkit-scrollbar-thumb {
+        background: rgba(0,0,0,0.1);
     }
 
     .thumb-frame-container {
         width: 75px;
-        height: 95px;
+        aspect-ratio: 3 / 4;
         flex-shrink: 0;
         background-color: #e5e7eb;
         cursor: pointer;
@@ -99,6 +110,7 @@
         padding: 60px 50px;
         background-color: #e5e7eb;
         border-left: 1px solid rgba(0,0,0,0.05);
+        box-sizing: border-box;
     }
 
     .meta-header-group h1 {
@@ -108,6 +120,7 @@
         letter-spacing: -0.04em;
         text-transform: uppercase;
         margin: 0 0 15px 0;
+        word-break: break-word;
     }
 
     .editorial-price-badge {
@@ -145,6 +158,9 @@
         cursor: pointer;
         text-align: center;
         transition: all 0.2s ease;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .brutalist-btn:hover {
@@ -178,6 +194,7 @@
         cursor: pointer;
         margin-bottom: 40px;
         transition: background-color 0.2s ease;
+        box-sizing: border-box; /* Force padding inclusion */
     }
 
     .velora-monolith-cta:hover {
@@ -267,10 +284,12 @@
     }
 
     .matrix-node-image-frame img {
-        max-width: 85%;
-        max-height: 85%;
-        object-fit: contain;
-        padding: 10px;
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: cover;
+        padding: 0;
         transition: transform 0.4s ease;
     }
 
@@ -318,30 +337,300 @@
     }
 
     /* --- RESPONSIVE MATRIX ADJUSTMENTS --- */
+    @@media (max-width: 1199.98px) {
+        .product-hero-matrix {
+            grid-template-columns: 1.05fr 0.95fr;
+        }
+
+        .product-meta-editorial-pane {
+            padding: 44px 32px;
+        }
+    }
+
     @@media (max-width: 991.98px) {
+        .editorial-wrapper,
+        .product-hero-matrix,
+        .media-gallery-pane,
+        .product-meta-editorial-pane,
+        .swiper-editorial-container {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
         .product-hero-matrix {
             grid-template-columns: 1fr;
+            min-height: auto;
         }
+
+        .media-gallery-pane {
+            padding: 24px;
+        }
+
+        .main-image-display-frame {
+            height: min(62vh, 620px);
+            min-height: 340px;
+        }
+
+        .editorial-thumbnails-strip {
+            gap: 10px;
+            margin-top: 18px;
+            justify-content: flex-start;
+        }
+
         .product-meta-editorial-pane {
             border-left: none;
             border-top: 1px solid rgba(0,0,0,0.05);
-            padding: 40px 24px;
+            padding: 42px 24px;
         }
-        .media-gallery-pane {
-            padding: 24px 16px;
+
+        .meta-header-group h1 {
+            font-size: clamp(2.4rem, 7vw, 4rem);
         }
-        .main-image-display-frame {
-            height: 55vh;
+
+        .editorial-price-badge {
+            margin-bottom: 34px;
         }
+
+        .brutalist-option-grid {
+            grid-template-columns: repeat(3, 1fr);
+            margin-bottom: 30px;
+        }
+
+        .color-flex-row .brutalist-btn {
+            flex: 1 1 calc(33.333% - 8px);
+            min-width: 0;
+            width: auto;
+        }
+
+        .velora-monolith-cta {
+            margin-bottom: 32px;
+        }
+
+        .product-fine-print {
+            margin-bottom: 32px;
+        }
+
         .matrix-interstitial-title {
-            padding: 60px 20px 30px 20px;
+            padding: 64px 24px 32px 24px;
         }
+
         .swiper-editorial-container {
-            padding: 0 20px;
+            padding: 0 24px;
         }
+
         .swiper-custom-navigation {
-            right: 20px;
-            top: -65px;
+            right: 24px;
+            top: -66px;
+        }
+
+        .swiper-slide {
+            min-width: 0;
+        }
+    }
+
+    @@media (max-width: 767.98px) {
+        .media-gallery-pane {
+            padding: 18px 16px 22px 16px;
+        }
+
+        .main-image-display-frame {
+            height: min(58vh, 560px);
+            min-height: 320px;
+        }
+
+        .product-meta-editorial-pane {
+            padding: 34px 18px;
+        }
+
+        .meta-header-group h1 {
+            font-size: clamp(2.15rem, 9vw, 3.4rem);
+        }
+
+        .editorial-price-badge {
+            font-size: 1.18rem;
+        }
+
+        .brutalist-option-grid {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 7px;
+        }
+
+        .brutalist-btn {
+            font-size: 0.68rem;
+            padding: 12px 4px;
+        }
+
+        .color-flex-row {
+            gap: 7px;
+        }
+
+        .color-flex-row .brutalist-btn {
+            flex: 1 1 calc(50% - 7px);
+            min-width: 0;
+            width: auto;
+            padding-left: 6px;
+            padding-right: 6px;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .editorial-wrapper {
+            padding-bottom: 34px;
+        }
+
+        .media-gallery-pane {
+            padding: 12px 12px 18px 12px;
+        }
+
+        .main-image-display-frame {
+            height: auto;
+            min-height: 0;
+            aspect-ratio: 4 / 5;
+            max-height: 72vh;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .editorial-thumbnails-strip {
+            width: calc(100% + 24px);
+            margin: 14px -12px 0 -12px;
+            padding: 0 12px 4px 12px;
+            gap: 8px;
+        }
+
+        .thumb-frame-container {
+            width: 60px;
+        }
+
+        .product-meta-editorial-pane {
+            padding: 30px 16px 22px 16px;
+        }
+
+        .meta-header-group h1 {
+            font-size: clamp(2rem, 11vw, 3rem);
+            margin-bottom: 12px;
+        }
+
+        .editorial-price-badge {
+            font-size: 1.08rem;
+            margin-bottom: 26px;
+        }
+
+        .brutalist-option-grid {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 7px;
+            margin-bottom: 26px;
+        }
+
+        .brutalist-btn {
+            font-size: 0.66rem;
+            padding: 11px 4px;
+        }
+
+        .color-flex-row {
+            gap: 7px;
+            margin-bottom: 32px;
+        }
+
+        .color-flex-row .brutalist-btn {
+            flex: 1 1 calc(50% - 7px);
+            min-width: 0;
+            width: auto;
+            padding-left: 6px;
+            padding-right: 6px;
+        }
+
+        .velora-monolith-cta {
+            position: static;
+            bottom: auto;
+            z-index: auto;
+            width: 100%;
+            margin: 0 0 28px 0;
+            padding: 16px;
+            box-shadow: none;
+        }
+
+        .product-fine-print {
+            font-size: 0.68rem;
+            line-height: 1.75;
+            margin-bottom: 28px;
+        }
+
+        .accordion-minimal-btn {
+            padding: 16px 0;
+            font-size: 0.68rem;
+        }
+
+        .accordion-minimal-content p {
+            padding-bottom: 16px;
+            font-size: 0.74rem;
+        }
+
+        .matrix-interstitial-title {
+            padding: 48px 16px 22px 16px;
+            font-size: clamp(2.35rem, 12vw, 3.6rem);
+        }
+
+        .swiper-editorial-container {
+            padding: 0 16px;
+        }
+
+        .swiper-custom-navigation {
+            position: static;
+            justify-content: flex-end;
+            margin: 0 0 14px 0;
+            padding-right: 0;
+        }
+
+        .nav-arrow-box {
+            width: 36px;
+            height: 36px;
+        }
+
+        .matrix-node-image-frame {
+            margin-bottom: 10px;
+        }
+
+        .matrix-node-meta-row {
+            flex-direction: column;
+            gap: 4px;
+            font-size: 0.68rem;
+        }
+    }
+
+    @@media (max-width: 380px) {
+        .media-gallery-pane {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .main-image-display-frame {
+            aspect-ratio: 1 / 1.15;
+        }
+
+        .editorial-thumbnails-strip {
+            width: calc(100% + 20px);
+            margin-left: -10px;
+            margin-right: -10px;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .thumb-frame-container {
+            width: 54px;
+        }
+
+        .product-meta-editorial-pane {
+            padding-left: 14px;
+            padding-right: 14px;
+        }
+
+        .meta-header-group h1 {
+            font-size: 2rem;
+        }
+
+        .brutalist-btn {
+            font-size: 0.62rem;
         }
     }
 </style>
@@ -379,9 +668,9 @@
         <div class="product-meta-editorial-pane">
             <div>
                 <div class="meta-header-group">
-                    <div class="d-flex justify-content-between align-items-start">
+                    <div class="d-flex justify-content-between align-items-start" style="gap: 15px;">
                         <h1>@Model.Name</h1>
-                        <button class="border-0 bg-transparent p-0" onclick="toggleBookmark(event, @Model.Id)" id="productBookmarkBtn" data-bookmarked="false" style="cursor: pointer; color: #999;">
+                        <button class="border-0 bg-transparent p-0" onclick="toggleBookmark(event, @Model.Id)" id="productBookmarkBtn" data-bookmarked="false" style="cursor: pointer; color: #999; flex-shrink: 0; margin-top: 5px;">
                             <i class="bi bi-bookmark" style="font-size: 1.4rem;"></i>
                         </button>
                     </div>
@@ -404,7 +693,7 @@
                     <div class="color-flex-row" id="colorSelectorGroup">
                         @for (int i = 0; i < colors.Count; i++)
                         {
-                            <button type="button" class="brutalist-btn color-btn @(i == 0 ? "selected-option" : "")" data-color="@colors[i]" style="min-width: 100px;">
+                            <button type="button" class="brutalist-btn color-btn @(i == 0 ? "selected-option" : "")" data-color="@colors[i]" style="min-width: 80px;">
                                 @colors[i]
                             </button>
                         }

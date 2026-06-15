@@ -54,7 +54,7 @@ namespace RepresentWeb.Controllers
 
                 // Restore cart from database to session
                 var dbCartItems = _context.ShoppingCarts.Where(c => c.UserEmail == model.Email).ToList();
-                var sessionCart = dbCartItems.Select(c => new RepresentWeb.Models.CartItem { ProductId = c.ProductId, Quantity = c.Quantity }).ToList();
+                var sessionCart = dbCartItems.Select(c => new RepresentWeb.Models.CartItem { ProductId = c.ProductId, Quantity = c.Quantity, Size = c.Size ?? string.Empty, Color = c.Color ?? string.Empty }).ToList();
                 var cartJson = System.Text.Json.JsonSerializer.Serialize(sessionCart);
                 HttpContext.Session.SetString("Cart", cartJson);
 
@@ -100,7 +100,7 @@ namespace RepresentWeb.Controllers
 
                 // Restore cart from database to session
                 var dbCartItems = _context.ShoppingCarts.Where(c => c.UserEmail == model.Email).ToList();
-                var sessionCart = dbCartItems.Select(c => new RepresentWeb.Models.CartItem { ProductId = c.ProductId, Quantity = c.Quantity }).ToList();
+                var sessionCart = dbCartItems.Select(c => new RepresentWeb.Models.CartItem { ProductId = c.ProductId, Quantity = c.Quantity, Size = c.Size ?? string.Empty, Color = c.Color ?? string.Empty }).ToList();
                 var cartJson = System.Text.Json.JsonSerializer.Serialize(sessionCart);
                 HttpContext.Session.SetString("Cart", cartJson);
 
@@ -199,7 +199,9 @@ namespace RepresentWeb.Controllers
                     // Sync session cart to database
                     foreach (var item in cart)
                     {
-                        var dbItem = _context.ShoppingCarts.FirstOrDefault(c => c.UserEmail == userEmail && c.ProductId == item.ProductId);
+                        var dbItem = item.Size == string.Empty && item.Color == string.Empty
+                            ? _context.ShoppingCarts.FirstOrDefault(c => c.UserEmail == userEmail && c.ProductId == item.ProductId && (c.Size == null || c.Size == item.Size) && (c.Color == null || c.Color == item.Color))
+                            : _context.ShoppingCarts.FirstOrDefault(c => c.UserEmail == userEmail && c.ProductId == item.ProductId && c.Size == item.Size && c.Color == item.Color);
                         if (dbItem != null)
                         {
                             dbItem.Quantity = item.Quantity;
@@ -211,6 +213,8 @@ namespace RepresentWeb.Controllers
                                 UserEmail = userEmail,
                                 ProductId = item.ProductId,
                                 Quantity = item.Quantity,
+                                Size = item.Size,
+                                Color = item.Color,
                                 CreatedAt = DateTime.Now
                             });
                         }
@@ -239,7 +243,9 @@ namespace RepresentWeb.Controllers
                     // Sync session cart to database
                     foreach (var item in cart)
                     {
-                        var dbItem = _context.ShoppingCarts.FirstOrDefault(c => c.UserEmail == userEmail && c.ProductId == item.ProductId);
+                        var dbItem = item.Size == string.Empty && item.Color == string.Empty
+                            ? _context.ShoppingCarts.FirstOrDefault(c => c.UserEmail == userEmail && c.ProductId == item.ProductId && (c.Size == null || c.Size == item.Size) && (c.Color == null || c.Color == item.Color))
+                            : _context.ShoppingCarts.FirstOrDefault(c => c.UserEmail == userEmail && c.ProductId == item.ProductId && c.Size == item.Size && c.Color == item.Color);
                         if (dbItem != null)
                         {
                             dbItem.Quantity = item.Quantity;
@@ -251,6 +257,8 @@ namespace RepresentWeb.Controllers
                                 UserEmail = userEmail,
                                 ProductId = item.ProductId,
                                 Quantity = item.Quantity,
+                                Size = item.Size,
+                                Color = item.Color,
                                 CreatedAt = DateTime.Now
                             });
                         }

@@ -93,9 +93,12 @@
                        class="d-block text-decoration-none group-hover text-dark">
 
                         <div class="position-relative overflow-hidden mb-3 bg-neutral-light aspect-ratio-portrait">
-                            @if (!string.IsNullOrEmpty(item.ImageUrl))
+                            @{
+                                var productImage = item.GetImages()?.FirstOrDefault();
+                            }
+                            @if (!string.IsNullOrEmpty(productImage))
                             {
-                                <img src="@item.ImageUrl"
+                                <img src="@productImage"
                                      alt="@item.Name"
                                      class="w-100 h-100 product-img" />
                             }

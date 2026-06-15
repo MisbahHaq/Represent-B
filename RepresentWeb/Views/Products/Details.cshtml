@@ -4,6 +4,7 @@
 @{
     ViewData["Title"] = Model.Name;
     var images = Model.GetImages() ?? new List<string> { "" };
+    var colors = Model.GetColors() ?? new List<string> { "Black" };
 }
 
 @section Head {
@@ -14,6 +15,7 @@
     #relatedSwiper { overflow: hidden; }
     #relatedSwiper .swiper-slide a { text-decoration: none !important; color: inherit; display: block; }
     #relatedSwiper .swiper-slide a:hover { text-decoration: none !important; color: inherit; }
+    .color-btn { min-width: 92px; }
     .swiper-button-next, .swiper-button-prev { color: #fff; }
 </style>
 
@@ -31,7 +33,7 @@
                         <img src="@images.FirstOrDefault()"
                              alt="@Model.Name"
                              id="mainProductImage"
-                             style="object-fit: contain; padding: 2rem; transition: opacity 0.5s ease;" />
+                             style="object-fit: cover; transition: opacity 0.5s ease;" />
                     }
                     else
                     {
@@ -44,16 +46,16 @@
 
                 @if (images.Count > 1)
                 {
-                    <div class="d-flex gap-2 mt-3 px-4">
-                        @for (int i = 0; i < Math.Min(3, images.Count); i++)
+                    <div class="d-flex gap-2 mt-3 px-4 overflow-auto no-scrollbar">
+                        @for (int i = 0; i < images.Count; i++)
                         {
                             <div class="img-container cursor-pointer"
-                                 style="width: 75px; height: 90px; background: #f5f5f3; aspect-ratio: 3/4;"
+                                 style="flex: 0 0 75px; width: 75px; height: 90px; background: #f5f5f3; aspect-ratio: 3/4;"
                                  onclick="switchImage('@images[i]', this)">
                                 <img src="@images[i]"
                                      alt="Thumbnail @(i + 1)"
                                      class="w-100 h-100"
-                                     style="object-fit: contain; padding: 0.3rem;" />
+                                     style="object-fit: cover;" />
                             </div>
                         }
                     </div>
@@ -118,10 +120,23 @@
                     </div>
                 </div>
 
-                <div class="mb-6 animate-fade-in animate-delay-3">
+                <div class="mb-5 animate-fade-in animate-delay-3" id="colorSection">
+                    <p class="text-caption mb-3" style="color: #999;">Select Color</p>
+                    <div class="d-flex flex-wrap gap-2" id="colorSelectorGroup">
+                        @for (int i = 0; i < colors.Count; i++)
+                        {
+                            <button type="button" class="btn-minimal py-3 color-btn @(i == 0 ? "btn-filled" : "")" data-color="@colors[i]"
+                                    style="font-size: 0.75rem; min-width: 92px; padding: 0.7rem 0;">
+                                @colors[i]
+                            </button>
+                        }
+                    </div>
+                </div>
+
+                <div class="mb-6 animate-fade-in animate-delay-4">
                     <button id="addToBagCta" class="btn-minimal btn-filled w-100 py-3"
                             style="font-size: 0.72rem; letter-spacing: 0.2em;">
-                        Select A Size
+                        Select A Size And Color
                     </button>
                 </div>
 
@@ -325,6 +340,7 @@
 
         document.addEventListener('DOMContentLoaded', function () {
             const sizeButtons = document.querySelectorAll('.size-btn');
+            const colorButtons = document.querySelectorAll('.color-btn');
             const ctaButton = document.getElementById('addToBagCta');
             sizeButtons.forEach(button => {
                 button.addEventListener('click', function () {
@@ -337,12 +353,30 @@
                     this.style.background = '#1a1a1a';
                     this.style.color = '#fff';
                     const selectedSize = this.getAttribute('data-size');
-                    ctaButton.innerText = 'ADD TO BAG ・ SIZE ' + selectedSize;
+                    const selectedColor = document.querySelector('.color-btn.btn-filled')?.getAttribute('data-color');
+                    ctaButton.innerText = 'ADD TO BAG ・ SIZE ' + selectedSize + ' ・ ' + selectedColor;
+                });
+            });
+            colorButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    colorButtons.forEach(btn => {
+                        btn.classList.remove('btn-filled');
+                        btn.style.background = 'transparent';
+                        btn.style.color = '#1a1a1a';
+                    });
+                    this.classList.add('btn-filled');
+                    this.style.background = '#1a1a1a';
+                    this.style.color = '#fff';
+                    const selectedSize = document.querySelector('.size-btn.btn-filled')?.getAttribute('data-size');
+                    const selectedColor = this.getAttribute('data-color');
+                    ctaButton.innerText = selectedSize ? 'ADD TO BAG ・ SIZE ' + selectedSize + ' ・ ' + selectedColor : 'ADD TO BAG ・ COLOR ' + selectedColor;
                 });
             });
             ctaButton.addEventListener('click', function() {
                 const selectedSize = document.querySelector('.size-btn.btn-filled')?.getAttribute('data-size');
+                const selectedColor = document.querySelector('.color-btn.btn-filled')?.getAttribute('data-color');
                 if (!selectedSize) { alert('Please select a size first'); return; }
+                if (!selectedColor) { alert('Please select a color first'); return; }
                 const originalText = this.innerText;
                 this.innerText = 'Adding...'; this.disabled = true;
                 fetch('/Cart/Add/@Model.Id', {
@@ -352,7 +386,7 @@
                         'RequestVerificationToken': getAntiForgeryToken(),
                         'X-Requested-With': 'XMLHttpRequest'
                     },
-                    body: 'id=@Model.Id&quantity=1'
+                    body: 'id=@Model.Id&quantity=1&size=' + encodeURIComponent(selectedSize) + '&color=' + encodeURIComponent(selectedColor)
                 })
                 .then(response => response.json())
                 .then(data => {

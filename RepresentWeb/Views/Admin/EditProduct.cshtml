@@ -59,6 +59,11 @@
                     <input asp-for="Tags" class="form-control bg-dark text-white border-secondary" placeholder="new, sale, popular">
                 </div>
 
+                <div class="mb-3">
+                    <label asp-for="Colors" class="form-label">Colors (comma separated)</label>
+                    <input asp-for="Colors" class="form-control bg-dark text-white border-secondary" placeholder="Black, White, Navy">
+                </div>
+
                 <button type="submit" class="btn btn-light">Save Changes</button>
                 <a asp-action="Products" class="btn btn-outline-secondary">Cancel</a>
             </form>

@@ -31,7 +31,7 @@ namespace RepresentWeb.Controllers
         // POST: Cart/Add/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Add(int id, int quantity = 1)
+        public IActionResult Add(int id, int quantity = 1, string? size = null, string? color = null)
         {
             var product = _context.Products.Find(id);
             if (product == null)
@@ -44,22 +44,27 @@ namespace RepresentWeb.Controllers
                 quantity = 1;
             }
 
+            var normalizedSize = NormalizeSize(size);
+            var normalizedColor = NormalizeColor(color);
+
             // Add to cart (stored in session and database if logged in)
             var cart = GetCart();
-            var cartItem = cart.FirstOrDefault(item => item.ProductId == id);
+            var cartItem = cart.FirstOrDefault(item => item.ProductId == id && item.Size == normalizedSize && item.Color == normalizedColor);
 
             // Also save to database if user is logged in
             var userEmail = HttpContext.Session.GetString("UserEmail");
             if (!string.IsNullOrEmpty(userEmail))
             {
-                var dbCartItem = _context.ShoppingCarts.FirstOrDefault(c => c.UserEmail == userEmail && c.ProductId == id);
+                var dbCartItem = normalizedSize == string.Empty && normalizedColor == string.Empty
+                    ? _context.ShoppingCarts.FirstOrDefault(c => c.UserEmail == userEmail && c.ProductId == id && (c.Size == null || c.Size == normalizedSize) && (c.Color == null || c.Color == normalizedColor))
+                    : _context.ShoppingCarts.FirstOrDefault(c => c.UserEmail == userEmail && c.ProductId == id && c.Size == normalizedSize && c.Color == normalizedColor);
                 if (dbCartItem != null)
                 {
                     dbCartItem.Quantity += quantity;
                 }
                 else
                 {
-                    _context.ShoppingCarts.Add(new ShoppingCart { UserEmail = userEmail, ProductId = id, Quantity = quantity });
+                    _context.ShoppingCarts.Add(new ShoppingCart { UserEmail = userEmail, ProductId = id, Quantity = quantity, Size = normalizedSize, Color = normalizedColor });
                 }
                 _context.SaveChanges();
             }
@@ -72,7 +77,7 @@ namespace RepresentWeb.Controllers
             else
             {
                 // Add new item
-                cart.Add(new CartItem { ProductId = id, Quantity = quantity });
+                cart.Add(new CartItem { ProductId = id, Quantity = quantity, Size = normalizedSize, Color = normalizedColor });
             }
 
             SaveCart(cart);
@@ -91,10 +96,12 @@ namespace RepresentWeb.Controllers
         // POST: Cart/Remove/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Remove(int id)
+        public IActionResult Remove(int id, string? size = null, string? color = null)
         {
+            var normalizedSize = NormalizeSize(size);
+            var normalizedColor = NormalizeColor(color);
             var cart = GetCart();
-            var cartItem = cart.FirstOrDefault(item => item.ProductId == id);
+            var cartItem = cart.FirstOrDefault(item => item.ProductId == id && item.Size == normalizedSize && item.Color == normalizedColor);
 
             if (cartItem != null)
             {
@@ -105,7 +112,9 @@ namespace RepresentWeb.Controllers
                 var userEmail = HttpContext.Session.GetString("UserEmail");
                 if (!string.IsNullOrEmpty(userEmail))
                 {
-                    var dbCartItem = _context.ShoppingCarts.FirstOrDefault(c => c.UserEmail == userEmail && c.ProductId == id);
+                    var dbCartItem = normalizedSize == string.Empty && normalizedColor == string.Empty
+                    ? _context.ShoppingCarts.FirstOrDefault(c => c.UserEmail == userEmail && c.ProductId == id && (c.Size == null || c.Size == normalizedSize) && (c.Color == null || c.Color == normalizedColor))
+                    : _context.ShoppingCarts.FirstOrDefault(c => c.UserEmail == userEmail && c.ProductId == id && c.Size == normalizedSize && c.Color == normalizedColor);
                     if (dbCartItem != null)
                     {
                         _context.ShoppingCarts.Remove(dbCartItem);
@@ -127,15 +136,17 @@ namespace RepresentWeb.Controllers
         // POST: Cart/Update/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Update(int id, int quantity)
+        public IActionResult Update(int id, int quantity, string? size = null, string? color = null)
         {
             if (quantity <= 0)
             {
-                return Remove(id);
+                return Remove(id, size, color);
             }
 
+            var normalizedSize = NormalizeSize(size);
+            var normalizedColor = NormalizeColor(color);
             var cart = GetCart();
-            var cartItem = cart.FirstOrDefault(item => item.ProductId == id);
+            var cartItem = cart.FirstOrDefault(item => item.ProductId == id && item.Size == normalizedSize && item.Color == normalizedColor);
 
             if (cartItem != null)
             {
@@ -146,7 +157,9 @@ namespace RepresentWeb.Controllers
                 var userEmail = HttpContext.Session.GetString("UserEmail");
                 if (!string.IsNullOrEmpty(userEmail))
                 {
-                    var dbCartItem = _context.ShoppingCarts.FirstOrDefault(c => c.UserEmail == userEmail && c.ProductId == id);
+                    var dbCartItem = normalizedSize == string.Empty && normalizedColor == string.Empty
+                    ? _context.ShoppingCarts.FirstOrDefault(c => c.UserEmail == userEmail && c.ProductId == id && (c.Size == null || c.Size == normalizedSize) && (c.Color == null || c.Color == normalizedColor))
+                    : _context.ShoppingCarts.FirstOrDefault(c => c.UserEmail == userEmail && c.ProductId == id && c.Size == normalizedSize && c.Color == normalizedColor);
                     if (dbCartItem != null)
                     {
                         dbCartItem.Quantity = quantity;
@@ -272,7 +285,9 @@ namespace RepresentWeb.Controllers
                     ProductName = cartItem.Product.Name,
                     Quantity = cartItem.Quantity,
                     Price = cartItem.Product.Price,
-                    ImageUrl = cartItem.Product.ImageUrl
+                    ImageUrl = cartItem.Product.ImageUrl,
+                    Size = cartItem.Size,
+                    Color = cartItem.Color
                 });
             }
 
@@ -330,7 +345,9 @@ namespace RepresentWeb.Controllers
                     var mergedCart = dbCartItems.Select(c => new CartItem
                     {
                         ProductId = c.ProductId,
-                        Quantity = c.Quantity
+                        Quantity = c.Quantity,
+                        Size = c.Size ?? string.Empty,
+                        Color = c.Color ?? string.Empty
                     }).ToList();
 
                     var cartJsonToSave = System.Text.Json.JsonSerializer.Serialize(mergedCart);
@@ -354,6 +371,16 @@ namespace RepresentWeb.Controllers
             HttpContext.Session.SetString("Cart", cartJson);
         }
 
+        private static string NormalizeSize(string? size)
+        {
+            return (size ?? string.Empty).Trim().ToUpperInvariant();
+        }
+
+        private static string NormalizeColor(string? color)
+        {
+            return (color ?? string.Empty).Trim();
+        }
+
         private List<CartViewModel.CartItemViewModel> GetCartItems()
         {
             var cart = GetCart();
@@ -369,7 +396,9 @@ namespace RepresentWeb.Controllers
                     cartItems.Add(new CartViewModel.CartItemViewModel
                     {
                         Product = product,
-                        Quantity = cartItem.Quantity
+                        Quantity = cartItem.Quantity,
+                        Size = cartItem.Size ?? string.Empty,
+                        Color = cartItem.Color ?? string.Empty
                     });
                 }
             }
@@ -391,6 +420,8 @@ namespace RepresentWeb.Controllers
             {
                 public Product? Product { get; set; }
                 public int Quantity { get; set; }
+                public string Size { get; set; } = string.Empty;
+                public string Color { get; set; } = string.Empty;
                 public decimal Subtotal => Product?.Price * Quantity ?? 0;
             }
         }

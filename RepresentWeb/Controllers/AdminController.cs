@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RepresentWeb.Data;
@@ -158,6 +159,7 @@ namespace RepresentWeb.Controllers
 
             if (ModelState.IsValid)
             {
+                product.ImageUrls = NormalizeImageUrls(product.ImageUrls, Request.Form);
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Products));
@@ -197,6 +199,7 @@ namespace RepresentWeb.Controllers
             {
                 try
                 {
+                    product.ImageUrls = NormalizeImageUrls(product.ImageUrls, Request.Form);
                     _context.Update(product);
                     await _context.SaveChangesAsync();
                 }
@@ -302,6 +305,26 @@ namespace RepresentWeb.Controllers
             if (order == null) return NotFound();
 
             return View(order);
+        }
+
+        private static string? NormalizeImageUrls(string? existingImageUrls, IFormCollection form)
+        {
+            var images = new List<string>();
+            if (!string.IsNullOrWhiteSpace(existingImageUrls))
+            {
+                images.AddRange(existingImageUrls.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(url => url.Trim()));
+            }
+
+            for (var i = 0; i < 5; i++)
+            {
+                var value = form[$"ImageUrls[{i}]"].FirstOrDefault();
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    images.Add(value.Trim());
+                }
+            }
+
+            return images.Any() ? string.Join(", ", images.Distinct(StringComparer.OrdinalIgnoreCase)) : existingImageUrls;
         }
 
         private bool ProductExists(int id)

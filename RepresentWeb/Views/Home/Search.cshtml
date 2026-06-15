@@ -35,9 +35,12 @@
                         <a asp-controller="Products" asp-action="Details" asp-route-id="@product.Id" 
                            class="d-block text-decoration-none">
                             <div style="aspect-ratio: 1/1; overflow: hidden; margin-bottom: 0.8rem;">
-                                @if (!string.IsNullOrEmpty(product.ImageUrl))
+                                @{
+                                    var productImage = product.GetImages()?.FirstOrDefault();
+                                }
+                                @if (!string.IsNullOrEmpty(productImage))
                                 {
-                                    <img src="@product.ImageUrl" alt="@product.Name" 
+                                    <img src="@productImage" alt="@product.Name" 
                                          class="w-100 h-100 object-cover" />
                                 }
                                 else

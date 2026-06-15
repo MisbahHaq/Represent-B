@@ -36,7 +36,7 @@
                                 @item.ProductName
                             </p>
                             <p style="font-size: 0.75rem; font-weight: 300; color: #999;">
-                                @item.Quantity × Rs @item.Price.ToString("N2")
+                                @if (!string.IsNullOrEmpty(item.Color)) { <span>Color: @item.Color · </span> }@if (!string.IsNullOrEmpty(item.Size)) { <span>Size: @item.Size · </span> }@item.Quantity × Rs @item.Price.ToString("N2")
                             </p>
                         </div>
                         <div class="col-auto text-end">

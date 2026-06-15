@@ -23,6 +23,8 @@ namespace RepresentWeb.Models
 
         public string? Tags { get; set; }
 
+        public string? Colors { get; set; }
+
         public List<string>? GetImages()
         {
             var images = new List<string>();
@@ -41,6 +43,15 @@ namespace RepresentWeb.Models
             return !string.IsNullOrEmpty(Tags)
                 ? Tags.Split(',', StringSplitOptions.RemoveEmptyEntries)
                     .Select(t => t.Trim())
+                    .ToList()
+                : null;
+        }
+
+        public List<string>? GetColors()
+        {
+            return !string.IsNullOrEmpty(Colors)
+                ? Colors.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(color => color.Trim())
                     .ToList()
                 : null;
         }

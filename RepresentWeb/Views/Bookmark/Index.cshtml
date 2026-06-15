@@ -42,9 +42,12 @@
                                class="d-block text-decoration-none" style="color: inherit;">
 
                                 <div class="img-container aspect-square mb-4" style="background: #f7f7f5;">
-                                    @if (!string.IsNullOrEmpty(item.Product.ImageUrl))
+                                    @{
+                                        var productImage = item.Product.GetImages()?.FirstOrDefault();
+                                    }
+                                    @if (!string.IsNullOrEmpty(productImage))
                                     {
-                                        <img src="@item.Product.ImageUrl"
+                                        <img src="@productImage"
                                              alt="@item.Product.Name"
                                              style="object-fit: contain; padding: 1rem;" />
                                     }

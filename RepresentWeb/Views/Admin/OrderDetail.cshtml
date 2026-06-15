@@ -46,6 +46,8 @@
                     <thead>
                         <tr>
                             <th>Product</th>
+                            <th>Color</th>
+                            <th>Size</th>
                             <th>Quantity</th>
                             <th>Unit Price</th>
                             <th>Subtotal</th>
@@ -56,6 +58,8 @@
                         {
                             <tr>
                                 <td>@item.ProductName</td>
+                                <td>@(string.IsNullOrEmpty(item.Color) ? "N/A" : item.Color)</td>
+                                <td>@(string.IsNullOrEmpty(item.Size) ? "N/A" : item.Size)</td>
                                 <td>@item.Quantity</td>
                                 <td>Rs @item.Price.ToString("N2")</td>
                                 <td>Rs @((item.Quantity * item.Price).ToString("N2"))</td>

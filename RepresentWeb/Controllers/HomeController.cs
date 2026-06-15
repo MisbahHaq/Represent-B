@@ -38,17 +38,41 @@ public class HomeController : Controller
         return View();
     }
 
-    public IActionResult Men()
+    public IActionResult Men(string sort = "newest")
     {
-        var products = _context.Products.Where(p => p.Gender == "Men").ToList();
+        var productsQuery = _context.Products.Where(p => p.Gender == "Men");
+        
+        productsQuery = sort switch
+        {
+            "price-low-high" => productsQuery.OrderBy(p => p.Price),
+            "price-high-low" => productsQuery.OrderByDescending(p => p.Price),
+            "name-a-z" => productsQuery.OrderBy(p => p.Name),
+            "name-z-a" => productsQuery.OrderByDescending(p => p.Name),
+            _ => productsQuery.OrderByDescending(p => p.Id)
+        };
+        
+        var products = productsQuery.ToList();
+        ViewBag.CurrentSort = sort;
         return View(products);
     }
 
-public IActionResult Women()
+    public IActionResult Women(string sort = "newest")
+    {
+        var productsQuery = _context.Products.Where(p => p.Gender == "Women");
+        
+        productsQuery = sort switch
         {
-            var products = _context.Products.Where(p => p.Gender == "Women").ToList();
-            return View(products);
-        }
+            "price-low-high" => productsQuery.OrderBy(p => p.Price),
+            "price-high-low" => productsQuery.OrderByDescending(p => p.Price),
+            "name-a-z" => productsQuery.OrderBy(p => p.Name),
+            "name-z-a" => productsQuery.OrderByDescending(p => p.Name),
+            _ => productsQuery.OrderByDescending(p => p.Id)
+        };
+        
+        var products = productsQuery.ToList();
+        ViewBag.CurrentSort = sort;
+        return View(products);
+    }
 
         public IActionResult Search(string q)
         {

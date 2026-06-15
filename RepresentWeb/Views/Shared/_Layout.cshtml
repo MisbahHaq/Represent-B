@@ -395,21 +395,17 @@
        fetch('/Bookmark/GetCount')
            .then(response => response.json())
            .then(data => {
-               const desktopBadge = document.querySelector('#bookmarkLink .badge-count');
-               const mobileDrawerBadge = document.querySelector('#bookmarkLinkMobileDrawer .badge-count');
-               const bookmarkIcon = document.querySelector('#bookmarkLink .bookmark-icon');
+                const desktopBadge = document.querySelector('#bookmarkLink .badge-count');
+                const mobileDrawerBadge = document.querySelector('#bookmarkLinkMobileDrawer .badge-count');
                
-               if (desktopBadge) {
-                   desktopBadge.textContent = data.count;
-                   desktopBadge.style.display = data.count > 0 ? 'inline-block' : 'none';
-               }
-               if (mobileDrawerBadge) {
-                   mobileDrawerBadge.textContent = data.count;
-                   mobileDrawerBadge.style.display = data.count > 0 ? 'inline-block' : 'none';
-               }
-               if (bookmarkIcon) {
-                   bookmarkIcon.style.color = data.count > 0 ? '#1a1a1a' : '#fff';
-               }
+                if (desktopBadge) {
+                    desktopBadge.textContent = data.count;
+                    desktopBadge.style.display = data.count > 0 ? 'inline-block' : 'none';
+                }
+                if (mobileDrawerBadge) {
+                    mobileDrawerBadge.textContent = data.count;
+                    mobileDrawerBadge.style.display = data.count > 0 ? 'inline-block' : 'none';
+                }
            });
     }
 

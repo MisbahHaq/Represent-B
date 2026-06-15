@@ -15,5 +15,9 @@ namespace RepresentWeb.Controllers
         public int BestSellingProductQuantity { get; set; }
         public Product? MostBookmarkedProduct { get; set; }
         public int MostBookmarkedProductCount { get; set; }
+        public int PendingCancellationRequests { get; set; }
+        public int NewChatRequests { get; set; }
+        public int UnreadSupportRequests { get; set; }
+        public List<SupportRequest> RecentSupportRequests { get; set; } = new();
     }
 }

@@ -107,6 +107,12 @@ namespace RepresentWeb.Controllers
                 mostBookmarkedProductCount = mostBookmarkedProduct.Count;
             }
 
+            var supportRequests = await _context.SupportRequests
+                .Include(r => r.Order)
+                .OrderByDescending(r => r.CreatedAt)
+                .Take(10)
+                .ToListAsync();
+
             var model = new AdminDashboardViewModel
             {
                 TotalOrders = await _context.Orders.CountAsync(),
@@ -114,12 +120,16 @@ namespace RepresentWeb.Controllers
                 PendingOrders = await _context.Orders.CountAsync(o => o.Status == "Pending"),
                 OrderReceivedOrders = await _context.Orders.CountAsync(o => o.Status == "Order Received"),
                 OutForDeliveryOrders = await _context.Orders.CountAsync(o => o.Status == "Out for Delivery"),
+                PendingCancellationRequests = await _context.SupportRequests.CountAsync(r => r.RequestType == "Cancellation" && r.Status != "Resolved"),
+                NewChatRequests = await _context.SupportRequests.CountAsync(r => r.RequestType == "AdminChat" && !r.IsRead),
+                UnreadSupportRequests = await _context.SupportRequests.CountAsync(r => !r.IsRead),
                 RecentOrders = orders,
                 RecentProducts = products,
                 BestSellingProduct = bestSellingProductInfo,
                 BestSellingProductQuantity = bestSellingProductQuantity,
                 MostBookmarkedProduct = mostBookmarkedProductInfo,
-                MostBookmarkedProductCount = mostBookmarkedProductCount
+                MostBookmarkedProductCount = mostBookmarkedProductCount,
+                RecentSupportRequests = supportRequests
             };
 
             return View(model);
@@ -259,6 +269,131 @@ namespace RepresentWeb.Controllers
                 .OrderByDescending(o => o.OrderDate)
                 .ToListAsync();
             return View(orders);
+        }
+
+        // GET: Admin/SupportRequests
+        public async Task<IActionResult> SupportRequests()
+        {
+            if (!IsAdminLoggedIn())
+            {
+                return RedirectToAction("Login", "Admin");
+            }
+
+            var requests = await _context.SupportRequests
+                .Include(r => r.Order)
+                .OrderByDescending(r => r.CreatedAt)
+                .ToListAsync();
+
+            return View(requests);
+        }
+
+        // GET: Admin/Cancellations
+        public async Task<IActionResult> Cancellations()
+        {
+            if (!IsAdminLoggedIn())
+            {
+                return RedirectToAction("Login", "Admin");
+            }
+
+            var requests = await _context.SupportRequests
+                .Include(r => r.Order)
+                .Where(r => r.RequestType == "Cancellation")
+                .OrderByDescending(r => r.CreatedAt)
+                .ToListAsync();
+
+            return View(requests);
+        }
+
+        // GET: Admin/UnreadSupport
+        public async Task<IActionResult> UnreadSupport()
+        {
+            if (!IsAdminLoggedIn())
+            {
+                return RedirectToAction("Login", "Admin");
+            }
+
+            var requests = await _context.SupportRequests
+                .Include(r => r.Order)
+                .Where(r => !r.IsRead)
+                .OrderByDescending(r => r.CreatedAt)
+                .ToListAsync();
+
+            return View(requests);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MarkSupportRequestRead(int id)
+        {
+            if (!IsAdminLoggedIn())
+            {
+                return Json(new { success = false, message = "Unauthorized" });
+            }
+
+            var request = await _context.SupportRequests.FindAsync(id);
+            if (request == null)
+            {
+                return Json(new { success = false, message = "Request not found" });
+            }
+
+            request.IsRead = true;
+            request.UpdatedAt = DateTime.Now;
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, message = "Request marked as read" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResolveSupportRequest(int id, string response)
+        {
+            if (!IsAdminLoggedIn())
+            {
+                return Json(new { success = false, message = "Unauthorized" });
+            }
+
+            var request = await _context.SupportRequests.FindAsync(id);
+            if (request == null)
+            {
+                return Json(new { success = false, message = "Request not found" });
+            }
+
+            request.AdminResponse = string.IsNullOrWhiteSpace(response) ? request.AdminResponse : response;
+            request.Status = "Resolved";
+            request.IsRead = true;
+            request.UpdatedAt = DateTime.Now;
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, message = "Request resolved" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CancelOrderFromChat(int id)
+        {
+            if (!IsAdminLoggedIn())
+            {
+                return Json(new { success = false, message = "Unauthorized" });
+            }
+
+            var request = await _context.SupportRequests
+                .Include(r => r.Order)
+                .FirstOrDefaultAsync(r => r.Id == id);
+
+            if (request == null)
+            {
+                return Json(new { success = false, message = "Request not found" });
+            }
+
+            if (request.Order != null)
+            {
+                request.Order.Status = "Cancelled";
+            }
+
+            request.Status = "Resolved";
+            request.IsRead = true;
+            request.UpdatedAt = DateTime.Now;
+            request.AdminResponse = "Order cancelled by admin from chatbot request.";
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, message = "Order cancelled" });
         }
 
         // POST: Admin/Orders/UpdateStatus

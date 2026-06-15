@@ -207,6 +207,183 @@
     .related-swiper .swiper-slide { flex: 0 0 50%; max-width: 50%; }
   }
   .swiper-button-next, .swiper-button-prev { color: #fff; }
+
+  .chatbot-widget {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    z-index: 1080;
+  }
+
+  .chatbot-toggle {
+    width: 58px;
+    height: 58px;
+    border: 0;
+    border-radius: 999px;
+    background: #111;
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 14px 35px rgba(0,0,0,0.22);
+  }
+
+  .chatbot-panel {
+    position: fixed;
+    right: 18px;
+    bottom: 88px;
+    width: min(390px, calc(100vw - 32px));
+    max-height: min(680px, calc(100vh - 118px));
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.12);
+    box-shadow: 0 24px 70px rgba(0,0,0,0.22);
+  }
+
+  .chatbot-panel.open {
+    display: flex;
+  }
+
+  .chatbot-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 16px;
+    background: #111;
+    color: #fff;
+  }
+
+  .chatbot-header strong {
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .chatbot-close {
+    width: 30px;
+    height: 30px;
+    border: 0;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1.2rem;
+    line-height: 1;
+  }
+
+  .chatbot-messages {
+    flex: 1;
+    min-height: 260px;
+    max-height: 360px;
+    overflow-y: auto;
+    padding: 14px;
+    background: #f8f7f4;
+  }
+
+  .chatbot-message {
+    max-width: 86%;
+    margin-bottom: 10px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    white-space: pre-wrap;
+  }
+
+  .chatbot-message.bot {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+
+  .chatbot-message.user {
+    margin-left: auto;
+    background: #111;
+    color: #fff;
+  }
+
+  .chatbot-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 10px;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    background: #fff;
+  }
+
+  .chatbot-action {
+    border: 1px solid rgba(0,0,0,0.14);
+    background: transparent;
+    color: #111;
+    cursor: pointer;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 8px 9px;
+  }
+
+  .chatbot-context-form {
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    background: #fff;
+  }
+
+  .chatbot-context-form.open {
+    display: flex;
+  }
+
+  .chatbot-context-form input,
+  .chatbot-context-form textarea {
+    width: 100%;
+    border: 1px solid rgba(0,0,0,0.14);
+    border-radius: 0;
+    padding: 9px 10px;
+    font-size: 0.82rem;
+  }
+
+  .chatbot-context-form textarea {
+    min-height: 76px;
+    resize: vertical;
+  }
+
+  .chatbot-submit {
+    border: 0;
+    background: #111;
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 10px;
+  }
+
+  @@media (max-width: 575.98px) {
+    .chatbot-widget {
+      right: 12px;
+      bottom: 12px;
+    }
+
+    .chatbot-panel {
+      right: 12px;
+      bottom: 82px;
+      width: calc(100vw - 24px);
+    }
+
+    .chatbot-toggle {
+      width: 54px;
+      height: 54px;
+      font-size: 0.66rem;
+    }
+  }
 </style>
 
 <body>
@@ -296,6 +473,46 @@
       </div>
     </nav>
   </header>
+
+  <div class="chatbot-widget" id="chatbotWidget">
+    <div class="chatbot-panel" id="chatbotPanel" aria-hidden="true">
+      <div class="chatbot-header">
+        <strong>Represent Assistant</strong>
+        <button type="button" class="chatbot-close" id="chatbotClose" aria-label="Close chatbot">×</button>
+      </div>
+
+      <div class="chatbot-messages" id="chatbotMessages" aria-live="polite">
+        <div class="chatbot-message bot">Hi, I can check order status, send a cancellation request to admin, or notify admin to chat.</div>
+      </div>
+
+      <div class="chatbot-actions">
+        <button type="button" class="chatbot-action" data-chatbot-mode="status">Order Status</button>
+        <button type="button" class="chatbot-action" data-chatbot-mode="cancel">Cancel Order</button>
+        <button type="button" class="chatbot-action" data-chatbot-mode="admin">Chat With Admin</button>
+      </div>
+
+      <form id="chatbotStatusForm" class="chatbot-context-form">
+        <input id="chatbotStatusOrder" type="text" placeholder="Order number, e.g. 12" autocomplete="off" />
+        <button type="submit" class="chatbot-submit">Check Status</button>
+      </form>
+
+      <form id="chatbotCancelForm" class="chatbot-context-form">
+        <input id="chatbotCancelOrder" type="text" placeholder="Order number, e.g. 12" autocomplete="off" />
+        <textarea id="chatbotCancelReason" placeholder="Cancellation reason"></textarea>
+        <button type="submit" class="chatbot-submit">Send Cancellation Request</button>
+      </form>
+
+      <form id="chatbotAdminForm" class="chatbot-context-form">
+        <input id="chatbotCustomerName" type="text" placeholder="Your name" autocomplete="name" />
+        <input id="chatbotCustomerEmail" type="email" placeholder="Email" autocomplete="email" />
+        <input id="chatbotAdminOrder" type="text" placeholder="Order number, optional" autocomplete="off" />
+        <textarea id="chatbotAdminMessage" placeholder="Message for admin"></textarea>
+        <button type="submit" class="chatbot-submit">Notify Admin</button>
+      </form>
+    </div>
+
+    <button type="button" class="chatbot-toggle" id="chatbotToggle" aria-label="Open chatbot">Chat</button>
+  </div>
 
   <main role="main" class="pb-0">
     @RenderBody()
@@ -418,6 +635,127 @@
            });
     }
 
+    function initChatbot() {
+      const panel = document.getElementById('chatbotPanel');
+      const toggle = document.getElementById('chatbotToggle');
+      const close = document.getElementById('chatbotClose');
+      const messages = document.getElementById('chatbotMessages');
+      const forms = Array.from(document.querySelectorAll('.chatbot-context-form'));
+      let activeMode = '';
+
+      if (!panel || !toggle || !messages) return;
+
+      function addMessage(text, sender) {
+        const message = document.createElement('div');
+        message.className = 'chatbot-message ' + (sender || 'bot');
+        message.textContent = text;
+        messages.appendChild(message);
+        messages.scrollTop = messages.scrollHeight;
+      }
+
+      function showMode(mode) {
+        activeMode = mode;
+        forms.forEach(form => form.classList.toggle('open', form.id === 'chatbot' + mode.charAt(0).toUpperCase() + mode.slice(1) + 'Form'));
+        addMessage(mode === 'status' ? 'Enter the order number and I will check its status.' : mode === 'cancel' ? 'Enter the order number and cancellation reason. Admin will review it.' : 'Enter your details and message. Admin will be notified.', 'bot');
+      }
+
+      function clearMode() {
+        activeMode = '';
+        forms.forEach(form => form.classList.remove('open'));
+      }
+
+      function getVerificationToken() {
+        return document.querySelector('[name=__RequestVerificationToken]')?.value || '';
+      }
+
+      function postChatbot(url, payload) {
+        return fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'RequestVerificationToken': getVerificationToken()
+          },
+          body: JSON.stringify(payload)
+        }).then(response => response.json());
+      }
+
+      toggle.addEventListener('click', function() {
+        const isOpen = panel.classList.toggle('open');
+        panel.setAttribute('aria-hidden', String(!isOpen));
+        toggle.textContent = isOpen ? 'Close' : 'Chat';
+        if (isOpen) {
+          const input = panel.querySelector('input, textarea');
+          input?.focus();
+        }
+      });
+
+      close.addEventListener('click', function() {
+        panel.classList.remove('open');
+        panel.setAttribute('aria-hidden', 'true');
+        toggle.textContent = 'Chat';
+        clearMode();
+      });
+
+      document.querySelectorAll('[data-chatbot-mode]').forEach(button => {
+        button.addEventListener('click', function() {
+          showMode(this.dataset.chatbotMode);
+        });
+      });
+
+      document.getElementById('chatbotStatusForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const orderNumber = document.getElementById('chatbotStatusOrder').value.trim();
+        if (!orderNumber) {
+          addMessage('Please enter an order number.', 'bot');
+          return;
+        }
+        addMessage('Order #' + orderNumber, 'user');
+        postChatbot('/Chatbot/Status', { orderNumber }).then(data => {
+          addMessage(data.message || 'Something went wrong.', data.success ? 'bot' : 'user');
+        });
+      });
+
+      document.getElementById('chatbotCancelForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const orderNumber = document.getElementById('chatbotCancelOrder').value.trim();
+        const reason = document.getElementById('chatbotCancelReason').value.trim();
+        if (!orderNumber || !reason) {
+          addMessage('Please enter both order number and cancellation reason.', 'bot');
+          return;
+        }
+        addMessage('Cancel order #' + orderNumber + ': ' + reason, 'user');
+        postChatbot('/Chatbot/Cancel', { orderNumber, reason }).then(data => {
+          addMessage(data.message || 'Something went wrong.', data.success ? 'bot' : 'user');
+        });
+      });
+
+      document.getElementById('chatbotAdminForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const customerName = document.getElementById('chatbotCustomerName').value.trim();
+        const customerEmail = document.getElementById('chatbotCustomerEmail').value.trim();
+        const orderNumber = document.getElementById('chatbotAdminOrder').value.trim();
+        const message = document.getElementById('chatbotAdminMessage').value.trim();
+        if (!message) {
+          addMessage('Please enter a message for admin.', 'bot');
+          return;
+        }
+        addMessage(message, 'user');
+        postChatbot('/Chatbot/NotifyAdmin', { customerName, customerEmail, orderNumber, message }).then(data => {
+          addMessage(data.message || 'Something went wrong.', data.success ? 'bot' : 'user');
+        });
+      });
+
+      fetch('/Account/CheckAuth')
+        .then(response => response.json())
+        .then(data => {
+          if (data.authenticated && data.userEmail) {
+            document.getElementById('chatbotCustomerEmail').value = data.userEmail;
+            document.getElementById('chatbotCustomerName').value = data.userName || 'Customer';
+          }
+        })
+        .catch(() => {});
+    }
+
     function getAntiForgeryToken() {
       const tokenElement = document.querySelector('[name=__RequestVerificationToken]');
       return tokenElement ? tokenElement.value : '';
@@ -494,6 +832,7 @@
         updateUserLoginLink();
         updateCartCount();
         updateBookmarkCount();
+        initChatbot();
         
         // Bind live query listeners to both elements cleanly
         bindSearchAutocomplete('searchInput', 'searchSuggestions');

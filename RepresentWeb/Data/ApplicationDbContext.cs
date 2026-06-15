@@ -16,5 +16,6 @@ namespace RepresentWeb.Data
         public DbSet<User> Users { get; set; }
         public DbSet<ShoppingCart> ShoppingCarts { get; set; }
         public DbSet<Bookmark> Bookmarks { get; set; }
+        public DbSet<SupportRequest> SupportRequests { get; set; }
     }
 }

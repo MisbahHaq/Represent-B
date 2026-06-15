@@ -55,7 +55,74 @@
                 </div>
             </div>
         </div>
+        <div class="col-6 col-md-3">
+            <div class="card bg-danger text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Cancellation Requests</h5>
+                    <h2 class="mb-0">@Model.PendingCancellationRequests</h2>
+                    <a asp-action="Cancellations" class="btn btn-sm btn-outline-light mt-2">View Cancellations</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card bg-info text-dark">
+                <div class="card-body">
+                    <h5 class="card-title">New Chat Requests</h5>
+                    <h2 class="mb-0">@Model.NewChatRequests</h2>
+                    <a asp-action="UnreadSupport" class="btn btn-sm btn-outline-light mt-2">View Unread</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card bg-warning text-dark">
+                <div class="card-body">
+                    <h5 class="card-title">Unread Support</h5>
+                    <h2 class="mb-0">@Model.UnreadSupportRequests</h2>
+                    <a asp-action="UnreadSupport" class="btn btn-sm btn-outline-light mt-2">View Unread</a>
+                </div>
+            </div>
+        </div>
     </div>
+
+    @if (Model.RecentSupportRequests.Any())
+    {
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4>Recent Chatbot Requests</h4>
+                    <a asp-action="SupportRequests" class="btn btn-sm btn-outline-light">View All</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-dark table-striped admin-table">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Order</th>
+                                <th>Customer</th>
+                                <th>Status</th>
+                                <th>Created</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var request in Model.RecentSupportRequests)
+                            {
+                                <tr>
+                                    <td>@request.RequestType</td>
+                                    <td>@(request.OrderId.HasValue ? "#" + request.OrderId : "General")</td>
+                                    <td>@request.CustomerName</td>
+                                    <td>
+                                        <span class="badge bg-@(request.Status == "Resolved" ? "success" : "warning")">@request.Status</span>
+                                        <span class="badge bg-secondary">@(request.IsRead ? "Read" : "Unread")</span>
+                                    </td>
+                                    <td>@request.CreatedAt.ToString("MMM dd, yyyy HH:mm")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
 
     @if (Model.BestSellingProduct != null)
     {

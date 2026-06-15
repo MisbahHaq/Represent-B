@@ -11,230 +11,492 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 }
 
-<style>
-    #relatedSwiper { overflow: hidden; }
-    #relatedSwiper .swiper-slide a { text-decoration: none !important; color: inherit; display: block; }
-    #relatedSwiper .swiper-slide a:hover { text-decoration: none !important; color: inherit; }
-    .color-btn { min-width: 92px; }
-    .swiper-button-next, .swiper-button-prev { color: #fff; }
+<style type="text/css">
+    /* --- HIGH-FASHION EDITORIAL DETAIL STYLE SYSTEM --- */
+    body {
+        background-color: #e5e7eb;
+        color: #000000;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .editorial-wrapper {
+        background-color: #e5e7eb;
+        padding-bottom: 80px;
+    }
+
+    /* --- TWO-COLUMN ASYMMETRIC GRID DISPLAY --- */
+    .product-hero-matrix {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        min-height: 90vh;
+        gap: 0;
+    }
+
+    .media-gallery-pane {
+        background-color: #f3f4f6;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        padding: 40px;
+        position: relative;
+    }
+
+    .main-image-display-frame {
+        width: 100%;
+        height: 78vh;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        overflow: hidden;
+    }
+
+    .main-image-display-frame img {
+        max-width: 95%;
+        max-height: 100%;
+        object-fit: contain;
+        transition: opacity 0.4s ease;
+    }
+
+    .editorial-thumbnails-strip {
+        display: flex;
+        gap: 12px;
+        margin-top: 30px;
+        width: 100%;
+        max-width: 95%;
+        overflow-x: auto;
+    }
+
+    .editorial-thumbnails-strip::-webkit-scrollbar {
+        display: none;
+    }
+
+    .thumb-frame-container {
+        width: 75px;
+        height: 95px;
+        flex-shrink: 0;
+        background-color: #e5e7eb;
+        cursor: pointer;
+        border: 1px solid rgba(0,0,0,0.05);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .thumb-frame-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        padding: 6px;
+    }
+
+    /* --- RIGHT CONTENT PANEL --- */
+    .product-meta-editorial-pane {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 60px 50px;
+        background-color: #e5e7eb;
+        border-left: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .meta-header-group h1 {
+        font-size: clamp(2.5rem, 4vw, 4.5rem);
+        font-weight: 800;
+        line-height: 0.9;
+        letter-spacing: -0.04em;
+        text-transform: uppercase;
+        margin: 0 0 15px 0;
+    }
+
+    .editorial-price-badge {
+        font-size: 1.35rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-bottom: 50px;
+    }
+
+    .section-editorial-caption {
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: rgba(0, 0, 0, 0.4);
+        margin-bottom: 12px;
+    }
+
+    /* --- BRUTALIST BUTTON MATRIX FOR OPTIONS --- */
+    .brutalist-option-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        margin-bottom: 35px;
+    }
+
+    .brutalist-btn {
+        background: transparent;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        color: #000000;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 14px 0;
+        cursor: pointer;
+        text-align: center;
+        transition: all 0.2s ease;
+    }
+
+    .brutalist-btn:hover {
+        border-color: #000000;
+    }
+
+    .brutalist-btn.selected-option {
+        background-color: #1a1c23;
+        color: #ffffff;
+        border-color: #1a1c23;
+    }
+
+    .color-flex-row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 45px;
+    }
+
+    /* --- HERO ADD TO BAG CTA --- */
+    .velora-monolith-cta {
+        width: 100%;
+        background-color: #1a1c23;
+        color: #ffffff;
+        border: none;
+        padding: 20px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        cursor: pointer;
+        margin-bottom: 40px;
+        transition: background-color 0.2s ease;
+    }
+
+    .velora-monolith-cta:hover {
+        background-color: #000000;
+    }
+
+    .product-fine-print {
+        font-size: 0.75rem;
+        line-height: 2;
+        color: #4b5563;
+        margin-bottom: 40px;
+    }
+
+    /* --- ACCORDION SIMPLICITY OVERHAUL --- */
+    .editorial-accordion-divider {
+        border-top: 1px solid rgba(0,0,0,0.1);
+        margin-top: 20px;
+    }
+
+    .accordion-minimal-item {
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .accordion-minimal-btn {
+        width: 100%;
+        background: transparent;
+        border: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 0;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        cursor: pointer;
+        color: #000000;
+        text-align: left;
+    }
+
+    .accordion-minimal-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+        font-size: 0.8rem;
+        line-height: 1.6;
+        color: #4b5563;
+    }
+
+    .accordion-minimal-content p {
+        padding-bottom: 20px;
+        margin: 0;
+    }
+
+    /* --- MOTH LOOKBOOK RECOMMENDED GRID --- */
+    .matrix-interstitial-title {
+        font-size: clamp(3rem, 8vw, 7rem);
+        font-weight: 800;
+        line-height: 0.85;
+        letter-spacing: -0.04em;
+        text-transform: uppercase;
+        padding: 100px 40px 40px 40px;
+    }
+
+    .swiper-editorial-container {
+        padding: 0 40px;
+        position: relative;
+    }
+
+    .matrix-display-node {
+        display: flex;
+        flex-direction: column;
+        text-decoration: none !important;
+        color: inherit !important;
+    }
+
+    .matrix-node-image-frame {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        background-color: #f3f4f6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 15px;
+        overflow: hidden;
+        border: 1px solid rgba(0,0,0,0.02);
+    }
+
+    .matrix-node-image-frame img {
+        max-width: 85%;
+        max-height: 85%;
+        object-fit: contain;
+        padding: 10px;
+        transition: transform 0.4s ease;
+    }
+
+    .matrix-display-node:hover .matrix-node-image-frame img {
+        transform: scale(1.03);
+    }
+
+    .matrix-node-meta-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        line-height: 1.4;
+    }
+
+    .matrix-node-meta-row .node-price {
+        color: #4b5563;
+        font-weight: 500;
+    }
+
+    .swiper-custom-navigation {
+        display: flex;
+        gap: 12px;
+        position: absolute;
+        top: -80px;
+        right: 40px;
+    }
+
+    .nav-arrow-box {
+        width: 40px;
+        height: 40px;
+        border: 1px solid rgba(0,0,0,0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+
+    .nav-arrow-box:hover {
+        border-color: #000000;
+        background-color: rgba(0,0,0,0.02);
+    }
+
+    /* --- RESPONSIVE MATRIX ADJUSTMENTS --- */
+    @@media (max-width: 991.98px) {
+        .product-hero-matrix {
+            grid-template-columns: 1fr;
+        }
+        .product-meta-editorial-pane {
+            border-left: none;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            padding: 40px 24px;
+        }
+        .media-gallery-pane {
+            padding: 24px 16px;
+        }
+        .main-image-display-frame {
+            height: 55vh;
+        }
+        .matrix-interstitial-title {
+            padding: 60px 20px 30px 20px;
+        }
+        .swiper-editorial-container {
+            padding: 0 20px;
+        }
+        .swiper-custom-navigation {
+            right: 20px;
+            top: -65px;
+        }
+    }
 </style>
 
-<div class="bg-white">
-    <div class="container-fluid px-0" style="max-width: 1600px;">
-
-        <div class="row gx-0 gy-5">
-
-            <div class="col-12 col-lg-6 px-0">
-                <div class="img-container aspect-portrait animate-fade-in"
-                     style="background: #f7f7f5; max-height: 85vh;">
-
-                    @if (!string.IsNullOrEmpty(images.FirstOrDefault()))
-                    {
-                        <img src="@images.FirstOrDefault()"
-                             alt="@Model.Name"
-                             id="mainProductImage"
-                             style="object-fit: cover; transition: opacity 0.5s ease;" />
-                    }
-                    else
-                    {
-                        <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted"
-                             style="font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;">
-                            No Image Available
-                        </div>
-                    }
-                </div>
-
-                @if (images.Count > 1)
+<div class="editorial-wrapper">
+    <div class="product-hero-matrix">
+        
+        <div class="media-gallery-pane">
+            <div class="main-image-display-frame">
+                @if (!string.IsNullOrEmpty(images.FirstOrDefault()))
                 {
-                    <div class="d-flex gap-2 mt-3 px-4 overflow-auto no-scrollbar">
-                        @for (int i = 0; i < images.Count; i++)
-                        {
-                            <div class="img-container cursor-pointer"
-                                 style="flex: 0 0 75px; width: 75px; height: 90px; background: #f5f5f3; aspect-ratio: 3/4;"
-                                 onclick="switchImage('@images[i]', this)">
-                                <img src="@images[i]"
-                                     alt="Thumbnail @(i + 1)"
-                                     class="w-100 h-100"
-                                     style="object-fit: cover;" />
-                            </div>
-                        }
+                    <img src="@images.FirstOrDefault()" alt="@Model.Name" id="mainProductImage" />
+                }
+                else
+                {
+                    <div style="font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: #999;">
+                        No Image Available
                     </div>
                 }
             </div>
 
-            <div class="col-12 col-lg-5 offset-lg-1 d-flex flex-column justify-content-center"
-                 style="padding: 2rem clamp(1.5rem, 4vw, 4rem);">
+            @if (images.Count > 1)
+            {
+                <div class="editorial-thumbnails-strip">
+                    @for (int i = 0; i < images.Count; i++)
+                    {
+                        <div class="thumb-frame-container" onclick="switchImage('@images[i]', this)">
+                            <img src="@images[i]" alt="Asset @(i + 1)" />
+                        </div>
+                    }
+                </div>
+            }
+        </div>
 
-                <div class="animate-fade-in animate-delay-1">
-
-                    <div class="d-flex justify-content-between align-items-start mb-1">
-                        <h1 class="text-primary m-0"
-                            style="color: #1a1a1a !important; font-size: clamp(1.3rem, 2vw, 1.6rem); font-weight: 300; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.3;">
-                            @Model.Name
-                        </h1>
-
-                        <button class="bookmark-btn p-0 border-0 bg-transparent"
-                                onclick="toggleBookmark(event, @Model.Id)"
-                                id="productBookmarkBtn"
-                                data-bookmarked="false"
-                                style="cursor: pointer; transition: color 0.5s ease;"
-                                title="Save Item">
-                            <i class="bi bi-bookmark" style="font-size: 1.1rem;"></i>
+        <div class="product-meta-editorial-pane">
+            <div>
+                <div class="meta-header-group">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <h1>@Model.Name</h1>
+                        <button class="border-0 bg-transparent p-0" onclick="toggleBookmark(event, @Model.Id)" id="productBookmarkBtn" data-bookmarked="false" style="cursor: pointer; color: #999;">
+                            <i class="bi bi-bookmark" style="font-size: 1.4rem;"></i>
                         </button>
                     </div>
-
-                    <div class="mt-4 mb-5"
-                         style="font-size: 1.15rem; font-weight: 300; letter-spacing: 0.04em;">
+                    <div class="editorial-price-badge">
                         Rs @Model.Price.ToString("N2")
                     </div>
-
                 </div>
 
-                <div class="mb-5 animate-fade-in animate-delay-2" id="sizeSection">
-                    <p class="text-caption mb-3" style="color: #999;">Select Size</p>
-                    <div class="row gx-2" id="sizeSelectorGroup">
-                        <div class="col-3">
-                            <button type="button" class="btn-minimal w-100 py-3 size-btn" data-size="S"
-                                    style="font-size: 0.75rem; min-width: auto; padding: 0.7rem 0;">
-                                S
-                            </button>
-                        </div>
-                        <div class="col-3">
-                            <button type="button" class="btn-minimal w-100 py-3 size-btn" data-size="M"
-                                    style="font-size: 0.75rem; min-width: auto; padding: 0.7rem 0;">
-                                M
-                            </button>
-                        </div>
-                        <div class="col-3">
-                            <button type="button" class="btn-minimal w-100 py-3 size-btn" data-size="L"
-                                    style="font-size: 0.75rem; min-width: auto; padding: 0.7rem 0;">
-                                L
-                            </button>
-                        </div>
-                        <div class="col-3">
-                            <button type="button" class="btn-minimal w-100 py-3 size-btn" data-size="XL"
-                                    style="font-size: 0.75rem; min-width: auto; padding: 0.7rem 0;">
-                                XL
-                            </button>
-                        </div>
+                <div id="sizeSection">
+                    <div class="section-editorial-caption">Size selection</div>
+                    <div class="brutalist-option-grid" id="sizeSelectorGroup">
+                        <button type="button" class="brutalist-btn size-btn" data-size="S">S</button>
+                        <button type="button" class="brutalist-btn size-btn" data-size="M">M</button>
+                        <button type="button" class="brutalist-btn size-btn" data-size="L">L</button>
                     </div>
                 </div>
 
-                <div class="mb-5 animate-fade-in animate-delay-3" id="colorSection">
-                    <p class="text-caption mb-3" style="color: #999;">Select Color</p>
-                    <div class="d-flex flex-wrap gap-2" id="colorSelectorGroup">
+                <div id="colorSection">
+                    <div class="section-editorial-caption">Color options</div>
+                    <div class="color-flex-row" id="colorSelectorGroup">
                         @for (int i = 0; i < colors.Count; i++)
                         {
-                            <button type="button" class="btn-minimal py-3 color-btn @(i == 0 ? "btn-filled" : "")" data-color="@colors[i]"
-                                    style="font-size: 0.50rem; min-width: 92px; padding: 0.7rem 0;">
+                            <button type="button" class="brutalist-btn color-btn @(i == 0 ? "selected-option" : "")" data-color="@colors[i]" style="min-width: 100px;">
                                 @colors[i]
                             </button>
                         }
                     </div>
                 </div>
 
-                <div class="mb-6 animate-fade-in animate-delay-4">
-                    <button id="addToBagCta" class="btn-minimal btn-filled w-100 py-3"
-                            style="font-size: 0.72rem; letter-spacing: 0.2em;">
-                        Select A Size And Color
-                    </button>
+                <button id="addToBagCta" class="velora-monolith-cta">
+                    Select Size And Color
+                </button>
+
+                <div class="product-fine-print">
+                    <div>Model details: 185cm architecture wearing dynamic size Medium</div>
+                    <div>Allocation value: Earn 240 Prestige Points on purchase</div>
+                    <div>Logistics: Complimented delivery over $300 thresholds</div>
+                    <div>Availability Index: @Model.Stock units remain in workspace stock</div>
                 </div>
-
-                <div class="animate-fade-in animate-delay-4" style="font-size: 0.8rem; font-weight: 300; color: #888; line-height: 2.2;">
-                    <p style="margin-bottom: 0.25rem;">Model is 184.5cm and 72kg wearing size M</p>
-                    <p style="margin-bottom: 0.25rem;">Earn 240 Prestige Points</p>
-                    <p style="margin-bottom: 0.25rem;">Free Shipping Over $300</p>
-                    <p>In Stock (@Model.Stock units available)</p>
-                </div>
-
-                <hr class="divider">
-
-                <div class="accordion accordion-flush animate-fade-in animate-delay-4" id="productMetaAccordion">
-                    <div class="accordion-item" style="border-bottom: 1px solid #eee;">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed px-0 py-3 text-primary bg-transparent text-start"
-                                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseDetails"
-                                    style="font-size: 0.78rem; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase;">
-                                Product Details
-                            </button>
-                        </h2>
-                        <div id="collapseDetails" class="accordion-collapse collapse"
-                             data-bs-parent="#productMetaAccordion">
-                            <div class="px-0 pb-4 text-secondary" style="font-size: 0.82rem; font-weight: 300; line-height: 1.8; color: #666;">
-                                @if(!string.IsNullOrEmpty(Model.Description)) {
-                                    @Model.Description
-                                } else {
-                                    <text>Introducing the All Over Print Towel Shirt in Aged White, crafted from heavyweight 300GSM reverse towelling cotton. Designed with a standard fit and revere collar, this shirt delivers relaxed vacation energy with a textured twist. Finished with side splits at the hem for ease of wear.</text>
-                                }
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="accordion-item" style="border-bottom: 1px solid #eee;">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed px-0 py-3 text-primary bg-transparent text-start"
-                                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseShipping"
-                                    style="font-size: 0.78rem; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase;">
-                                Shipping & Returns
-                            </button>
-                        </h2>
-                        <div id="collapseShipping" class="accordion-collapse collapse"
-                             data-bs-parent="#productMetaAccordion">
-                            <div class="px-0 pb-4 text-secondary" style="font-size: 0.82rem; font-weight: 300; line-height: 1.8; color: #666;">
-                                Free shipping on orders over $300. Standard delivery takes 3-5 business days. Express delivery available. Free returns within 30 days.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
+
+            <div class="editorial-accordion-divider">
+                <div class="accordion-minimal-item">
+                    <button class="accordion-minimal-btn" onclick="toggleAccordion('collapseDetails')">
+                        <span>Product Specifications</span>
+                        <i class="bi bi-plus-lg"></i>
+                    </button>
+                    <div id="collapseDetails" class="accordion-minimal-content">
+                        <p>
+                            @if(!string.IsNullOrEmpty(Model.Description)) {
+                                @Model.Description
+                            } else {
+                                <text>Introducing an editorial-cut baseline silhouette. Finished with standard fit structuring and heavyweight premium textiles curated for long-term comfort and seasonal progression matrices.</text>
+                            }
+                        </p>
+                    </div>
+                </div>
+
+                <div class="accordion-minimal-item">
+                    <button class="accordion-minimal-btn" onclick="toggleAccordion('collapseShipping')">
+                        <span>Fulfillment & Returns</span>
+                        <i class="bi bi-plus-lg"></i>
+                    </button>
+                    <div id="collapseShipping" class="accordion-minimal-content">
+                        <p>Standard priority dispatch operations settle within 3-5 standard workspace business timelines. Returns are honored within a 30-day window frame.</p>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <div class="bg-secondary" style="padding: 5rem 0; margin-top: 4rem;">
-        <div class="container-fluid" style="max-width: 1500px; padding: 0 clamp(1.5rem, 5vw, 5rem);">
-            <p class="text-caption mb-5 animate-fade-in" style="color: #999; letter-spacing: 0.2em;">
-                You Might Also Like
-            </p>
+    <div>
+        <div class="matrix-interstitial-title">
+            Other Sides
+        </div>
 
-            @if (ViewBag.RelatedProducts is List<RepresentWeb.Models.Product> relatedProducts && relatedProducts.Any())
-            {
-                <div class="swiper" id="relatedSwiper" style="overflow: hidden;">
+        @if (ViewBag.RelatedProducts is List<RepresentWeb.Models.Product> relatedProducts && relatedProducts.Any())
+        {
+            <div class="swiper-editorial-container">
+                <div class="swiper-custom-navigation">
+                    <div class="nav-arrow-box" id="relatedPrev"><i class="bi bi-arrow-left"></i></div>
+                    <div class="nav-arrow-box" id="relatedNext"><i class="bi bi-arrow-right"></i></div>
+                </div>
+
+                <div class="swiper" id="relatedSwiper">
                     <div class="swiper-wrapper">
                         @foreach (var relatedProduct in relatedProducts)
                         {
                             var relatedImages2 = relatedProduct.GetImages() ?? new List<string> { "" };
                             var relatedProductImage2 = relatedImages2.FirstOrDefault() ?? "";
                             
-                            <div class="swiper-slide" style="height: auto;">
-                                <a asp-controller="Products" asp-action="Details" asp-route-id="@relatedProduct.Id">
-                                    <div class="img-container aspect-square mb-3" style="background: #efedea;">
+                            <div class="swiper-slide">
+                                <a class="matrix-display-node" asp-controller="Products" asp-action="Details" asp-route-id="@relatedProduct.Id">
+                                    <div class="matrix-node-image-frame">
                                         @if (!string.IsNullOrEmpty(relatedProductImage2))
                                         {
-                                            <img src="@relatedProductImage2" alt="@relatedProduct.Name" class="w-100 h-100"
-                                                 style="object-fit: contain; padding: 1rem;" />
+                                            <img src="@relatedProductImage2" alt="@relatedProduct.Name" />
                                         }
                                         else
                                         {
-                                            <div class="w-100 h-100 d-flex align-items-center justify-content-center"
-                                                 style="font-size: 0.7rem; color: #bbb; letter-spacing: 0.12em; text-transform: uppercase;">
-                                                Product
-                                            </div>
+                                            <div style="font-size: 0.65rem; color: #999; letter-spacing: 0.1em; text-transform: uppercase;">Product Node</div>
                                         }
                                     </div>
-                                    <p class="m-0" style="font-size: 0.78rem; font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase; color: #1a1a1a;">
-                                        @relatedProduct.Name
-                                    </p>
-                                    <p class="m-0 mt-1" style="font-size: 0.75rem; font-weight: 300; color: #999;">Rs @relatedProduct.Price.ToString("N2")</p>
+                                    <div class="matrix-node-meta-row">
+                                        <span>@relatedProduct.Name</span>
+                                        <span class="node-price">Rs @relatedProduct.Price.ToString("N2")</span>
+                                    </div>
                                 </a>
                             </div>
                         }
                     </div>
-                    <div class="swiper-button-prev" id="relatedPrev"></div>
-                    <div class="swiper-button-next" id="relatedNext"></div>
                 </div>
-            }
-        </div>
+            </div>
+        }
     </div>
 </div>
 
@@ -249,175 +511,125 @@
             setTimeout(() => {
                 mainImg.src = src;
                 mainImg.style.opacity = '1';
-            }, 250);
+            }, 200);
+        }
+
+        function toggleAccordion(id) {
+            const content = document.getElementById(id);
+            const btn = content.previousElementSibling;
+            const icon = btn.querySelector('i');
+            
+            if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+                content.style.maxHeight = '0px';
+                icon.className = 'bi bi-plus-lg';
+            } else {
+                content.style.maxHeight = content.scrollHeight + 'px';
+                icon.className = 'bi bi-dash-lg';
+            }
         }
 
         function isUserLoggedIn() {
             if (typeof appAuthCache !== 'undefined' && appAuthCache !== null) return Promise.resolve(appAuthCache);
-            if (typeof window.appAuthCache !== 'undefined' && window.appAuthCache !== null) return Promise.resolve(window.appAuthCache);
             return fetch('/Account/CheckAuth')
                 .then(r => r.json())
-                .then(data => {
-                    window.appAuthCache = data.authenticated;
-                    return data.authenticated;
-                })
+                .then(data => { window.appAuthCache = data.authenticated; return data.authenticated; })
                 .catch(() => false);
         }
 
-        function showLoginPrompt() {
-             const result = confirm('Please log in to use the bookmark feature.\n\nOK to go to login page, Cancel to stay on current page.');
-             if (result) { window.location.href = '/Account/Login'; }
-         }
-
-        function setBookmarkButtonState(btn, isBookmarked) {
-            btn.dataset.bookmarked = isBookmarked ? 'true' : 'false';
-            btn.style.color = isBookmarked ? '#000' : '#999';
-            btn.classList.toggle('is-bookmarked', isBookmarked);
-            const icon = btn.querySelector('i');
-            if (icon) {
-                icon.classList.toggle('bi-bookmark-fill', isBookmarked);
-                icon.classList.toggle('bi-bookmark', !isBookmarked);
-            }
-        }
-
         function toggleBookmark(event, productId) {
-            const btn = event.currentTarget || event.target.closest('.bookmark-btn');
+            const btn = event.currentTarget || event.target.closest('button');
             if (!btn) return;
             isUserLoggedIn().then(loggedIn => {
-                if (!loggedIn) { showLoginPrompt(); return; }
-                const isBookmarked = btn.dataset.bookmarked === 'true' || btn.classList.contains('is-bookmarked');
+                if (!loggedIn) { 
+                    if(confirm('Please log in to bookmark items.')) { window.location.href = '/Account/Login'; }
+                    return; 
+                }
+                const isBookmarked = btn.dataset.bookmarked === 'true';
                 const url = isBookmarked ? '/Bookmark/Remove/' + productId : '/Bookmark/Add/' + productId;
                 btn.disabled = true;
+                
                 fetch(url, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
-                        'RequestVerificationToken': getAntiForgeryToken(),
+                        'RequestVerificationToken': document.querySelector('[name=__RequestVerificationToken]')?.value || '',
                         'X-Requested-With': 'XMLHttpRequest'
                     },
                     body: 'id=' + productId
                 })
-                .then(response => response.json())
+                .then(r => r.json())
                 .then(data => {
                     if (data.success) {
-                        const nextBookmarkedState = !isBookmarked;
-                        setBookmarkButtonState(btn, nextBookmarkedState);
-                        updateBookmarkCount();
-                    const bookmarkId = String(productId);
-                    const saved = localStorage.getItem('bookmarkedProducts') || '[]';
-                    let bookmarks = JSON.parse(saved).map(id => String(id));
-                    if (nextBookmarkedState) { if (!bookmarks.includes(bookmarkId)) bookmarks.push(bookmarkId); }
-                    else { const idx = bookmarks.indexOf(bookmarkId); if (idx > -1) bookmarks.splice(idx, 1); }
-                    localStorage.setItem('bookmarkedProducts', JSON.stringify(bookmarks));
-                    } else { alert('Failed to update bookmark'); }
+                        const newState = !isBookmarked;
+                        btn.dataset.bookmarked = newState ? 'true' : 'false';
+                        btn.style.color = newState ? '#000000' : '#999999';
+                        btn.querySelector('i').className = newState ? 'bi bi-bookmark-fill' : 'bi bi-bookmark';
+                    }
                     btn.disabled = false;
-                })
-                .catch(error => { console.error('Error:', error); alert('Network error'); btn.disabled = false; });
+                }).catch(() => btn.disabled = false);
             });
-        }
-
-        function updateBookmarkCount() {
-            fetch('/Bookmark/GetCount').then(r => r.json()).then(data => {
-                const badge = document.querySelector('#bookmarkLink .badge-count');
-                if (badge) {
-                    badge.textContent = data.count;
-                    badge.style.display = data.count > 0 ? 'inline-block' : 'none';
-                }
-            });
-        }
-        
-        function updateCartCount() {
-            fetch('/Cart/GetCount').then(r => r.json()).then(data => {
-                const el = document.querySelector('#cartLink .badge-count');
-                if (el) el.textContent = data.count;
-            });
-        }
-        
-        function getAntiForgeryToken() {
-            const tokenElement = document.querySelector('[name=__RequestVerificationToken]');
-            return tokenElement ? tokenElement.value : '';
         }
 
         document.addEventListener('DOMContentLoaded', function () {
             const sizeButtons = document.querySelectorAll('.size-btn');
             const colorButtons = document.querySelectorAll('.color-btn');
             const ctaButton = document.getElementById('addToBagCta');
+
             sizeButtons.forEach(button => {
                 button.addEventListener('click', function () {
-                    sizeButtons.forEach(btn => {
-                        btn.classList.remove('btn-filled');
-                        btn.style.background = 'transparent';
-                        btn.style.color = '#1a1a1a';
-                    });
-                    this.classList.add('btn-filled');
-                    this.style.background = '#1a1a1a';
-                    this.style.color = '#fff';
-                    const selectedSize = this.getAttribute('data-size');
-                    const selectedColor = document.querySelector('.color-btn.btn-filled')?.getAttribute('data-color');
-                    ctaButton.innerText = 'ADD TO BAG ・ SIZE ' + selectedSize + ' ・ ' + selectedColor;
+                    sizeButtons.forEach(btn => btn.classList.remove('selected-option'));
+                    this.classList.add('selected-option');
+                    updateCtaText();
                 });
             });
+
             colorButtons.forEach(button => {
                 button.addEventListener('click', function () {
-                    colorButtons.forEach(btn => {
-                        btn.classList.remove('btn-filled');
-                        btn.style.background = 'transparent';
-                        btn.style.color = '#1a1a1a';
-                    });
-                    this.classList.add('btn-filled');
-                    this.style.background = '#1a1a1a';
-                    this.style.color = '#fff';
-                    const selectedSize = document.querySelector('.size-btn.btn-filled')?.getAttribute('data-size');
-                    const selectedColor = this.getAttribute('data-color');
-                    ctaButton.innerText = selectedSize ? 'ADD TO BAG ・ SIZE ' + selectedSize + ' ・ ' + selectedColor : 'ADD TO BAG ・ COLOR ' + selectedColor;
+                    colorButtons.forEach(btn => btn.classList.remove('selected-option'));
+                    this.classList.add('selected-option');
+                    updateCtaText();
                 });
             });
+
+            function updateCtaText() {
+                const size = document.querySelector('.size-btn.selected-option')?.getAttribute('data-size');
+                const color = document.querySelector('.color-btn.selected-option')?.getAttribute('data-color');
+                if (size && color) {
+                    ctaButton.innerText = 'ADD TO BAG — ' + size + ' / ' + color;
+                } else if (color) {
+                    ctaButton.innerText = 'ADD TO BAG — ' + color;
+                }
+            }
+
             ctaButton.addEventListener('click', function() {
-                const selectedSize = document.querySelector('.size-btn.btn-filled')?.getAttribute('data-size');
-                const selectedColor = document.querySelector('.color-btn.btn-filled')?.getAttribute('data-color');
-                if (!selectedSize) { alert('Please select a size first'); return; }
-                if (!selectedColor) { alert('Please select a color first'); return; }
-                const originalText = this.innerText;
-                this.innerText = 'Adding...'; this.disabled = true;
+                const size = document.querySelector('.size-btn.selected-option')?.getAttribute('data-size');
+                const color = document.querySelector('.color-btn.selected-option')?.getAttribute('data-color');
+                if (!size || !color) { alert('Please choose combinations complete.'); return; }
+                
+                this.innerText = 'PROCESSING...'; this.disabled = true;
                 fetch('/Cart/Add/@Model.Id', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
-                        'RequestVerificationToken': getAntiForgeryToken(),
+                        'RequestVerificationToken': document.querySelector('[name=__RequestVerificationToken]')?.value || '',
                         'X-Requested-With': 'XMLHttpRequest'
                     },
-                    body: 'id=@Model.Id&quantity=1&size=' + encodeURIComponent(selectedSize) + '&color=' + encodeURIComponent(selectedColor)
+                    body: 'id=@Model.Id&quantity=1&size=' + encodeURIComponent(size) + '&color=' + encodeURIComponent(color)
                 })
-                .then(response => response.json())
+                .then(r => r.json())
                 .then(data => {
                     if (data.success) {
-                        this.innerText = 'Added to Bag';
-                        updateCartCount();
-                        setTimeout(() => { this.innerText = originalText; this.disabled = false; }, 2000);
-                    } else { alert('Failed to add item to cart'); this.innerText = originalText; this.disabled = false; }
-                })
-                .catch(error => { alert('Network error'); this.innerText = originalText; this.disabled = false; });
+                        this.innerText = 'IN BAG';
+                        setTimeout(() => { updateCtaText(); this.disabled = false; }, 2000);
+                    } else { this.innerText = 'ERROR'; this.disabled = false; }
+                }).catch(() => { this.innerText = 'ADD TO BAG'; this.disabled = false; });
             });
-            const saved = localStorage.getItem('bookmarkedProducts') || '[]';
-            const bookmarks = JSON.parse(saved).map(id => String(id));
-            if (bookmarks.includes(String(@Model.Id))) {
-                const btn = document.getElementById('productBookmarkBtn');
-                if (btn) {
-                    setBookmarkButtonState(btn, true);
-                }
-            }
-            updateBookmarkCount();
-            
-            // Swiper Initialization
+
             new Swiper('#relatedSwiper', {
                 slidesPerView: 4,
                 spaceBetween: 24,
-                centeredSlides: false,
                 loop: true,
-                navigation: {
-                    nextEl: '#relatedNext',
-                    prevEl: '#relatedPrev',
-                },
+                navigation: { nextEl: '#relatedNext', prevEl: '#relatedPrev' },
                 breakpoints: {
                     0: { slidesPerView: 2, spaceBetween: 16 },
                     768: { slidesPerView: 3, spaceBetween: 20 },

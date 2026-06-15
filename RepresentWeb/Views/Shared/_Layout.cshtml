@@ -219,7 +219,7 @@
 
         <div class="d-lg-none d-flex align-items-center" style="gap: 0.25rem; z-index: 11;">
           <a href="#" class="icon-btn" id="userLoginLinkMobile">
-            <i class="bi bi-person" style="font-size: 0.95rem;"></i>
+            <i class="bi bi-person" style="font-size: 0.95rem; color: #fff;"></i>
           </a>
           <a asp-controller="Cart" asp-action="Index" class="icon-btn position-relative" id="cartLinkMobile">
             <i class="bi bi-bag" style="font-size: 0.95rem;"></i>
@@ -267,7 +267,7 @@
               </div>
 
               <a href="#" class="icon-btn" id="userLoginLink">
-                <i class="bi bi-person" style="font-size: 0.95rem;"></i>
+                <i class="bi bi-person" style="font-size: 0.95rem; color: #fff;"></i>
               </a>
 
               <a asp-controller="Bookmark" asp-action="Index" class="icon-btn position-relative" id="bookmarkLink">
@@ -367,11 +367,11 @@
             
             loginLinks.forEach(loginLink => {
                 if (loggedIn) {
-                    loginLink.innerHTML = '<i class="bi bi-person-circle"></i>';
+                    loginLink.innerHTML = '<i class="bi bi-person-circle" style="font-size: 0.95rem; color: #fff;"></i>';
                     loginLink.title = isAdmin ? 'Admin Panel' : 'Account';
                     loginLink.href = isAdmin ? '/Admin/Dashboard' : '/Account/Profile';
                 } else {
-                    loginLink.innerHTML = '<i class="bi bi-person"></i>';
+                    loginLink.innerHTML = '<i class="bi bi-person" style="font-size: 0.95rem; color: #fff;"></i>';
                     loginLink.title = 'Login';
                     loginLink.href = '/Account/Login';
                 }

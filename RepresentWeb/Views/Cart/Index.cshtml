@@ -7,20 +7,33 @@
 <div class="section-spacer bg-white">
     <div class="container-fluid" style="max-width: 1200px; padding: 0 clamp(1.5rem, 4vw, 4rem);">
 
-        @if (Model.Items.Count == 0)
-        {
-            <div class="text-center" style="padding: 6rem 0;">
-                <p class="text-caption animate-fade-in" style="color: #999;">Your Cart</p>
-                <h2 class="text-heading text-primary animate-fade-in animate-delay-1" style="margin-top: 0.5rem;">Is Empty</h2>
-                <p class="text-secondary animate-fade-in animate-delay-2" style="margin-top: 1rem; font-weight: 300;">
-                    <a asp-controller="Home" asp-action="Index"
-                       class="hover-reveal"
-                       style="color: #1a1a1a; text-decoration: none; border-bottom: 1px solid #1a1a1a; padding-bottom: 2px;">
-                        Continue browsing
-                    </a>
-                </p>
-            </div>
-        }
+       @if (Model.Items.Count == 0)
+{
+    <div class="text-center" style="padding: 8rem 0; max-width: 500px; margin: 0 auto;">
+        <div style="font-size: 2.5rem; margin-bottom: 1rem;">🛒</div>
+
+        <h2 style="font-size: 1.5rem; font-weight: 500; margin-bottom: .75rem; color: #1a1a1a;">
+            Your cart is empty
+        </h2>
+
+        <p style="color: #888; font-size: .95rem; line-height: 1.7; margin-bottom: 2rem;">
+            It seems your future purchases haven't arrived yet.
+        </p>
+
+        <a asp-controller="Products"
+           asp-action="Index"
+           style="display: inline-block;
+                  text-decoration: none;
+                  color: #1a1a1a;
+                  border-bottom: 1px solid #1a1a1a;
+                  padding-bottom: 2px;
+                  font-size: .9rem;
+                  letter-spacing: .08em;
+                  text-transform: uppercase;">
+            Start shopping
+        </a>
+    </div>
+}
         else
         {
             <div class="mb-5 animate-fade-in">

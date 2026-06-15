@@ -1,38 +1,451 @@
 @{
     ViewData["Title"] = "Home";
+    var bestSellers = ViewBag.BestSellers as List<Product> ?? new List<Product>();
 }
 
-<!-- FIRST HERO -->
-<section class="relative w-full" style="height: 100svh; overflow: hidden;">
-    <img src="/assets/first-pic.png"
-         alt="Campaign"
-         class="absolute inset-0 w-full h-full object-cover"
-         style="transition: transform 1.2s cubic-bezier(0.25, 0.1, 0.25, 1);" />
+<style>
+    .home-hero {
+        height: 100svh;
+        min-height: 680px;
+        overflow: hidden;
+        background: #0d0d0d;
+    }
 
-    <div class="absolute inset-0"
-         style="background: linear-gradient(to top, rgba(0,0,0,0.25) 0%, transparent 40%);"></div>
+    .home-hero-image {
+        object-fit: cover;
+        filter: saturate(0.9) contrast(1.03);
+        transform: scale(1.015);
+        transition: transform 1.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
 
-    <div class="absolute inset-0 flex flex-col items-center justify-end"
-         style="padding-bottom: clamp(5rem, 10vh, 9rem);">
+    .home-hero:hover .home-hero-image {
+        transform: scale(1.045);
+    }
 
-        <div class="text-center animate-fade-in" style="color: #fff;">
-            <p class="text-subheading animate-fade-in animate-delay-1 mb-3"
-               style="color: #fff; opacity: 0.85;">
-                Now Live
-            </p>
+    .home-hero-overlay {
+        background:
+            linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0.08) 48%, rgba(0, 0, 0, 0.18)),
+            linear-gradient(to right, rgba(0, 0, 0, 0.32), transparent 58%);
+    }
 
-            <h1 class="text-display animate-fade-in animate-delay-2 mb-6"
-                style="color: #fff; font-weight: 250;">
-                High Summer
-            </h1>
+    .home-kicker {
+        font-size: clamp(0.68rem, 1vw, 0.78rem);
+        font-weight: 300;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.78);
+    }
 
-            <a href="/Home/Men"
-               class="btn-minimal animate-fade-in animate-delay-3"
-               style="border-color: rgba(255,255,255,0.7); color: #fff;">
-                Shop Now
-            </a>
+    .home-hero-title {
+        font-size: clamp(3rem, 9vw, 9rem);
+        font-weight: 200;
+        letter-spacing: 0.045em;
+        line-height: 0.88;
+        text-transform: uppercase;
+        color: #fff;
+    }
+
+    .home-hero-copy {
+        max-width: 420px;
+        font-size: 0.82rem;
+        font-weight: 300;
+        letter-spacing: 0.06em;
+        line-height: 1.9;
+        color: rgba(255, 255, 255, 0.76);
+    }
+
+    .home-section {
+        padding: clamp(4.5rem, 8vw, 8rem) 0;
+    }
+
+    .home-section-header {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 1.5rem;
+        margin-bottom: clamp(2rem, 4vw, 3.5rem);
+    }
+
+    .home-section-title {
+        margin: 0;
+        font-size: clamp(1.4rem, 3vw, 2.6rem);
+        font-weight: 200;
+        letter-spacing: 0.12em;
+        line-height: 1;
+        text-transform: uppercase;
+    }
+
+    .home-section-note {
+        margin: 0;
+        max-width: 340px;
+        font-size: 0.78rem;
+        font-weight: 300;
+        letter-spacing: 0.08em;
+        line-height: 1.8;
+        color: #777;
+        text-align: right;
+    }
+
+    .home-split {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: clamp(0.75rem, 1.5vw, 1.25rem);
+    }
+
+    .home-split-card {
+        position: relative;
+        min-height: clamp(420px, 55vw, 620px);
+        overflow: hidden;
+        background: #eee;
+        color: #fff;
+        isolation: isolate;
+    }
+
+    .home-split-card::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.05) 62%);
+        transition: opacity 0.6s ease;
+    }
+
+    .home-split-card:hover::after {
+        opacity: 0.46;
+    }
+
+    .home-split-card img {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 1s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+
+    .home-split-card:hover img {
+        transform: scale(1.035);
+    }
+
+    .home-split-content {
+        position: absolute;
+        inset: auto 0 0;
+        z-index: 2;
+        padding: clamp(1.5rem, 3vw, 2.5rem);
+    }
+
+    .home-split-label {
+        margin: 0 0 0.75rem;
+        font-size: 0.68rem;
+        font-weight: 300;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.72);
+    }
+
+    .home-split-title {
+        margin: 0;
+        font-size: clamp(1.7rem, 3.5vw, 3.2rem);
+        font-weight: 200;
+        letter-spacing: 0.12em;
+        line-height: 1;
+        text-transform: uppercase;
+    }
+
+    .home-product-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: clamp(1rem, 2vw, 1.5rem);
+    }
+
+    .home-product-card {
+        display: block;
+        color: inherit;
+        text-decoration: none;
+        min-width: 0;
+    }
+
+    .home-product-media {
+        position: relative;
+        overflow: hidden;
+        aspect-ratio: 3 / 4;
+        background: #f3f2ef;
+        margin-bottom: 1rem;
+    }
+
+    .home-product-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), filter 0.8s ease;
+        filter: grayscale(0.02);
+    }
+
+    .home-product-card:hover img {
+        transform: scale(1.045);
+        filter: grayscale(0.18) contrast(1.02);
+    }
+
+    .home-product-name {
+        margin: 0;
+        font-size: 0.78rem;
+        font-weight: 400;
+        letter-spacing: 0.08em;
+        line-height: 1.45;
+        text-transform: uppercase;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .home-product-price {
+        margin-top: 0.35rem;
+        font-size: 0.74rem;
+        font-weight: 300;
+        letter-spacing: 0.08em;
+        color: #777;
+    }
+
+    .home-editorial {
+        display: grid;
+        grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
+        gap: clamp(1.25rem, 3vw, 3rem);
+        align-items: center;
+        background: #f6f5f2;
+        padding: clamp(1rem, 2vw, 2rem);
+    }
+
+    .home-editorial-image {
+        aspect-ratio: 4 / 5;
+        overflow: hidden;
+        background: #ddd;
+    }
+
+    .home-editorial-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: saturate(0.88) contrast(1.02);
+    }
+
+    .home-editorial-copy {
+        padding: clamp(1.5rem, 4vw, 4rem);
+    }
+
+    .home-editorial-title {
+        margin: 0 0 1.5rem;
+        font-size: clamp(2rem, 5vw, 5rem);
+        font-weight: 200;
+        letter-spacing: 0.1em;
+        line-height: 0.95;
+        text-transform: uppercase;
+    }
+
+    .home-editorial-text {
+        margin: 0 0 2rem;
+        max-width: 520px;
+        font-size: 0.82rem;
+        font-weight: 300;
+        letter-spacing: 0.06em;
+        line-height: 2;
+        color: #666;
+    }
+
+    .home-signal-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1px;
+        background: #e6e4df;
+        border-top: 1px solid #e6e4df;
+        border-bottom: 1px solid #e6e4df;
+    }
+
+    .home-signal {
+        padding: clamp(1.5rem, 3vw, 2.5rem);
+        background: #fff;
+    }
+
+    .home-signal strong {
+        display: block;
+        margin-bottom: 0.75rem;
+        font-size: 0.72rem;
+        font-weight: 400;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+    }
+
+    .home-signal span {
+        display: block;
+        font-size: 0.78rem;
+        font-weight: 300;
+        letter-spacing: 0.06em;
+        line-height: 1.8;
+        color: #777;
+    }
+
+    @@media (max-width: 1199.98px) {
+        .home-product-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .home-signal-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @@media (max-width: 991.98px) {
+        .home-section-header {
+            align-items: start;
+            flex-direction: column;
+        }
+
+        .home-section-note {
+            text-align: left;
+        }
+
+        .home-split {
+            grid-template-columns: 1fr;
+        }
+
+        .home-split-card {
+            min-height: 460px;
+        }
+
+        .home-editorial {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 767.98px) {
+        .home-hero {
+            min-height: 620px;
+        }
+
+        .home-hero-title {
+            letter-spacing: 0.06em;
+        }
+
+        .home-product-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.85rem;
+        }
+
+        .home-product-name {
+            font-size: 0.72rem;
+        }
+
+        .home-product-price {
+            font-size: 0.7rem;
+        }
+
+        .home-signal-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .home-hero {
+            min-height: 560px;
+        }
+
+        .home-section {
+            padding: 3.5rem 0;
+        }
+
+        .home-split-card {
+            min-height: 390px;
+        }
+
+        .home-product-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<section class="home-hero position-relative">
+    <img src="/assets/first-pic-main.png"
+         alt="Represent campaign"
+         class="home-hero-image w-100 h-100" />
+    <div class="home-hero-overlay position-absolute inset-0"></div>
+
+    <div class="position-absolute inset-0 d-flex align-items-end"
+         style="padding: clamp(1.5rem, 5vw, 5rem);">
+        <div class="container-fluid px-0" style="max-width: 1600px;">
+            <div class="row align-items-end gx-0">
+                <div class="col-12 col-lg-7">
+                    <div class="animate-fade-in">
+                        <p class="home-kicker mb-4">Now Live</p>
+                        <h1 class="home-hero-title mb-4">High<br />Summer</h1>
+                        <p class="home-hero-copy mb-4">
+                            Minimal pieces with heavyweight texture, clean lines, and a quiet luxury finish.
+                        </p>
+                        <div class="d-flex flex-wrap gap-2 animate-fade-in animate-delay-3">
+                            <a href="/Home/Men" class="btn-minimal" style="border-color: rgba(255,255,255,0.72); color: #fff;">Shop Men</a>
+                            <a href="/Home/Women" class="btn-minimal" style="border-color: rgba(255,255,255,0.72); color: #fff;">Shop Women</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
     </div>
 </section>
 
+<div class="home-signal-grid">
+    <div class="home-signal">
+        <strong>Premium Fabric</strong>
+        <span>Heavyweight cottons, textured finishes, and clean construction.</span>
+    </div>
+    <div class="home-signal">
+        <strong>Limited Drops</strong>
+        <span>Small-batch releases designed to stay sharp and intentional.</span>
+    </div>
+    <div class="home-signal">
+        <strong>Free Shipping</strong>
+        <span>Complimentary delivery on orders over $300.</span>
+    </div>
+    <div class="home-signal">
+        <strong>30 Day Returns</strong>
+        <span>Easy returns for a confident fit and effortless exchange.</span>
+    </div>
+</div>
+
+<section class="home-section">
+    <div class="container-fluid px-4 px-md-5" style="max-width: 1600px;">
+        <div class="home-section-header">
+            <h2 class="home-section-title">Latest<br />Drops</h2>
+            <p class="home-section-note">New arrivals selected for clean silhouettes, tonal styling, and everyday impact.</p>
+        </div>
+
+        <div class="home-product-grid">
+            @foreach (var product in bestSellers.Take(8))
+            {
+                var productImage = product.GetImages()?.FirstOrDefault() ?? "/assets/placeholder.jpg";
+
+                <a asp-controller="Products" asp-action="Details" asp-route-id="@product.Id" class="home-product-card">
+                    <div class="home-product-media">
+                        <img src="@productImage" alt="@product.Name" />
+                    </div>
+                    <h3 class="home-product-name">@product.Name</h3>
+                    <div class="home-product-price">Rs @product.Price.ToString("N0")</div>
+                </a>
+            }
+        </div>
+    </div>
+</section>
+
+<section class="home-section" style="padding-top: 0;">
+    <div class="container-fluid px-0" style="max-width: 1600px;">
+        <div class="home-split">
+            <a href="/Home/Men" class="home-split-card text-decoration-none">
+                <img src="/assets/guy.webp" alt="Men collection" />
+                <div class="home-split-content">
+                    <p class="home-split-label">Engineered For</p>
+                    <h2 class="home-split-title">Men</h2>
+                </div>
+            </a>
+            <a href="/Home/Women" class="home-split-card text-decoration-none">
+                <img src="/assets/woman_main.webp" alt="Women collection" />
+                <div class="home-split-content">
+                    <p class="home-split-label">Engineered For</p>
+                    <h2 class="home-split-title">Women</h2>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>

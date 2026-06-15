@@ -52,7 +52,6 @@ public class HomeController : Controller
         };
         
         var products = productsQuery.ToList();
-        ViewBag.CurrentSort = sort;
         return View(products);
     }
 
@@ -70,7 +69,6 @@ public class HomeController : Controller
         };
         
         var products = productsQuery.ToList();
-        ViewBag.CurrentSort = sort;
         return View(products);
     }
 

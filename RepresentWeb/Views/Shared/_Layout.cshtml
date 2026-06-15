@@ -125,7 +125,7 @@
     }
 
     #navbarContent > div > div:first-child {
-      padding-top: 2rem !important;
+      padding-top: 1.5rem !important;
     }
     
     .navbar-collapse {
@@ -138,9 +138,8 @@
       margin-bottom: 0 !important;
     }
     
-    /* Avoid text overlapping on narrow mobile frames */
     .navbar-brand {
-      font-size: 0.8rem !important;
+      font-size: 0.72rem !important;
       letter-spacing: 0.25em !important;
     }
   }
@@ -206,7 +205,7 @@
     @Html.AntiForgeryToken()
   </div>
   <header>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-black border-bottom border-secondary py-3">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-black border-bottom border-secondary py-2">
       <div class="container-fluid px-3 px-md-4 position-relative d-flex align-items-center justify-content-between">
 
         <button class="navbar-toggler border-0 shadow-none p-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation" style="z-index: 11; margin: 0 !important; padding: 0 !important; border: 0 !important;">
@@ -214,8 +213,8 @@
         </button>
 
         <a class="navbar-brand position-absolute start-50 translate-middle-x text-white m-0"
-           asp-controller="Home" asp-action="Index"
-           style="letter-spacing: 0.35em; font-size: 0.9rem; font-weight: 200; text-transform: uppercase; z-index: 5;">
+           href="~/"
+           style="letter-spacing: 0.35em; font-size: 0.78rem; font-weight: 200; text-transform: uppercase; z-index: 5; cursor: pointer;">
           Represent
         </a>
 

@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using representweb.Data;
-using representweb.Models;
+using RepresentWeb.Data;
+using RepresentWeb.Models;
 
-namespace representweb.Controllers
+namespace RepresentWeb.Controllers
 {
     public class ProductsController : Controller
     {
@@ -35,6 +35,27 @@ namespace representweb.Controllers
             var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
             if (product == null) return NotFound();
 
+            var related = new List<Product>();
+            if (!string.IsNullOrEmpty(product.Tags))
+            {
+                var currentTags = product.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(t => t.Trim())
+                    .Where(t => !string.IsNullOrEmpty(t))
+                    .ToList();
+
+                if (currentTags.Any())
+                {
+                    var candidates = await _context.Products
+                        .Where(p => p.Id != product.Id && p.Tags != null)
+                        .ToListAsync();
+                    related = candidates
+                        .AsEnumerable()
+                        .Where(p => p.GetTags() != null && p.GetTags()!.Any(t => currentTags.Contains(t)))
+                        .ToList();
+                }
+            }
+
+            ViewBag.RelatedProducts = related;
             return View(product);
         }
 

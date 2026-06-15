@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using representweb.Models;
+using RepresentWeb.Models;
 
-namespace representweb.Models
+namespace RepresentWeb.Models
 {
     public class ProfileViewModel
     {

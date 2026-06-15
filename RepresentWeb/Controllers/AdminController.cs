@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using representweb.Data;
-using representweb.Models;
+using RepresentWeb.Data;
+using RepresentWeb.Models;
 
-namespace representweb.Controllers
+namespace RepresentWeb.Controllers
 {
     public class AdminController : Controller
     {

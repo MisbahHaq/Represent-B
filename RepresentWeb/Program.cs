@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using representweb.Data;
+using RepresentWeb.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,7 +42,7 @@ app.MapControllerRoute(
 
 using (var scope = app.Services.CreateScope())
 {
-    await representweb.Data.DbInitializer.SeedAsync(scope.ServiceProvider);
+    await RepresentWeb.Data.DbInitializer.SeedAsync(scope.ServiceProvider);
 }
 
 app.Run();

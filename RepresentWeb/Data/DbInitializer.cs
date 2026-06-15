@@ -1,8 +1,8 @@
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
-using representweb.Models;
+using RepresentWeb.Models;
 
-namespace representweb.Data
+namespace RepresentWeb.Data
 {
     public static class DbInitializer
     {

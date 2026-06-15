@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace representweb.Models
+namespace RepresentWeb.Models
 {
     public class Order
     {

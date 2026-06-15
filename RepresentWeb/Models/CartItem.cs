@@ -1,4 +1,4 @@
-namespace representweb.Models
+namespace RepresentWeb.Models
 {
     public class CartItem
     {

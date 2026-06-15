@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using representweb.Models;
+using Microsoft.EntityFrameworkCore;
+using RepresentWeb.Models;
 
-namespace representweb.Data
+namespace RepresentWeb.Data
 {
     public class ApplicationDbContext : DbContext
     {

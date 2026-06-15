@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using representweb.Data;
-using representweb.Models;
+using RepresentWeb.Data;
+using RepresentWeb.Models;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace representweb.Controllers
+namespace RepresentWeb.Controllers
 {
     public class BookmarkController : Controller
     {

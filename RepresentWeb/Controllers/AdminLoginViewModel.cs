@@ -1,4 +1,4 @@
-namespace representweb.Controllers
+namespace RepresentWeb.Controllers
 {
     public class AdminLoginViewModel
     {

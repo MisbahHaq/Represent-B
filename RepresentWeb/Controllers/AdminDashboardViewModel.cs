@@ -1,6 +1,6 @@
-using representweb.Models;
+using RepresentWeb.Models;
 
-namespace representweb.Controllers
+namespace RepresentWeb.Controllers
 {
     public class AdminDashboardViewModel
     {

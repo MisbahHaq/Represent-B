@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
-namespace representweb.Models
+namespace RepresentWeb.Models
 {
     public class Product
     {

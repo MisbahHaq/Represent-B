@@ -1,6 +1,6 @@
 using System;
 
-namespace representweb.Models
+namespace RepresentWeb.Models
 {
     public class ShoppingCart
     {

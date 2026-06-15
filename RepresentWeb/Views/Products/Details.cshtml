@@ -1,16 +1,27 @@
-﻿@model representweb.Models.Product
+@model RepresentWeb.Models.Product
+@using RepresentWeb.Models
 
 @{
     ViewData["Title"] = Model.Name;
     var images = Model.GetImages() ?? new List<string> { "" };
 }
 
+@section Head {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+}
+
+<style>
+    #relatedSwiper { overflow: hidden; }
+    #relatedSwiper .swiper-slide a { text-decoration: none !important; color: inherit; display: block; }
+    #relatedSwiper .swiper-slide a:hover { text-decoration: none !important; color: inherit; }
+    .swiper-button-next, .swiper-button-prev { color: #fff; }
+</style>
+
 <div class="bg-white">
     <div class="container-fluid px-0" style="max-width: 1600px;">
 
         <div class="row gx-0 gy-5">
 
-            <!-- Images -->
             <div class="col-12 col-lg-6 px-0">
                 <div class="img-container aspect-portrait animate-fade-in"
                      style="background: #f7f7f5; max-height: 85vh;">
@@ -49,7 +60,6 @@
                 }
             </div>
 
-            <!-- Product Info -->
             <div class="col-12 col-lg-5 offset-lg-1 d-flex flex-column justify-content-center"
                  style="padding: 2rem clamp(1.5rem, 4vw, 4rem);">
 
@@ -57,18 +67,18 @@
 
                     <div class="d-flex justify-content-between align-items-start mb-1">
                         <h1 class="text-primary m-0"
-                            style="font-size: clamp(1.3rem, 2vw, 1.6rem); font-weight: 300; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.3;">
+                            style="color: #1a1a1a !important; font-size: clamp(1.3rem, 2vw, 1.6rem); font-weight: 300; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.3;">
                             @Model.Name
                         </h1>
 
-                          <button class="bookmark-btn p-0 border-0 bg-transparent"
-                                  onclick="toggleBookmark(event, @Model.Id)"
-                                  id="productBookmarkBtn"
-                                  data-bookmarked="false"
-                                  style="cursor: pointer; color: #999; transition: color 0.5s ease;"
-                                  title="Save Item">
-                              <i class="bi bi-bookmark" style="font-size: 1.1rem;"></i>
-                          </button>
+                        <button class="bookmark-btn p-0 border-0 bg-transparent"
+                                onclick="toggleBookmark(event, @Model.Id)"
+                                id="productBookmarkBtn"
+                                data-bookmarked="false"
+                                style="cursor: pointer; transition: color 0.5s ease;"
+                                title="Save Item">
+                            <i class="bi bi-bookmark" style="font-size: 1.1rem;"></i>
+                        </button>
                     </div>
 
                     <div class="mt-4 mb-5"
@@ -78,7 +88,6 @@
 
                 </div>
 
-                <!-- Size Selector -->
                 <div class="mb-5 animate-fade-in animate-delay-2" id="sizeSection">
                     <p class="text-caption mb-3" style="color: #999;">Select Size</p>
                     <div class="row gx-2" id="sizeSelectorGroup">
@@ -109,7 +118,6 @@
                     </div>
                 </div>
 
-                <!-- Add to Bag -->
                 <div class="mb-6 animate-fade-in animate-delay-3">
                     <button id="addToBagCta" class="btn-minimal btn-filled w-100 py-3"
                             style="font-size: 0.72rem; letter-spacing: 0.2em;">
@@ -117,7 +125,6 @@
                     </button>
                 </div>
 
-                <!-- Meta -->
                 <div class="animate-fade-in animate-delay-4" style="font-size: 0.8rem; font-weight: 300; color: #888; line-height: 2.2;">
                     <p style="margin-bottom: 0.25rem;">Model is 184.5cm and 72kg wearing size M</p>
                     <p style="margin-bottom: 0.25rem;">Earn 240 Prestige Points</p>
@@ -127,7 +134,6 @@
 
                 <hr class="divider">
 
-                <!-- Accordion: Details & Shipping -->
                 <div class="accordion accordion-flush animate-fade-in animate-delay-4" id="productMetaAccordion">
                     <div class="accordion-item" style="border-bottom: 1px solid #eee;">
                         <h2 class="accordion-header">
@@ -170,211 +176,220 @@
         </div>
     </div>
 
-    <!-- Editorial Recommendation Strip -->
     <div class="bg-secondary" style="padding: 5rem 0; margin-top: 4rem;">
         <div class="container-fluid" style="max-width: 1500px; padding: 0 clamp(1.5rem, 5vw, 5rem);">
             <p class="text-caption mb-5 animate-fade-in" style="color: #999; letter-spacing: 0.2em;">
                 You Might Also Like
             </p>
 
-            <div class="row gx-4 gy-5">
-                <div class="col-6 col-md-3 animate-fade-in animate-delay-1">
-                    <div class="img-container aspect-square mb-3" style="background: #efedea;">
-                        <div class="w-100 h-100 d-flex align-items-center justify-content-center"
-                             style="font-size: 0.7rem; color: #bbb; letter-spacing: 0.12em; text-transform: uppercase;">
-                            Product
-                        </div>
+            @if (ViewBag.RelatedProducts is List<RepresentWeb.Models.Product> relatedProducts && relatedProducts.Any())
+            {
+                <div class="swiper" id="relatedSwiper" style="overflow: hidden;">
+                    <div class="swiper-wrapper">
+                        @foreach (var relatedProduct in relatedProducts)
+                        {
+                            var relatedImages2 = relatedProduct.GetImages() ?? new List<string> { "" };
+                            var relatedProductImage2 = relatedImages2.FirstOrDefault() ?? "";
+                            
+                            <div class="swiper-slide" style="height: auto;">
+                                <a asp-controller="Products" asp-action="Details" asp-route-id="@relatedProduct.Id">
+                                    <div class="img-container aspect-square mb-3" style="background: #efedea;">
+                                        @if (!string.IsNullOrEmpty(relatedProductImage2))
+                                        {
+                                            <img src="@relatedProductImage2" alt="@relatedProduct.Name" class="w-100 h-100"
+                                                 style="object-fit: contain; padding: 1rem;" />
+                                        }
+                                        else
+                                        {
+                                            <div class="w-100 h-100 d-flex align-items-center justify-content-center"
+                                                 style="font-size: 0.7rem; color: #bbb; letter-spacing: 0.12em; text-transform: uppercase;">
+                                                Product
+                                            </div>
+                                        }
+                                    </div>
+                                    <p class="m-0" style="font-size: 0.78rem; font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase; color: #1a1a1a;">
+                                        @relatedProduct.Name
+                                    </p>
+                                    <p class="m-0 mt-1" style="font-size: 0.75rem; font-weight: 300; color: #999;">Rs @relatedProduct.Price.ToString("N2")</p>
+                                </a>
+                            </div>
+                        }
                     </div>
-                    <p class="m-0" style="font-size: 0.78rem; font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase;">
-                        247 Bucket Hat
-                    </p>
-                    <p class="m-0 mt-1" style="font-size: 0.75rem; font-weight: 300; color: #999;">Rs. 4,200</p>
+                    <div class="swiper-button-prev" id="relatedPrev"></div>
+                    <div class="swiper-button-next" id="relatedNext"></div>
                 </div>
-                <div class="col-6 col-md-3 animate-fade-in animate-delay-2">
-                    <div class="img-container aspect-square mb-3" style="background: #efedea;">
-                        <div class="w-100 h-100 d-flex align-items-center justify-content-center"
-                             style="font-size: 0.7rem; color: #bbb; letter-spacing: 0.12em; text-transform: uppercase;">
-                            Product
-                        </div>
-                    </div>
-                    <p class="m-0" style="font-size: 0.78rem; font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase;">
-                        Legacy Hoodie
-                    </p>
-                    <p class="m-0 mt-1" style="font-size: 0.75rem; font-weight: 300; color: #999;">Rs. 12,500</p>
-                </div>
-                <div class="col-6 col-md-3 animate-fade-in animate-delay-3">
-                    <div class="img-container aspect-square mb-3" style="background: #efedea;">
-                        <div class="w-100 h-100 d-flex align-items-center justify-content-center"
-                             style="font-size: 0.7rem; color: #bbb; letter-spacing: 0.12em; text-transform: uppercase;">
-                            Product
-                        </div>
-                    </div>
-                    <p class="m-0" style="font-size: 0.78rem; font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase;">
-                        Utility Shoulder Bag
-                    </p>
-                    <p class="m-0 mt-1" style="font-size: 0.75rem; font-weight: 300; color: #999;">Rs. 8,900</p>
-                </div>
-                <div class="col-6 col-md-3 animate-fade-in animate-delay-4">
-                    <div class="img-container aspect-square mb-3" style="background: #efedea;">
-                        <div class="w-100 h-100 d-flex align-items-center justify-content-center"
-                             style="font-size: 0.7rem; color: #bbb; letter-spacing: 0.12em; text-transform: uppercase;">
-                            Product
-                        </div>
-                    </div>
-                    <p class="m-0" style="font-size: 0.78rem; font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase;">
-                        Overdrive Leather Jacket
-                    </p>
-                    <p class="m-0 mt-1" style="font-size: 0.75rem; font-weight: 300; color: #999;">Rs. 68,000</p>
-                </div>
-            </div>
+            }
         </div>
     </div>
 </div>
 
-<script>
-    function switchImage(src, thumbnailEl) {
-        const mainImg = document.getElementById('mainProductImage');
-        if (!mainImg || !src) return;
-        mainImg.style.opacity = '0';
-        setTimeout(() => {
-            mainImg.src = src;
-            mainImg.style.opacity = '1';
-        }, 250);
-    }
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-    function isUserLoggedIn() {
-        if (typeof appAuthCache !== 'undefined' && appAuthCache !== null) return Promise.resolve(appAuthCache);
-        if (typeof window.appAuthCache !== 'undefined' && window.appAuthCache !== null) return Promise.resolve(window.appAuthCache);
-        return fetch('/Account/CheckAuth')
-            .then(r => r.json())
-            .then(data => {
-                window.appAuthCache = data.authenticated;
-                return data.authenticated;
-            })
-            .catch(() => false);
-    }
-
-    function showLoginPrompt() {
-         const result = confirm('Please log in to use the bookmark feature.\n\nOK to go to login page, Cancel to stay on current page.');
-         if (result) { window.location.href = '/Account/Login'; }
-     }
-
-    function setBookmarkButtonState(btn, isBookmarked) {
-        btn.dataset.bookmarked = isBookmarked ? 'true' : 'false';
-        btn.style.color = isBookmarked ? '#000' : '#999';
-        btn.classList.toggle('is-bookmarked', isBookmarked);
-        const icon = btn.querySelector('i');
-        if (icon) {
-            icon.classList.toggle('bi-bookmark-fill', isBookmarked);
-            icon.classList.toggle('bi-bookmark', !isBookmarked);
+    <script>
+        function switchImage(src, thumbnailEl) {
+            const mainImg = document.getElementById('mainProductImage');
+            if (!mainImg || !src) return;
+            mainImg.style.opacity = '0';
+            setTimeout(() => {
+                mainImg.src = src;
+                mainImg.style.opacity = '1';
+            }, 250);
         }
-    }
 
-    function toggleBookmark(event, productId) {
-        const btn = event.currentTarget || event.target.closest('.bookmark-btn');
-        if (!btn) return;
-        isUserLoggedIn().then(loggedIn => {
-            if (!loggedIn) { showLoginPrompt(); return; }
-            const isBookmarked = btn.dataset.bookmarked === 'true' || btn.classList.contains('is-bookmarked');
-            const url = isBookmarked ? '/Bookmark/Remove/' + productId : '/Bookmark/Add/' + productId;
-            btn.disabled = true;
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'RequestVerificationToken': getAntiForgeryToken(),
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: 'id=' + productId
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const nextBookmarkedState = !isBookmarked;
-                    setBookmarkButtonState(btn, nextBookmarkedState);
-                    updateBookmarkCount();
-                const bookmarkId = String(productId);
-                const saved = localStorage.getItem('bookmarkedProducts') || '[]';
-                let bookmarks = JSON.parse(saved).map(id => String(id));
-                if (nextBookmarkedState) { if (!bookmarks.includes(bookmarkId)) bookmarks.push(bookmarkId); }
-                else { const idx = bookmarks.indexOf(bookmarkId); if (idx > -1) bookmarks.splice(idx, 1); }
-                localStorage.setItem('bookmarkedProducts', JSON.stringify(bookmarks));
-                } else { alert('Failed to update bookmark'); }
-                btn.disabled = false;
-            })
-            .catch(error => { console.error('Error:', error); alert('Network error'); btn.disabled = false; });
-        });
-    }
+        function isUserLoggedIn() {
+            if (typeof appAuthCache !== 'undefined' && appAuthCache !== null) return Promise.resolve(appAuthCache);
+            if (typeof window.appAuthCache !== 'undefined' && window.appAuthCache !== null) return Promise.resolve(window.appAuthCache);
+            return fetch('/Account/CheckAuth')
+                .then(r => r.json())
+                .then(data => {
+                    window.appAuthCache = data.authenticated;
+                    return data.authenticated;
+                })
+                .catch(() => false);
+        }
 
-    function updateBookmarkCount() {
-        fetch('/Bookmark/GetCount').then(r => r.json()).then(data => {
-            const badge = document.querySelector('#bookmarkLink .badge-count');
-            if (badge) {
-                badge.textContent = data.count;
-                badge.style.display = data.count > 0 ? 'inline-block' : 'none';
+        function showLoginPrompt() {
+             const result = confirm('Please log in to use the bookmark feature.\n\nOK to go to login page, Cancel to stay on current page.');
+             if (result) { window.location.href = '/Account/Login'; }
+         }
+
+        function setBookmarkButtonState(btn, isBookmarked) {
+            btn.dataset.bookmarked = isBookmarked ? 'true' : 'false';
+            btn.style.color = isBookmarked ? '#000' : '#999';
+            btn.classList.toggle('is-bookmarked', isBookmarked);
+            const icon = btn.querySelector('i');
+            if (icon) {
+                icon.classList.toggle('bi-bookmark-fill', isBookmarked);
+                icon.classList.toggle('bi-bookmark', !isBookmarked);
             }
-        });
-    }
-    function updateCartCount() {
-        fetch('/Cart/GetCount').then(r => r.json()).then(data => {
-            const el = document.querySelector('#cartLink .badge-count');
-            if (el) el.textContent = data.count;
-        });
-    }
-    function getAntiForgeryToken() {
-        const tokenElement = document.querySelector('[name=__RequestVerificationToken]');
-        return tokenElement ? tokenElement.value : '';
-    }
+        }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const sizeButtons = document.querySelectorAll('.size-btn');
-        const ctaButton = document.getElementById('addToBagCta');
-        sizeButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                sizeButtons.forEach(btn => {
-                    btn.classList.remove('btn-filled');
-                    btn.style.background = 'transparent';
-                    btn.style.color = '#1a1a1a';
+        function toggleBookmark(event, productId) {
+            const btn = event.currentTarget || event.target.closest('.bookmark-btn');
+            if (!btn) return;
+            isUserLoggedIn().then(loggedIn => {
+                if (!loggedIn) { showLoginPrompt(); return; }
+                const isBookmarked = btn.dataset.bookmarked === 'true' || btn.classList.contains('is-bookmarked');
+                const url = isBookmarked ? '/Bookmark/Remove/' + productId : '/Bookmark/Add/' + productId;
+                btn.disabled = true;
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'RequestVerificationToken': getAntiForgeryToken(),
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: 'id=' + productId
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const nextBookmarkedState = !isBookmarked;
+                        setBookmarkButtonState(btn, nextBookmarkedState);
+                        updateBookmarkCount();
+                    const bookmarkId = String(productId);
+                    const saved = localStorage.getItem('bookmarkedProducts') || '[]';
+                    let bookmarks = JSON.parse(saved).map(id => String(id));
+                    if (nextBookmarkedState) { if (!bookmarks.includes(bookmarkId)) bookmarks.push(bookmarkId); }
+                    else { const idx = bookmarks.indexOf(bookmarkId); if (idx > -1) bookmarks.splice(idx, 1); }
+                    localStorage.setItem('bookmarkedProducts', JSON.stringify(bookmarks));
+                    } else { alert('Failed to update bookmark'); }
+                    btn.disabled = false;
+                })
+                .catch(error => { console.error('Error:', error); alert('Network error'); btn.disabled = false; });
+            });
+        }
+
+        function updateBookmarkCount() {
+            fetch('/Bookmark/GetCount').then(r => r.json()).then(data => {
+                const badge = document.querySelector('#bookmarkLink .badge-count');
+                if (badge) {
+                    badge.textContent = data.count;
+                    badge.style.display = data.count > 0 ? 'inline-block' : 'none';
+                }
+            });
+        }
+        
+        function updateCartCount() {
+            fetch('/Cart/GetCount').then(r => r.json()).then(data => {
+                const el = document.querySelector('#cartLink .badge-count');
+                if (el) el.textContent = data.count;
+            });
+        }
+        
+        function getAntiForgeryToken() {
+            const tokenElement = document.querySelector('[name=__RequestVerificationToken]');
+            return tokenElement ? tokenElement.value : '';
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const sizeButtons = document.querySelectorAll('.size-btn');
+            const ctaButton = document.getElementById('addToBagCta');
+            sizeButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    sizeButtons.forEach(btn => {
+                        btn.classList.remove('btn-filled');
+                        btn.style.background = 'transparent';
+                        btn.style.color = '#1a1a1a';
+                    });
+                    this.classList.add('btn-filled');
+                    this.style.background = '#1a1a1a';
+                    this.style.color = '#fff';
+                    const selectedSize = this.getAttribute('data-size');
+                    ctaButton.innerText = 'ADD TO BAG ・ SIZE ' + selectedSize;
                 });
-                this.classList.add('btn-filled');
-                this.style.background = '#1a1a1a';
-                this.style.color = '#fff';
-                const selectedSize = this.getAttribute('data-size');
-                ctaButton.innerText = 'ADD TO BAG — SIZE ' + selectedSize;
+            });
+            ctaButton.addEventListener('click', function() {
+                const selectedSize = document.querySelector('.size-btn.btn-filled')?.getAttribute('data-size');
+                if (!selectedSize) { alert('Please select a size first'); return; }
+                const originalText = this.innerText;
+                this.innerText = 'Adding...'; this.disabled = true;
+                fetch('/Cart/Add/@Model.Id', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'RequestVerificationToken': getAntiForgeryToken(),
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: 'id=@Model.Id&quantity=1'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        this.innerText = 'Added to Bag';
+                        updateCartCount();
+                        setTimeout(() => { this.innerText = originalText; this.disabled = false; }, 2000);
+                    } else { alert('Failed to add item to cart'); this.innerText = originalText; this.disabled = false; }
+                })
+                .catch(error => { alert('Network error'); this.innerText = originalText; this.disabled = false; });
+            });
+            const saved = localStorage.getItem('bookmarkedProducts') || '[]';
+            const bookmarks = JSON.parse(saved).map(id => String(id));
+            if (bookmarks.includes(String(@Model.Id))) {
+                const btn = document.getElementById('productBookmarkBtn');
+                if (btn) {
+                    setBookmarkButtonState(btn, true);
+                }
+            }
+            updateBookmarkCount();
+            
+            // Swiper Initialization
+            new Swiper('#relatedSwiper', {
+                slidesPerView: 4,
+                spaceBetween: 24,
+                centeredSlides: false,
+                loop: true,
+                navigation: {
+                    nextEl: '#relatedNext',
+                    prevEl: '#relatedPrev',
+                },
+                breakpoints: {
+                    0: { slidesPerView: 2, spaceBetween: 16 },
+                    768: { slidesPerView: 3, spaceBetween: 20 },
+                    1200: { slidesPerView: 4, spaceBetween: 24 }
+                }
             });
         });
-        ctaButton.addEventListener('click', function() {
-            const selectedSize = document.querySelector('.size-btn.btn-filled')?.getAttribute('data-size');
-            if (!selectedSize) { alert('Please select a size first'); return; }
-            const originalText = this.innerText;
-            this.innerText = 'Adding...'; this.disabled = true;
-            fetch('/Cart/Add/@Model.Id', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'RequestVerificationToken': getAntiForgeryToken(),
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: 'id=@Model.Id&quantity=1'
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    this.innerText = 'Added to Bag';
-                    updateCartCount();
-                    setTimeout(() => { this.innerText = originalText; this.disabled = false; }, 2000);
-                } else { alert('Failed to add item to cart'); this.innerText = originalText; this.disabled = false; }
-            })
-            .catch(error => { alert('Network error'); this.innerText = originalText; this.disabled = false; });
-        });
-        const saved = localStorage.getItem('bookmarkedProducts') || '[]';
-        const bookmarks = JSON.parse(saved).map(id => String(id));
-        if (bookmarks.includes(String(@Model.Id))) {
-            const btn = document.getElementById('productBookmarkBtn');
-            if (btn) {
-                setBookmarkButtonState(btn, true);
-            }
-        }
-        updateBookmarkCount();
-    });
-</script>
+    </script>
+}

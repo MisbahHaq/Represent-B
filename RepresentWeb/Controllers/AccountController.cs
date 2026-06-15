@@ -4,11 +4,11 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using System.Linq;
 using System;
-using representweb.Models;
-using representweb.Data;
+using RepresentWeb.Models;
+using RepresentWeb.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace representweb.Controllers
+namespace RepresentWeb.Controllers
 {
     public class AccountController : Controller
     {
@@ -54,7 +54,7 @@ namespace representweb.Controllers
 
                 // Restore cart from database to session
                 var dbCartItems = _context.ShoppingCarts.Where(c => c.UserEmail == model.Email).ToList();
-                var sessionCart = dbCartItems.Select(c => new representweb.Models.CartItem { ProductId = c.ProductId, Quantity = c.Quantity }).ToList();
+                var sessionCart = dbCartItems.Select(c => new RepresentWeb.Models.CartItem { ProductId = c.ProductId, Quantity = c.Quantity }).ToList();
                 var cartJson = System.Text.Json.JsonSerializer.Serialize(sessionCart);
                 HttpContext.Session.SetString("Cart", cartJson);
 
@@ -100,7 +100,7 @@ namespace representweb.Controllers
 
                 // Restore cart from database to session
                 var dbCartItems = _context.ShoppingCarts.Where(c => c.UserEmail == model.Email).ToList();
-                var sessionCart = dbCartItems.Select(c => new representweb.Models.CartItem { ProductId = c.ProductId, Quantity = c.Quantity }).ToList();
+                var sessionCart = dbCartItems.Select(c => new RepresentWeb.Models.CartItem { ProductId = c.ProductId, Quantity = c.Quantity }).ToList();
                 var cartJson = System.Text.Json.JsonSerializer.Serialize(sessionCart);
                 HttpContext.Session.SetString("Cart", cartJson);
 
@@ -194,7 +194,7 @@ namespace representweb.Controllers
                 var cartJson = HttpContext.Session.GetString("Cart");
                 if (!string.IsNullOrEmpty(cartJson))
                 {
-                    var cart = System.Text.Json.JsonSerializer.Deserialize<List<representweb.Models.CartItem>>(cartJson) ?? new List<representweb.Models.CartItem>();
+                    var cart = System.Text.Json.JsonSerializer.Deserialize<List<RepresentWeb.Models.CartItem>>(cartJson) ?? new List<RepresentWeb.Models.CartItem>();
 
                     // Sync session cart to database
                     foreach (var item in cart)
@@ -206,7 +206,7 @@ namespace representweb.Controllers
                         }
                         else
                         {
-                            _context.ShoppingCarts.Add(new representweb.Models.ShoppingCart
+                            _context.ShoppingCarts.Add(new RepresentWeb.Models.ShoppingCart
                             {
                                 UserEmail = userEmail,
                                 ProductId = item.ProductId,
@@ -234,7 +234,7 @@ namespace representweb.Controllers
                 var cartJson = HttpContext.Session.GetString("Cart");
                 if (!string.IsNullOrEmpty(cartJson))
                 {
-                    var cart = System.Text.Json.JsonSerializer.Deserialize<List<representweb.Models.CartItem>>(cartJson) ?? new List<representweb.Models.CartItem>();
+                    var cart = System.Text.Json.JsonSerializer.Deserialize<List<RepresentWeb.Models.CartItem>>(cartJson) ?? new List<RepresentWeb.Models.CartItem>();
 
                     // Sync session cart to database
                     foreach (var item in cart)
@@ -246,7 +246,7 @@ namespace representweb.Controllers
                         }
                         else
                         {
-                            _context.ShoppingCarts.Add(new representweb.Models.ShoppingCart
+                            _context.ShoppingCarts.Add(new RepresentWeb.Models.ShoppingCart
                             {
                                 UserEmail = userEmail,
                                 ProductId = item.ProductId,

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -13,6 +13,8 @@
   <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
   <link rel="stylesheet" href="~/css/output.css" asp-append-version="true" />
   <link rel="stylesheet" href="~/RepresentWeb.styles.css" asp-append-version="true" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  @RenderSection("Head", required: false)
 </head>
 
 <style>
@@ -198,6 +200,13 @@
   .suggestion-name { color: #fff; font-weight: 400; letter-spacing: 0.04em; }
   .suggestion-price { color: #888; font-size: 0.7rem; }
   .no-results { padding: 0.75rem 0.85rem; color: #666; font-size: 0.75rem; font-style: italic; }
+
+  .related-swiper { overflow: hidden; }
+  .related-swiper .swiper-slide { height: auto; }
+  @@media (max-width: 575.98px) {
+    .related-swiper .swiper-slide { flex: 0 0 50%; max-width: 50%; }
+  }
+  .swiper-button-next, .swiper-button-prev { color: #fff; }
 </style>
 
 <body>
@@ -327,7 +336,7 @@
 
         <div class="col-12 mt-5 pt-4">
           <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-            <p class="text-caption m-0" style="color: #444; font-size:0.75rem;">© 2026 Represent. All rights reserved.</p>
+            <p class="text-caption m-0" style="color: #444; font-size:0.75rem;">� 2026 Represent. All rights reserved.</p>
             <div class="d-flex gap-4" style="font-size:0.75rem;">
               <a href="#" class="text-decoration-none" style="color: #555;">Terms</a>
               <a href="#" class="text-decoration-none" style="color: #555;">Privacy</a>
@@ -340,6 +349,7 @@
   </footer>
 
   <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script>
     if (typeof window.appAuthCache === 'undefined') {
        window.appAuthCache = null;

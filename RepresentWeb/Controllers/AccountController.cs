@@ -106,7 +106,13 @@ namespace RepresentWeb.Controllers
 
                 HttpContext.Session.SetString("UserEmail", model.Email);
                 HttpContext.Session.SetString("AuthToken", "fake-jwt-token");
-
+                HttpContext.Session.SetString("UserName", user.Name);
+                HttpContext.Session.SetString("UserAddress", user.Address);
+                
+                if (model.RememberMe)
+                {
+                }
+                
                 return Json(new { success = true });
             }
             
@@ -177,7 +183,8 @@ namespace RepresentWeb.Controllers
                 
                 HttpContext.Session.SetString("UserEmail", model.Email);
                 HttpContext.Session.SetString("AuthToken", "fake-jwt-token");
-                
+                HttpContext.Session.SetString("UserName", user.Name);
+
                 return Json(new { success = true });
             }
             
@@ -281,7 +288,7 @@ namespace RepresentWeb.Controllers
                 return Json(new { authenticated = false });
             }
             var isAdmin = HttpContext.Session.GetString("IsAdmin") == "true";
-            return Json(new { authenticated = true, userEmail = userEmail, isAdmin = isAdmin });
+            return Json(new { authenticated = true, userEmail = userEmail, userName = HttpContext.Session.GetString("UserName") ?? string.Empty, isAdmin = isAdmin });
         }
 
         // GET: Account/Profile

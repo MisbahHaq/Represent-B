@@ -49,6 +49,12 @@ namespace RepresentWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> Cancel([FromBody] ChatbotCancelOrderRequest request)
         {
+            var userEmail = HttpContext.Session.GetString("UserEmail");
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                return LoginRequired("request cancellations");
+            }
+
             if (!TryParseOrderNumber(request?.OrderNumber, out var orderId))
             {
                 return Json(new { success = false, message = "Please enter a valid order number." });
@@ -59,7 +65,7 @@ namespace RepresentWeb.Controllers
                 return Json(new { success = false, message = "Please provide a cancellation reason." });
             }
 
-            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId && o.UserEmail == userEmail);
             if (order == null)
             {
                 return Json(new { success = false, message = "We could not find an order with that number." });
@@ -75,12 +81,18 @@ namespace RepresentWeb.Controllers
                 return Json(new { success = false, message = "Delivered orders cannot be cancelled through chatbot." });
             }
 
+            var customerName = HttpContext.Session.GetString("UserName");
+            if (string.IsNullOrWhiteSpace(customerName))
+            {
+                customerName = userEmail;
+            }
+
             var supportRequest = new SupportRequest
             {
                 RequestType = "Cancellation",
                 OrderId = order.Id,
-                CustomerName = string.IsNullOrWhiteSpace(request.CustomerName) ? "Guest" : request.CustomerName,
-                CustomerEmail = string.IsNullOrWhiteSpace(request.CustomerEmail) ? "Guest" : request.CustomerEmail,
+                CustomerName = customerName,
+                CustomerEmail = userEmail,
                 Reason = request.Reason,
                 Message = $"Cancellation requested for order #{order.Id}. Reason: {request.Reason}",
                 Status = "New",
@@ -102,17 +114,45 @@ namespace RepresentWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> NotifyAdmin([FromBody] ChatbotAdminChatRequest request)
         {
+            var userEmail = HttpContext.Session.GetString("UserEmail");
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                return LoginRequired("contact admin");
+            }
+
             if (string.IsNullOrWhiteSpace(request?.Message))
             {
                 return Json(new { success = false, message = "Please type a message for admin." });
             }
 
+            int? orderId = null;
+            if (!string.IsNullOrWhiteSpace(request.OrderNumber))
+            {
+                if (!TryParseOrderNumber(request.OrderNumber, out var parsedOrderId))
+                {
+                    return Json(new { success = false, message = "Please enter a valid order number." });
+                }
+
+                if (!await _context.Orders.AnyAsync(o => o.Id == parsedOrderId && o.UserEmail == userEmail))
+                {
+                    return Json(new { success = false, message = "We could not find an order with that number." });
+                }
+
+                orderId = parsedOrderId;
+            }
+
+            var customerName = HttpContext.Session.GetString("UserName");
+            if (string.IsNullOrWhiteSpace(customerName))
+            {
+                customerName = userEmail;
+            }
+
             var supportRequest = new SupportRequest
             {
                 RequestType = "AdminChat",
-                OrderId = TryParseOrderNumber(request.OrderNumber, out var orderId) ? orderId : null,
-                CustomerName = string.IsNullOrWhiteSpace(request.CustomerName) ? "Guest" : request.CustomerName,
-                CustomerEmail = string.IsNullOrWhiteSpace(request.CustomerEmail) ? "Guest" : request.CustomerEmail,
+                OrderId = orderId,
+                CustomerName = customerName,
+                CustomerEmail = userEmail,
                 Reason = string.Empty,
                 Message = request.Message,
                 Status = "New",
@@ -128,6 +168,48 @@ namespace RepresentWeb.Controllers
                 success = true,
                 message = "Admin has been notified. They will respond from the admin panel.",
                 requestId = supportRequest.Id
+            });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Replies()
+        {
+            var userEmail = HttpContext.Session.GetString("UserEmail");
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                return StatusCode(401, new
+                {
+                    success = false,
+                    message = "Please log in to view admin replies.",
+                    redirectUrl = Url.Action("Login", "Account")
+                });
+            }
+
+            var replies = await _context.SupportRequests
+                .Where(r => r.CustomerEmail == userEmail && !string.IsNullOrWhiteSpace(r.AdminResponse))
+                .OrderBy(r => r.CreatedAt)
+                .Select(r => new
+                {
+                    id = r.Id,
+                    requestType = r.RequestType,
+                    status = r.Status,
+                    message = r.Message,
+                    adminResponse = r.AdminResponse,
+                    createdAt = r.CreatedAt,
+                    updatedAt = r.UpdatedAt
+                })
+                .ToListAsync();
+
+            return Json(new { success = true, replies });
+        }
+
+        private IActionResult LoginRequired(string action)
+        {
+            return StatusCode(401, new
+            {
+                success = false,
+                message = $"Please log in to {action}.",
+                redirectUrl = Url.Action("Login", "Account")
             });
         }
 

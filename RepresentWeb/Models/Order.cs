@@ -8,6 +8,8 @@ namespace RepresentWeb.Models
         public int Id { get; set; }
         public string UserEmail { get; set; } = string.Empty;
         public string? Address { get; set; }
+        public string? Country { get; set; }
+        public string? City { get; set; }
         public string? PhoneNumber { get; set; }
         public DateTime OrderDate { get; set; }
         public string Status { get; set; } = string.Empty;

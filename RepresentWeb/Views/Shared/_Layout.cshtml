@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="~/css/output.css" asp-append-version="true" />
   <link rel="stylesheet" href="~/RepresentWeb.styles.css" asp-append-version="true" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <script src="~/lib/jquery/dist/jquery.min.js"></script>
   @RenderSection("Head", required: false)
 </head>
 
@@ -586,6 +587,16 @@
             .catch(() => ({ authenticated: false, isAdmin: false }));
     }
 
+    function requireChatbotLogin() {
+        return isUserLoggedIn().then(data => {
+            if (!data.authenticated) {
+                window.location.href = '/Account/Login';
+                return false;
+            }
+            return true;
+        });
+    }
+
     function updateUserLoginLink() {
         isUserLoggedIn().then(data => {
             const loggedIn = data.authenticated;
@@ -676,7 +687,55 @@
             'RequestVerificationToken': getVerificationToken()
           },
           body: JSON.stringify(payload)
-        }).then(response => response.json());
+        }).then(response => {
+          if (response.status === 401) {
+            return response.json().then(data => {
+              if (data.redirectUrl) {
+                window.location.href = data.redirectUrl;
+              }
+              return data;
+            });
+          }
+          return response.json();
+        });
+      }
+
+      let displayedReplyIds = new Set((localStorage.getItem('chatbotDisplayedReplyIds') || '').split(',').filter(Boolean));
+
+      function rememberDisplayedReply(id) {
+        displayedReplyIds.add(String(id));
+        localStorage.setItem('chatbotDisplayedReplyIds', Array.from(displayedReplyIds).join(','));
+      }
+
+      function addAdminReply(reply) {
+        if (!reply || !reply.adminResponse || displayedReplyIds.has(String(reply.id))) {
+          return;
+        }
+
+        const requestLabel = reply.requestType === 'Cancellation' ? 'cancellation request' : 'support request';
+        addMessage('Admin reply to your ' + requestLabel + ': ' + reply.adminResponse, 'bot');
+
+        if (reply.status === 'Resolved') {
+          addMessage('Your ' + requestLabel + ' has been resolved.', 'bot');
+        }
+
+        rememberDisplayedReply(reply.id);
+      }
+
+      function fetchChatbotReplies() {
+        fetch('/Chatbot/Replies')
+          .then(response => {
+            if (response.status === 401) {
+              return { success: false, replies: [] };
+            }
+            return response.json();
+          })
+          .then(data => {
+            if (data && data.replies) {
+              data.replies.forEach(addAdminReply);
+            }
+          })
+          .catch(() => {});
       }
 
       toggle.addEventListener('click', function() {
@@ -698,7 +757,14 @@
 
       document.querySelectorAll('[data-chatbot-mode]').forEach(button => {
         button.addEventListener('click', function() {
-          showMode(this.dataset.chatbotMode);
+          const mode = this.dataset.chatbotMode;
+          if (mode === 'cancel' || mode === 'admin') {
+            requireChatbotLogin().then(allowed => {
+              if (allowed) showMode(mode);
+            });
+            return;
+          }
+          showMode(mode);
         });
       });
 
@@ -754,6 +820,9 @@
           }
         })
         .catch(() => {});
+
+      fetchChatbotReplies();
+      setInterval(fetchChatbotReplies, 10000);
     }
 
     function getAntiForgeryToken() {

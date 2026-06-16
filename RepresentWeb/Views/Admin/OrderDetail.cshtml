@@ -20,6 +20,8 @@
                     <h5 class="card-title text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.1em; color: #888;">Customer Information</h5>
                     <p class="mb-1"><strong>Email:</strong> @Model.UserEmail</p>
                     <p class="mb-1"><strong>Phone:</strong> @(string.IsNullOrEmpty(Model.PhoneNumber) ? "N/A" : Model.PhoneNumber)</p>
+                    <p class="mb-1"><strong>Country / Region:</strong> @(string.IsNullOrEmpty(Model.Country) ? "N/A" : Model.Country)</p>
+                    <p class="mb-1"><strong>City:</strong> @(string.IsNullOrEmpty(Model.City) ? "N/A" : Model.City)</p>
                     <p class="mb-0"><strong>Address:</strong> @(string.IsNullOrEmpty(Model.Address) ? "N/A" : Model.Address)</p>
                 </div>
             </div>

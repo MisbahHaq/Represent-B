@@ -13,6 +13,7 @@
 <form asp-action="Checkout" method="post" id="checkoutForm">
                             <input type="hidden" id="deliveryMethodInput" name="deliveryMethod" value="standard" />
                             <input type="hidden" id="paymentMethodInput" name="paymentMethod" value="card" />
+                            <div asp-validation-summary="ModelOnly" class="text-danger" style="font-size: 0.78rem; margin-bottom: 1rem;"></div>
 
                             <div style="margin-bottom: 3rem;">
                         <div style="margin-bottom: 2rem;">
@@ -35,7 +36,8 @@
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
                             <div>
                                 <label style="display: block; font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #666; margin-bottom: 0.5rem;">Phone number</label>
-                                <input type="text" name="Phone" value="@Model.Phone" placeholder="Phone number" style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #ccc; background: #fff; font-family: 'Inter', sans-serif; font-size: 0.85rem; color: #000; outline: none;" />
+                                <input asp-for="Phone" required placeholder="Phone number" style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #ccc; background: #fff; font-family: 'Inter', sans-serif; font-size: 0.85rem; color: #000; outline: none;" />
+                                <span asp-validation-for="Phone" class="text-danger" style="font-size: 0.72rem;"></span>
                             </div>
                             <div>
                                 <label style="display: block; font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #666; margin-bottom: 0.5rem;">Email</label>
@@ -50,18 +52,21 @@
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
                             <div>
                                 <label style="display: block; font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #666; margin-bottom: 0.5rem;">Country / Region</label>
-                                <input type="text" placeholder="Country / Region" style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #ccc; background: #fff; font-family: 'Inter', sans-serif; font-size: 0.85rem; color: #000; outline: none;" />
+                                <input asp-for="Country" required placeholder="Country / Region" style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #ccc; background: #fff; font-family: 'Inter', sans-serif; font-size: 0.85rem; color: #000; outline: none;" />
+                                <span asp-validation-for="Country" class="text-danger" style="font-size: 0.72rem;"></span>
                             </div>
                             <div>
                                 <label style="display: block; font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #666; margin-bottom: 0.5rem;">City</label>
-                                <input type="text" placeholder="City" style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #ccc; background: #fff; font-family: 'Inter', sans-serif; font-size: 0.85rem; color: #000; outline: none;" />
+                                <input asp-for="City" required placeholder="City" style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #ccc; background: #fff; font-family: 'Inter', sans-serif; font-size: 0.85rem; color: #000; outline: none;" />
+                                <span asp-validation-for="City" class="text-danger" style="font-size: 0.72rem;"></span>
                             </div>
                         </div>
 
                         <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
                             <div>
                                 <label style="display: block; font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #666; margin-bottom: 0.5rem;">Address</label>
-                                <input type="text" name="Address" value="@Model.Address" readonly style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #ccc; background: #f9f9f9; font-family: 'Inter', sans-serif; font-size: 0.85rem; color: #000; outline: none;" />
+                                <input asp-for="Address" required style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #ccc; background: #fff; font-family: 'Inter', sans-serif; font-size: 0.85rem; color: #000; outline: none;" />
+                                <span asp-validation-for="Address" class="text-danger" style="font-size: 0.72rem;"></span>
                             </div>
                             <div>
                                 <label style="display: block; font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #666; margin-bottom: 0.5rem;">Zip / Postal code</label>
@@ -229,6 +234,7 @@
 </div>
 
 @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
     <script>
         const cartTotal = @Model.TotalAmount;
 

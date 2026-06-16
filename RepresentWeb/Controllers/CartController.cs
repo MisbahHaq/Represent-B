@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using RepresentWeb.Data;
 using RepresentWeb.Models;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
@@ -197,12 +198,6 @@ namespace RepresentWeb.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            var address = HttpContext.Session.GetString("UserAddress");
-            if (string.IsNullOrEmpty(address))
-            {
-                return RedirectToAction("UpdateAddress", "Account");
-            }
-
             var fullName = HttpContext.Session.GetString("UserName") ?? string.Empty;
             var nameParts = fullName.Split(' ', 2);
             var firstName = nameParts.Length > 0 ? nameParts[0] : string.Empty;
@@ -217,11 +212,13 @@ namespace RepresentWeb.Controllers
             var viewModel = new CartViewModel
             {
                 Items = cartItems,
-                TotalAmount = cartItems.Sum(item => item.Product.Price * item.Quantity),
+                TotalAmount = cartItems.Sum(item => item.Product?.Price * item.Quantity ?? 0),
                 FirstName = firstName,
                 LastName = lastName,
                 Email = userEmail,
-                Address = address
+                Address = HttpContext.Session.GetString("UserAddress") ?? string.Empty,
+                Country = string.Empty,
+                City = string.Empty
             };
 
             return View(viewModel);
@@ -238,10 +235,11 @@ namespace RepresentWeb.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            var address = HttpContext.Session.GetString("UserAddress");
-            if (string.IsNullOrEmpty(address))
+            if (!ModelState.IsValid)
             {
-                return RedirectToAction("UpdateAddress", "Account");
+                model.Items = GetCartItems();
+                model.TotalAmount = model.Items.Sum(item => item.Product?.Price * item.Quantity ?? 0);
+                return View(model);
             }
 
             var cartItems = GetCartItems();
@@ -267,7 +265,9 @@ namespace RepresentWeb.Controllers
             var order = new Order
             {
                 UserEmail = userEmail,
-                Address = address,
+                Address = model.Address,
+                Country = model.Country,
+                City = model.City,
                 PhoneNumber = model.Phone,
                 OrderDate = DateTime.Now,
                 Status = "Pending",
@@ -293,6 +293,14 @@ namespace RepresentWeb.Controllers
 
             _context.Orders.Add(order);
             _context.SaveChanges();
+
+            HttpContext.Session.SetString("UserAddress", model.Address);
+            var user = _context.Users.FirstOrDefault(u => u.Email == userEmail);
+            if (user != null)
+            {
+                user.Address = model.Address;
+                _context.SaveChanges();
+            }
 
             // Clear cart from both session and database
             var cart = GetCart();
@@ -413,7 +421,13 @@ namespace RepresentWeb.Controllers
             public string FirstName { get; set; } = string.Empty;
             public string LastName { get; set; } = string.Empty;
             public string Email { get; set; } = string.Empty;
+            [Required(ErrorMessage = "Address is required.")]
             public string Address { get; set; } = string.Empty;
+            [Required(ErrorMessage = "Country / region is required.")]
+            public string Country { get; set; } = string.Empty;
+            [Required(ErrorMessage = "City is required.")]
+            public string City { get; set; } = string.Empty;
+            [Required(ErrorMessage = "Phone number is required.")]
             public string Phone { get; set; } = string.Empty;
 
             public class CartItemViewModel

@@ -322,14 +322,14 @@ namespace RepresentWeb.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> MarkSupportRequestRead(int id)
+        public async Task<IActionResult> MarkSupportRequestRead([FromBody] SupportRequestActionModel model)
         {
             if (!IsAdminLoggedIn())
             {
                 return Json(new { success = false, message = "Unauthorized" });
             }
 
-            var request = await _context.SupportRequests.FindAsync(id);
+            var request = await _context.SupportRequests.FindAsync(model?.Id ?? 0);
             if (request == null)
             {
                 return Json(new { success = false, message = "Request not found" });
@@ -343,20 +343,20 @@ namespace RepresentWeb.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ResolveSupportRequest(int id, string response)
+        public async Task<IActionResult> ResolveSupportRequest([FromBody] SupportRequestActionModel model)
         {
             if (!IsAdminLoggedIn())
             {
                 return Json(new { success = false, message = "Unauthorized" });
             }
 
-            var request = await _context.SupportRequests.FindAsync(id);
+            var request = await _context.SupportRequests.FindAsync(model?.Id ?? 0);
             if (request == null)
             {
                 return Json(new { success = false, message = "Request not found" });
             }
 
-            request.AdminResponse = string.IsNullOrWhiteSpace(response) ? request.AdminResponse : response;
+            request.AdminResponse = string.IsNullOrWhiteSpace(model?.Response) ? request.AdminResponse : model.Response;
             request.Status = "Resolved";
             request.IsRead = true;
             request.UpdatedAt = DateTime.Now;
@@ -366,16 +366,17 @@ namespace RepresentWeb.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CancelOrderFromChat(int id)
+        public async Task<IActionResult> CancelOrderFromChat([FromBody] SupportRequestActionModel model)
         {
             if (!IsAdminLoggedIn())
             {
                 return Json(new { success = false, message = "Unauthorized" });
             }
 
+            var requestId = model?.Id ?? 0;
             var request = await _context.SupportRequests
                 .Include(r => r.Order)
-                .FirstOrDefaultAsync(r => r.Id == id);
+                .FirstOrDefaultAsync(r => r.Id == requestId);
 
             if (request == null)
             {
@@ -467,6 +468,12 @@ namespace RepresentWeb.Controllers
             return _context.Products.Any(e => e.Id == id);
         }
     }
+}
+
+public class SupportRequestActionModel
+{
+    public int Id { get; set; }
+    public string? Response { get; set; }
 }
 
 public class OrderStatusUpdateModel

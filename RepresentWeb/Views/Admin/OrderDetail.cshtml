@@ -34,7 +34,7 @@
                     <p class="mb-1"><strong>Status:</strong> <span class="badge bg-@(Model.Status == "Order Received" ? "light text-dark" : Model.Status == "Pending" ? "warning" : Model.Status == "Out for Delivery" ? "info" : Model.Status == "Delivered" ? "success" : "secondary")">@Model.Status</span></p>
                     <p class="mb-1"><strong>Delivery:</strong> @(Model.DeliveryMethod ?? "")</p>
                     <p class="mb-1"><strong>Payment:</strong> @(Model.PaymentMethod ?? "")</p>
-                    <p class="mb-0"><strong>Total:</strong> Rs @Model.TotalAmount.ToString("N2")</p>
+                    <p class="mb-0"><strong>Total:</strong> $@Model.TotalAmount.ToString("N2")</p>
                 </div>
             </div>
         </div>
@@ -63,8 +63,8 @@
                                 <td>@(string.IsNullOrEmpty(item.Color) ? "N/A" : item.Color)</td>
                                 <td>@(string.IsNullOrEmpty(item.Size) ? "N/A" : item.Size)</td>
                                 <td>@item.Quantity</td>
-                                <td>Rs @item.Price.ToString("N2")</td>
-                                <td>Rs @((item.Quantity * item.Price).ToString("N2"))</td>
+                                <td>$@item.Price.ToString("N2")</td>
+                                <td>$@((item.Quantity * item.Price).ToString("N2"))</td>
                             </tr>
                         }
                     </tbody>

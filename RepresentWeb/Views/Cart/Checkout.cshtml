@@ -94,15 +94,15 @@
                                 </div>
                                 <span class="delivery-price" style="font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 500; color: #000;">Free</span>
                             </label>
-                            <label class="delivery-option" style="display: flex; align-items: center; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid #eee; cursor: pointer;" data-price="500" data-label="Express Shipping">
+                            <label class="delivery-option" style="display: flex; align-items: center; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid #eee; cursor: pointer;" data-price="5" data-label="Express Shipping">
                                 <div style="display: flex; align-items: center; gap: 0.85rem;">
-                                    <input type="radio" name="delivery" value="express" data-price="500" style="width: 18px; height: 18px; accent-color: #000; cursor: pointer;" />
+                                    <input type="radio" name="delivery" value="express" data-price="5" style="width: 18px; height: 18px; accent-color: #000; cursor: pointer;" />
                                     <div>
                                         <div style="font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 500; color: #000;">Express Shipping</div>
                                         <div style="font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 300; color: #888; margin-top: 0.15rem;">Delivery within 1-3 days</div>
                                     </div>
                                 </div>
-                                <span class="delivery-price" style="font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 500; color: #000;">Rs 500</span>
+                                <span class="delivery-price" style="font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 500; color: #000;">$5.00</span>
                             </label>
                         </div>
 
@@ -148,7 +148,7 @@
                                     <input type="radio" name="payment" value="cod" style="width: 18px; height: 18px; accent-color: #000; cursor: pointer;" />
                                     <span style="font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 500; color: #000;">Cash on Delivery</span>
                                 </div>
-                                <span style="font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 500; color: #000;">+ Rs 800</span>
+                                <span style="font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 500; color: #000;">+ $8.00</span>
                             </label>
                         </div>
 
@@ -192,7 +192,7 @@
                                     <div style="font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 300; color: #888;">Qty: @item.Quantity</div>
                                 </div>
                                 <div style="display: flex; align-items: center; font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 400; color: #000;">
-                                    Rs @item.Subtotal.ToString("N2")
+                                    $@item.Subtotal.ToString("N2")
                                 </div>
                             </div>
                         }
@@ -206,7 +206,7 @@
                     <div style="border-top: 1px solid #ddd; padding-top: 1.25rem;">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 300; color: #555;">
                             <span>Subtotal</span>
-                            <span id="subtotalCost" style="color: #000;">Rs @Model.TotalAmount.ToString("N2")</span>
+                            <span id="subtotalCost" style="color: #000;">$@Model.TotalAmount.ToString("N2")</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 300; color: #555;">
                             <span>Shipping</span>
@@ -214,15 +214,15 @@
                         </div>
                         <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 300; color: #555;">
                             <span>Delivery fee</span>
-                            <span id="deliveryFee" style="color: #000;">Rs 0</span>
+                            <span id="deliveryFee" style="color: #000;">$0.00</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin-bottom: 1.25rem; font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 300; color: #555;">
                             <span>Payment fee</span>
-                            <span id="paymentFee" style="color: #000;">Rs 0</span>
+                            <span id="paymentFee" style="color: #000;">$0.00</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; align-items: baseline; padding-top: 1rem; border-top: 1px solid #ccc;">
                             <span style="font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #000;">Total</span>
-                            <span id="totalAmount" style="font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 600; color: #000;">Rs @Model.TotalAmount.ToString("N2")</span>
+                            <span id="totalAmount" style="font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 600; color: #000;">$@Model.TotalAmount.ToString("N2")</span>
                         </div>
                     </div>
 
@@ -244,8 +244,8 @@
             if (checkedDelivery && checkedDelivery.dataset.price) {
                 deliveryPrice = parseFloat(checkedDelivery.dataset.price) || 0;
             }
-            document.getElementById('deliveryFee').textContent = 'Rs ' + deliveryPrice.toFixed(0);
-            document.getElementById('shippingCost').textContent = deliveryPrice > 0 ? 'Rs ' + deliveryPrice.toFixed(0) : 'Free';
+            document.getElementById('deliveryFee').textContent = '$' + deliveryPrice.toFixed(2);
+            document.getElementById('shippingCost').textContent = deliveryPrice > 0 ? '$' + deliveryPrice.toFixed(2) : 'Free';
             if (checkedDelivery) {
                 document.getElementById('deliveryMethodInput').value = checkedDelivery.value;
             }
@@ -261,18 +261,18 @@
                 }
 
                 if (checkedPayment.value === 'cod') {
-                    paymentFee = 800;
-                    document.getElementById('paymentFee').textContent = 'Rs 800';
+                    paymentFee = 8;
+                    document.getElementById('paymentFee').textContent = '$8.00';
                 } else {
                     paymentFee = 0;
-                    document.getElementById('paymentFee').textContent = 'Rs 0';
+                    document.getElementById('paymentFee').textContent = '$0.00';
                 }
 
                 document.getElementById('paymentMethodInput').value = checkedPayment.value;
             }
 
             const total = cartTotal + deliveryPrice + paymentFee;
-            document.getElementById('totalAmount').textContent = 'Rs ' + total.toFixed(2);
+            document.getElementById('totalAmount').textContent = '$' + total.toFixed(2);
         }
 
         document.addEventListener('DOMContentLoaded', function() {

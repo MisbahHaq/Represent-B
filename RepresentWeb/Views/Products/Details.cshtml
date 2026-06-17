@@ -909,6 +909,9 @@
                 .then(data => {
                     if (data.success) {
                         this.innerText = 'IN BAG';
+                        if (typeof updateCartCount === 'function') {
+                            updateCartCount();
+                        }
                         setTimeout(() => { updateCtaText(); this.disabled = false; }, 2000);
                     } else { this.innerText = 'ERROR'; this.disabled = false; }
                 }).catch(() => { this.innerText = 'ADD TO BAG'; this.disabled = false; });
